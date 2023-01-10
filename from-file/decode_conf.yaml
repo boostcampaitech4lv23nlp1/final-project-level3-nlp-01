@@ -1,0 +1,6 @@
+mdl: mdl/ksponspeech.zip
+wav_scp: ./download/bert/wav.scp
+config: conf/decode_asr.yaml
+output_dir: output/bert
+ngpu: 1
+batch_size: 1
