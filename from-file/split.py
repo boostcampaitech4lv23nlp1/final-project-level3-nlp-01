@@ -10,6 +10,9 @@ import argparse
 import logging
 import sys
 import time
+import threading
+import hashlib
+from multiprocessing import Process, Queue
 
 from pathlib import Path
 from typing import Optional
@@ -42,6 +45,8 @@ from espnet2.utils.types import str2bool
 from espnet2.utils.types import str2triple_str
 from espnet2.utils.types import str_or_none
 from espnet_model_zoo.downloader import ModelDownloader
+
+from torch.cuda.amp import autocast
 
 
 class Speech2Text:
@@ -117,6 +122,7 @@ class Speech2Text:
             token_list=token_list,
             pre_beam_score_key=None if ctc_weight == 1.0 else "full",
         )
+        
         # TODO(karita): make all scorers batchfied
         if batch_size == 1:
             non_batch = [
@@ -196,14 +202,15 @@ class Speech2Text:
         batch = to_device(batch, device=self.device)
 
         # b. Forward Encoder
-        enc, _ = self.asr_model.encode(**batch)
-        assert len(enc) == 1, len(enc)
+        with autocast(enabled=True):
+            enc, _ = self.asr_model.encode(**batch)
+            assert len(enc) == 1, len(enc)
 
-        # c. Passed the encoder result and the beam search
-        nbest_hyps = self.beam_search(
-            x=enc[0], maxlenratio=self.maxlenratio, minlenratio=self.minlenratio
-        )
-        nbest_hyps = nbest_hyps[: self.nbest]
+            # c. Passed the encoder result and the beam search
+            nbest_hyps = self.beam_search(
+                x=enc[0], maxlenratio=self.maxlenratio, minlenratio=self.minlenratio
+            )
+            nbest_hyps = nbest_hyps[: self.nbest]
 
         results = []
         for hyp in nbest_hyps:
@@ -354,7 +361,7 @@ def get_parser():
     )
 
     # modify 
-    parser.add_argument("--output_dir", type=str, default='output/bert', required=False)
+    parser.add_argument("--output_dir", type=str, default='output/sample', required=False)
     parser.add_argument(
         "--ngpu",
         type=int,
@@ -364,7 +371,7 @@ def get_parser():
     parser.add_argument("--seed", type=int, default=0, help="Random seed")
     parser.add_argument(
         "--dtype",
-        default="float16",
+        default="float32",
         choices=["float16", "float32", "float64"],
         help="Data type",
     )
@@ -490,51 +497,98 @@ class SplitWavAudioMubin():
     def make_scp_file(self):
         with open(os.path.join(self.folder, 'wav.scp'), 'w+') as f:
             f.writelines(self.scp_texts)
-        
+
+    def make_split_scp_file(self, split=3):
+        div = len(self.scp_texts) // split
+
+        left, right = 0, div
+        idx = 0
+        scps = []
+        while True:
+            scp = os.path.join(self.folder, f'wav{idx}.scp')
+            with open(scp, 'w+') as f:
+                f.writelines(self.scp_texts[left:right])
+
+            scps.append(scp)
+            if right < 0 or split == 1: break
+
+            left = right
+            if right + div < len(self.scp_texts):
+                right += div
+            else:
+                right = -1
+            idx += 1
+        return scps
 
 def change_sampling_rate(file, resample_sr=16000):
-    data, sr = librosa.load(file, sr=48000)
-    resample = librosa.resample(data, sr, resample_sr)
-    
-    sf.write('./download/sample/bert.wav', resample, resample_sr, format='WAV')
+    filename = file.split('/')[-1].split('.')[0]
 
+    if not os.path.exists(f'./download/{filename}/{filename}.wav'):    
+        data, sr = librosa.load(file, sr=48000)
+        resample = librosa.resample(data, sr, resample_sr)
+
+        os.makedirs(f'./download/{filename}', exist_ok=True)
+        sf.write(f'./download/{filename}/{filename}.wav', resample, resample_sr, format='WAV')
+    return filename
 
 if __name__ == '__main__':
-    # change_sampling_rate('./BERT.wav')
-
     start_time = time.time()
+    cfg = OmegaConf.load('./decode_conf.yaml')
 
-    folder = './download/bert'
-    file = 'bert.wav'
+
+    filename = change_sampling_rate('./bert.wav')
+
+    folder = f'./download/{filename}'
+    file = f'{filename}.wav'
     split_wav = SplitWavAudioMubin(folder, file)
-    split_wav.multiple_split(min_per_split=0.25)
-    split_wav.make_scp_file()
+    split_wav.multiple_split(min_per_split=0.5)
 
-    print('decoding')
+    # split_wav.make_scp_file()
+    print(f'num process : {cfg.num_process}')
+    scps = split_wav.make_split_scp_file(split=cfg.num_process)
     
     parser = get_parser()
     args = parser.parse_args()
-    cfg = OmegaConf.load('./decode_conf.yaml')
     
     d = ModelDownloader('.cache/espnet')
     o = d.download_and_unpack(cfg.mdl)
     args.config = cfg.config
     args.ngpu = cfg.ngpu
     args.batch_size = cfg.batch_size
+    args.output_dir = f'./output/{filename}'
 
     kwargs = vars(args)
     kwargs.update(o)
-    kwargs.update({
-        'data_path_and_name_and_type': [(cfg.wav_scp, 'speech',
-                                                    'sound')]
-    })
-
+    
     del args.mdl_file
     del args.wav_scp
-
     kwargs.pop('config', None)
 
-    
-    inference(**kwargs)
-    print(time.time() - start_time)
-    
+    output_dir = args.output_dir
+    if len(scps) > 1:
+        processes = []
+        for i, scp in enumerate(scps):
+            kwargs.update({
+                'data_path_and_name_and_type': [(scp, 'speech', 'sound')],
+                'output_dir': output_dir + f'{i}'
+            })
+            process = Process(
+                target=inference,
+                kwargs=kwargs
+            )
+
+            process.start()
+            processes.append(process)
+
+        for process in processes:
+            process.join()
+    else:
+        kwargs.update({
+                'data_path_and_name_and_type': [(scps[0], 'speech', 'sound')],
+                'output_dir': args.output_dir
+            })
+        inference(**kwargs)
+
+    print("-"*50)
+    print(f"\n\nend(sec) : {time.time()-start_time:.2f}")
+    print("-"*50)
