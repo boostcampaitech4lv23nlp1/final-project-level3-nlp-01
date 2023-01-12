@@ -1,0 +1,1697 @@
+{
+    "dataSet": {
+        "version": "1.0",
+        "date": null,
+        "typeInfo": {
+            "category": "국어",
+            "subcategory": "초등2",
+            "place": "studio",
+            "speakers": [
+                {
+                    "id": "1",
+                    "age": "None",
+                    "gender": "여",
+                    "residence": null
+                }
+            ],
+            "inputType": "broadcast"
+        },
+        "dialogs": [
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000000.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000000.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000001.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000001.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000002.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000002.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000003.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000003.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000004.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000004.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000005.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000005.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000006.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000006.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000007.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000007.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000008.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000008.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000009.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000009.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000010.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000010.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000011.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000011.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000012.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000012.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000013.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000013.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000014.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000014.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000015.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000015.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000016.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000016.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000017.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000017.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000018.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000018.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000019.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000019.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000020.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000020.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000021.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000021.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000022.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000022.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000023.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000023.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000024.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000024.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000025.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000025.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000026.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000026.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000027.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000027.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000028.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000028.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000029.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000029.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000030.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000030.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000031.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000031.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000032.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000032.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000033.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000033.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000034.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000034.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000035.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000035.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000036.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000036.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000037.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000037.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000038.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000038.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000039.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000039.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000040.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000040.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000041.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000041.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000042.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000042.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000043.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000043.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000044.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000044.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000045.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000045.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000046.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000046.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000047.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000047.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000048.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000048.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000049.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000049.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000050.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000050.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000051.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000051.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000052.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000052.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000053.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000053.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000054.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000054.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000055.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000055.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000056.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000056.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000057.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000057.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000058.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000058.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000059.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000059.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000060.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000060.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000061.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000061.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000062.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000062.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000063.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000063.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000064.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000064.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000065.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000065.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000066.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000066.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000067.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000067.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000068.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000068.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000069.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000069.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000070.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000070.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000071.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000071.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000072.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000072.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000073.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000073.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000074.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000074.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000075.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000075.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000076.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000076.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000077.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000077.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000078.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000078.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000079.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000079.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000080.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000080.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000081.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000081.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000082.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000082.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000083.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000083.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000084.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000084.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000085.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000085.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000086.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000086.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000087.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000087.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000088.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000088.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000089.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000089.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000090.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000090.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000091.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000091.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000092.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000092.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000093.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000093.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000094.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000094.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000095.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000095.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000096.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000096.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000097.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000097.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000098.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000098.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000099.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000099.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000100.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000100.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000101.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000101.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000102.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000102.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000103.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000103.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000104.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000104.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000105.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000105.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000106.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000106.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000107.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000107.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000108.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000108.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000109.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000109.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000110.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000110.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000111.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000111.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000112.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000112.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000113.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000113.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000114.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000114.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000115.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000115.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000116.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000116.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000117.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000117.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000118.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000118.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000119.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000119.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000120.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000120.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000121.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000121.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000122.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000122.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000123.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000123.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000124.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000124.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000125.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000125.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000126.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000126.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000127.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000127.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000128.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000128.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000129.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000129.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000130.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000130.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000131.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000131.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000132.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000132.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000133.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000133.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000134.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000134.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000135.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000135.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000136.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000136.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000137.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000137.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000138.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000138.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000139.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000139.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000140.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000140.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000141.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000141.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000142.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000142.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000143.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000143.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000144.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000144.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000145.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000145.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000146.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000146.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000147.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000147.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000148.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000148.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000149.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000149.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000150.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000150.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000151.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000151.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000152.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000152.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000153.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000153.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000154.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000154.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000155.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000155.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000156.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000156.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000157.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000157.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000158.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000158.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000159.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000159.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000160.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000160.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000161.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000161.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000162.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000162.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000163.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000163.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000164.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000164.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000165.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000165.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000166.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000166.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000167.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000167.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000168.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000168.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000169.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000169.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000170.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000170.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000171.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000171.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000172.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000172.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000173.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000173.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000174.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000174.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000175.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000175.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000176.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000176.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000177.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000177.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000178.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000178.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000179.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000179.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000180.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000180.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000181.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000181.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000182.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000182.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000183.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000183.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000184.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000184.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000185.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000185.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000186.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000186.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000187.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000187.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000188.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000188.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000189.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000189.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000190.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000190.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000191.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000191.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000192.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000192.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000193.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000193.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000194.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000194.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000195.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000195.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000196.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000196.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000197.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000197.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000198.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000198.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000199.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000199.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000200.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000200.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000201.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000201.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000202.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000202.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000203.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000203.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000204.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000204.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000205.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000205.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000206.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000206.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000207.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000207.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000208.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000208.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000209.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000209.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000210.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000210.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000211.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000211.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000212.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000212.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000213.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000213.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000214.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000214.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000215.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000215.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000216.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000216.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000217.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000217.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000218.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000218.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000219.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000219.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000220.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000220.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000221.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000221.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000222.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000222.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000223.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000223.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000224.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000224.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000225.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000225.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000226.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000226.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000227.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000227.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000228.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000228.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000229.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000229.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000230.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000230.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000231.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000231.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000232.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000232.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000233.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000233.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000234.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000234.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000235.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000235.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000236.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000236.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000237.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000237.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000238.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000238.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000239.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000239.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000240.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000240.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000241.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000241.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000242.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000242.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000243.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000243.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000244.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000244.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000245.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000245.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000246.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000246.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000247.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000247.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000248.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000248.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000249.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000249.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000250.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000250.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000251.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000251.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000252.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000252.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000253.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000253.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000254.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000254.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000255.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000255.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000256.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000256.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000257.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000257.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000258.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000258.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000259.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000259.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000260.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000260.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000261.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000261.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000262.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000262.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000263.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000263.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000264.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000264.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000265.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000265.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000266.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000266.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000267.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000267.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000268.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000268.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000269.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000269.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000270.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000270.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000271.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000271.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000272.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000272.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000273.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000273.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000274.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000274.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000275.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000275.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000276.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000276.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000277.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000277.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000278.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000278.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000279.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000279.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000280.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000280.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000281.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000281.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000282.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000282.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000283.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000283.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000284.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000284.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000285.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000285.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000286.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000286.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000287.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000287.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000288.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000288.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000289.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000289.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000290.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000290.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000291.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000291.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000292.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000292.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000293.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000293.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000294.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000294.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000295.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000295.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000296.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000296.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000297.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000297.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000298.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000298.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000299.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000299.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000300.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000300.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000301.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000301.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000302.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000302.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000303.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000303.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000304.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000304.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000305.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000305.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000306.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000306.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000307.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000307.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000308.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000308.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000309.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000309.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000311.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000311.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000312.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000312.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000313.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000313.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000314.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000314.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000315.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000315.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000316.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000316.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000317.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000317.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000318.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000318.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000319.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000319.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000320.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000320.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000321.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000321.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000322.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000322.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000323.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000323.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000324.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000324.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000325.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000325.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000326.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000326.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000327.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000327.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000328.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000328.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000329.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000329.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000330.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000330.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000331.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000331.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000332.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000332.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000333.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000333.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000334.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000334.txt"
+            },
+            {
+                "speaker": "1",
+                "audioPath": "KlecSpeech/D01/E02/S000001/000335.wav",
+                "textPath": "KlecSpeech/D01/E02/S000001/000335.txt"
+            }
+        ]
+    }
+}
