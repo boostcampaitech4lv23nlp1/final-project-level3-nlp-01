@@ -35,8 +35,9 @@ from typing import Optional, Sequence, Tuple, Union, List
 from speech2text import Speech2Text
 from inference import inference
 
-warnings.filterwarnings(action='ignore', category=UserWarning)
 
+IGNORE_FOLDERS = ['.DS_Store']
+warnings.filterwarnings(action='ignore', category=UserWarning)
 
 class SplitWavAudioMubin():
     def __init__(self, 
@@ -132,7 +133,7 @@ class SplitWavAudioMubin():
             f.writelines(self.scp_texts)
 
     def make_split_scp_file(self, split=4):
-        div = len(self.scp_texts) // split
+        div = math.ceil(len(self.scp_texts) / split)
 
         left, right = 0, div
         idx = 0
@@ -141,7 +142,10 @@ class SplitWavAudioMubin():
             scp = os.path.join(self.folder, f'wav{idx}.scp')
             if len(self.scp_texts[left:right]) > 0:
                 with open(scp, 'w+') as f:
-                    f.writelines(self.scp_texts[left:right])
+                    f.writelines(
+                        self.scp_texts[left:right] 
+                        if right >= 0 else self.scp_texts[left:]
+                    )
                 scps.append(scp)
             
             if right < 0 or split == 1: break
@@ -229,6 +233,7 @@ def main():
     print(f"\n\nend(sec) : {time.time()-start_time:.2f}")
     print("-"*50)
 
+
 def dev():
     start_time = time.time()
     cfg = OmegaConf.load('./decode_conf.yaml')
@@ -240,18 +245,19 @@ def dev():
     )
 
     all_scps = []
-    for e in os.listdir(data_path):
-        for s in os.listdir(os.path.join(data_path, e)):
-            folder_path = os.path.join(data_path, e, s)                                                    # folder
-            file_paths = sorted([os.path.join(folder_path, file) for file in os.listdir(folder_path)])     # files
+    for domain in [t for t in os.listdir(data_path) if t not in IGNORE_FOLDERS]:
+        for subdomain in [t for t in os.listdir(os.path.join(data_path, domain)) if t not in IGNORE_FOLDERS]:      
+            for directory in [t for t in os.listdir(os.path.join(data_path, domain, subdomain)) if t not in IGNORE_FOLDERS]:
+                folder_path = os.path.join(data_path, domain, subdomain, directory)                            # folder
+                file_paths = sorted([os.path.join(folder_path, file) for file in os.listdir(folder_path) if file.split('.')[1] == 'wav'])     # files
 
-            split_wav.scp_texts.clear()
-            for file_path in file_paths:
-                name = file_path.split('/')[-1][:-4]
-                split_wav.scp_texts.append(" ".join([name, file_path]) + '\n')
-            
-            split_wav.folder = folder_path
-            all_scps.append(split_wav.make_split_scp_file(split=cfg.num_process))
+                split_wav.scp_texts.clear()
+                for file_path in file_paths:
+                    name = file_path.split('/')[-1][:-4]
+                    split_wav.scp_texts.append(" ".join([name, file_path]) + '\n')
+                
+                split_wav.folder = folder_path
+                all_scps.append(split_wav.make_split_scp_file(split=cfg.num_process))
 
     parser = get_parser()
     args = parser.parse_args()
@@ -300,30 +306,45 @@ def dev():
     print("-"*50)
 
 def make_new_dataset(output_file_paths: str, labeled_file_paths: str):
-    
     # 1. create dictionary and add labeled data
     output = defaultdict(list)
     folder = labeled_file_paths[0].split('/')[-2]
     for labeled_file_path in labeled_file_paths:
         idx = labeled_file_path.split('/')[-1].split('.')[0]
         extension = labeled_file_path.split('/')[-1].split('.')[1]
+
+        domain = labeled_file_path.split('/')[-4]
+        subdomain = labeled_file_path.split('/')[-3]
         if extension == 'txt':
             with open(labeled_file_path, 'r+') as f:
                 line = f.readline().strip()
-
+            
+            # step 1. choose best word
             for match in set(re.findall(r'\([^)]*\)[/]\([^)]*\)', line)):
                 repl = match.split('/')[0][1:-1]
                 line = line.replace(match, repl)
-            output[folder+'_'+idx].append(line)
+            
+            # step 2. change '[kr]/' -> [kr] 
+            for match in set(re.findall(r'[가-힣][/]', line)):
+                repl = match[:-1]
+                line = line.replace(match, repl)
+
+            # step 3. change '[en]/' -> ''
+            for match in set(re.findall(r'[a-z][/]', line)):
+                repl = ''
+                line = line.replace(match, repl)
+
+            output[domain+'-'+subdomain+'-'+folder+'-'+idx].append(line)
 
     # 2. add output data in dictionary
     for output_file_path in output_file_paths:
+        domain, subdomain = output_file_path.split('/')[3:5]
         with open(output_file_path, 'r+') as f:
             lines = f.readlines()
         for line in lines:
             line_split = line.split(' ') 
             idx, line = line_split[0], " ".join(line_split[1:])
-            output[folder+'_'+idx].append(line)
+            output[domain+'-'+subdomain+'-'+folder+'-'+idx].append(line)
     
     # 3. add null values
     for key, value in output.items():
@@ -339,24 +360,25 @@ def dataset():
     output_path = os.path.join('output', 'validation', 'raw_data')
 
     dfs = pd.DataFrame({'label': [], 'output': []})
-    for e in os.listdir(output_path):
-        for s in os.listdir(os.path.join(output_path, e)):
-            output_folder_path = os.path.join(output_path, e, s)
-            output_file_paths = sorted([
-                os.path.join(output_folder_path, file, '1best_recog', 'text')
-                for file in os.listdir(output_folder_path)
-            ])
+    for domain in os.listdir(output_path):
+        for subdomain in os.listdir(os.path.join(output_path, domain)):
+            for directory in os.listdir(os.path.join(output_path, domain, subdomain)):
+                output_folder_path = os.path.join(output_path, domain, subdomain, directory)
+                output_file_paths = sorted([
+                    os.path.join(output_folder_path, file, '1best_recog', 'text')
+                    for file in os.listdir(output_folder_path)
+                ])
 
-            labeled_folder_path = os.path.join(data_path, e, s)
-            labeled_file_paths = sorted([
-                os.path.join(labeled_folder_path, file)
-                for file in os.listdir(labeled_folder_path)
-            ])
-            df = make_new_dataset(output_file_paths, labeled_file_paths)
-            dfs = pd.concat([dfs, df])
+                labeled_folder_path = os.path.join(data_path, domain, subdomain, directory)
+                labeled_file_paths = sorted([
+                    os.path.join(labeled_folder_path, file)
+                    for file in os.listdir(labeled_folder_path)
+                ])
+                df = make_new_dataset(output_file_paths, labeled_file_paths)
+                dfs = pd.concat([dfs, df])
     dfs.to_csv('./dataset.csv')
 
 if __name__ == '__main__':
     # main()
-    dev()
+    # dev()
     dataset()
