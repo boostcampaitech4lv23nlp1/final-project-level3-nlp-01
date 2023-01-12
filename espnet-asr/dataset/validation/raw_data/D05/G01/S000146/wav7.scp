@@ -20,7 +20,3 @@
 000201 dataset/validation/raw_data/D05/G01/S000146/000201.wav
 000202 dataset/validation/raw_data/D05/G01/S000146/000202.wav
 000203 dataset/validation/raw_data/D05/G01/S000146/000203.wav
-wav0 dataset/validation/raw_data/D05/G01/S000146/wav0.scp
-wav1 dataset/validation/raw_data/D05/G01/S000146/wav1.scp
-wav2 dataset/validation/raw_data/D05/G01/S000146/wav2.scp
-wav3 dataset/validation/raw_data/D05/G01/S000146/wav3.scp
