@@ -39,7 +39,7 @@ from inference import inference
 
 IGNORE_FOLDERS = ['.DS_Store']
 warnings.filterwarnings(action='ignore', category=UserWarning)
-warnings.filterwarnings(action='ignore', category=FutureWarning)
+# warnings.filterwarnings(action='ignore', category=FutureWarning)
 
 class SplitWavAudioMubin():
     def __init__(self, 
@@ -214,7 +214,7 @@ def main():
         processes = []
         for i, scp in enumerate(scps):
             kwargs.update({
-                'label_path_and_name_and_type': [(scp, 'speech', 'sound')],
+                'data_path_and_name_and_type': [(scp, 'speech', 'sound')],
                 'output_dir': output_dir + f'{i}'
             })
             process = Process(
@@ -229,7 +229,7 @@ def main():
             process.join()
     else:
         kwargs.update({
-                'label_path_and_name_and_type': [(scps[0], 'speech', 'sound')],
+                'data_path_and_name_and_type': [(scps[0], 'speech', 'sound')],
                 'output_dir': args.output_dir
             })
         inference(**kwargs)
@@ -269,7 +269,7 @@ def dev():
                     file_paths = sorted([os.path.join(folder_path, file) for file in os.listdir(folder_path) if file.split('.')[1] == 'wav'])     # files
 
                     # resampling wav files (? -> 16000)
-                    file_paths = change_sampling_rate_file_paths(file_paths)
+                    # file_paths = change_sampling_rate_file_paths(file_paths)
 
                     split_wav.scp_texts.clear()
                     for file_path in file_paths:
@@ -307,7 +307,7 @@ def dev():
                     'output', *scp_split[1:-1], scp_split[-2]
                 )
                 kwargs.update({
-                    'label_path_and_name_and_type': [(scp, 'speech', 'sound')],
+                    'data_path_and_name_and_type': [(scp, 'speech', 'sound')],
                     'output_dir': output_dir + f'_{i}'
                 })
                 process = Process(
@@ -317,6 +317,7 @@ def dev():
 
                 process.start()
                 processes.append(process)
+                time.sleep(0.1)     # sleep
             
             for process in processes:
                 process.join()
@@ -409,5 +410,5 @@ def dataset():
 
 if __name__ == '__main__':
     # main()
-    # dev()
+    dev()
     dataset()
