@@ -12,9 +12,10 @@ import shutil
 import warnings
 import re
 
+
 from collections import defaultdict
 from pydub import AudioSegment, silence
-
+from tqdm import tqdm
 from omegaconf import OmegaConf
 from typing import List
 from multiprocessing import Process, Queue
@@ -38,6 +39,7 @@ from inference import inference
 
 IGNORE_FOLDERS = ['.DS_Store']
 warnings.filterwarnings(action='ignore', category=UserWarning)
+warnings.filterwarnings(action='ignore', category=FutureWarning)
 
 class SplitWavAudioMubin():
     def __init__(self, 
@@ -212,7 +214,7 @@ def main():
         processes = []
         for i, scp in enumerate(scps):
             kwargs.update({
-                'data_path_and_name_and_type': [(scp, 'speech', 'sound')],
+                'label_path_and_name_and_type': [(scp, 'speech', 'sound')],
                 'output_dir': output_dir + f'{i}'
             })
             process = Process(
@@ -227,7 +229,7 @@ def main():
             process.join()
     else:
         kwargs.update({
-                'data_path_and_name_and_type': [(scps[0], 'speech', 'sound')],
+                'label_path_and_name_and_type': [(scps[0], 'speech', 'sound')],
                 'output_dir': args.output_dir
             })
         inference(**kwargs)
@@ -245,28 +247,28 @@ def change_sampling_rate_file_paths(file_paths, resampling_sr=16000):
             sf.write(file_path, resample, resampling_sr, format='WAV')
             no_error_file_paths.append(file_path)
         except EOFError as e:
-            pass
+            print(f"error occurred - {file_path}")
     return no_error_file_paths
 
 def dev():
     start_time = time.time()
     cfg = OmegaConf.load('./decode_conf.yaml')
 
-    data_path = os.path.join('dataset', 'train', 'raw_data')
+    label_path = os.path.join('dataset', 'train', 'raw_data')
     split_wav = SplitWavAudioMubin(
         folder=None,
         filename=None
     )
 
     all_scps = []
-    for idx in [t for t in os.listdir(data_path) if t not in IGNORE_FOLDERS]:
-        for domain in [t for t in os.listdir(os.path.join(data_path, idx)) if t not in IGNORE_FOLDERS]:
-            for subdomain in [t for t in os.listdir(os.path.join(data_path, idx, domain)) if t not in IGNORE_FOLDERS]:      
-                for directory in [t for t in os.listdir(os.path.join(data_path, idx, domain, subdomain)) if t not in IGNORE_FOLDERS]:
-                    folder_path = os.path.join(data_path, idx, domain, subdomain, directory)                            # folder
+    for idx in [t for t in os.listdir(label_path) if t not in IGNORE_FOLDERS]:
+        for domain in [t for t in os.listdir(os.path.join(label_path, idx)) if t not in IGNORE_FOLDERS]:
+            for subdomain in [t for t in os.listdir(os.path.join(label_path, idx, domain)) if t not in IGNORE_FOLDERS]:      
+                for directory in tqdm(tl:=[t for t in os.listdir(os.path.join(label_path, idx, domain, subdomain)) if t not in IGNORE_FOLDERS], desc=subdomain, total=len(tl)):
+                    folder_path = os.path.join(label_path, idx, domain, subdomain, directory)                            # folder
                     file_paths = sorted([os.path.join(folder_path, file) for file in os.listdir(folder_path) if file.split('.')[1] == 'wav'])     # files
 
-                    # resampling wav files
+                    # resampling wav files (? -> 16000)
                     file_paths = change_sampling_rate_file_paths(file_paths)
 
                     split_wav.scp_texts.clear()
@@ -277,6 +279,10 @@ def dev():
                     split_wav.folder = folder_path
                     all_scps.append(split_wav.make_split_scp_file(split=cfg.num_process))
 
+                    break
+                break
+            break
+        break
     parser = get_parser()
     args = parser.parse_args()
 
@@ -305,7 +311,7 @@ def dev():
                     'output', *scp_split[1:-1], scp_split[-2]
                 )
                 kwargs.update({
-                    'data_path_and_name_and_type': [(scp, 'speech', 'sound')],
+                    'label_path_and_name_and_type': [(scp, 'speech', 'sound')],
                     'output_dir': output_dir + f'_{i}'
                 })
                 process = Process(
@@ -326,9 +332,10 @@ def dev():
 def make_new_dataset(output_file_paths: str, labeled_file_paths: str):
     # 1. create dictionary and add labeled data
     output = defaultdict(list)
-    folder = labeled_file_paths[0].split('/')[-2]
+    idx = labeled_file_paths[0].split('/')[-5]      # KlecSpeech_train_D12_label_0
+    folder = labeled_file_paths[0].split('/')[-2]   # S001007
     for labeled_file_path in labeled_file_paths:
-        idx = labeled_file_path.split('/')[-1].split('.')[0]
+        i = labeled_file_path.split('/')[-1].split('.')[0]
         extension = labeled_file_path.split('/')[-1].split('.')[1]
 
         domain = labeled_file_path.split('/')[-4]
@@ -351,18 +358,22 @@ def make_new_dataset(output_file_paths: str, labeled_file_paths: str):
             for match in set(re.findall(r'[a-z][/]', line)):
                 repl = ''
                 line = line.replace(match, repl)
-
-            output[domain+'-'+subdomain+'-'+folder+'-'+idx].append(line)
+            
+            # key : KlecSpeech_train_D12_label_0-D12-G02-S001007-000625
+            key = idx + '-' + domain + '-' + subdomain + '-' + folder + '-' + i
+            output[key].append(line)
 
     # 2. add output data in dictionary
     for output_file_path in output_file_paths:
-        domain, subdomain = output_file_path.split('/')[3:5]
+        _, domain, subdomain = output_file_path.split('/')[3:6]
         with open(output_file_path, 'r+') as f:
             lines = f.readlines()
         for line in lines:
             line_split = line.split(' ') 
-            idx, line = line_split[0], " ".join(line_split[1:])
-            output[domain+'-'+subdomain+'-'+folder+'-'+idx].append(line)
+            i, line = line_split[0], " ".join(line_split[1:])
+
+            key = idx + '-' + domain + '-' + subdomain + '-' + folder + '-' + i
+            output[key].append(line.strip())
     
     # 3. add null values
     for key, value in output.items():
@@ -374,29 +385,33 @@ def make_new_dataset(output_file_paths: str, labeled_file_paths: str):
 
 
 def dataset():
-    data_path = os.path.join('dataset', 'validation', 'labeled_data')
-    output_path = os.path.join('output', 'validation', 'raw_data')
+    label_path = os.path.join('dataset', 'train', 'labeled_data')
+    output_path = os.path.join('output', 'train', 'raw_data')
 
     dfs = pd.DataFrame({'label': [], 'output': []})
-    for domain in os.listdir(output_path):
-        for subdomain in os.listdir(os.path.join(output_path, domain)):
-            for directory in os.listdir(os.path.join(output_path, domain, subdomain)):
-                output_folder_path = os.path.join(output_path, domain, subdomain, directory)
-                output_file_paths = sorted([
-                    os.path.join(output_folder_path, file, '1best_recog', 'text')
-                    for file in os.listdir(output_folder_path)
-                ])
+    for idx in os.listdir(output_path):
+        for domain in os.listdir(os.path.join(output_path, idx)):
+            for subdomain in os.listdir(os.path.join(output_path, idx, domain)):
+                for directory in os.listdir(os.path.join(output_path, idx, domain, subdomain)):
+                    output_folder_path = os.path.join(output_path, idx, domain, subdomain, directory)
+                    output_file_paths = sorted([
+                        os.path.join(output_folder_path, file, '1best_recog', 'text')
+                        for file in os.listdir(output_folder_path)
+                    ])
 
-                labeled_folder_path = os.path.join(data_path, domain, subdomain, directory)
-                labeled_file_paths = sorted([
-                    os.path.join(labeled_folder_path, file)
-                    for file in os.listdir(labeled_folder_path)
-                ])
-                df = make_new_dataset(output_file_paths, labeled_file_paths)
-                dfs = pd.concat([dfs, df])
+                    labeled_idx = idx.split('_')
+                    labeled_idx[-2] = 'label'
+                    labeled_idx = "_".join(labeled_idx)
+                    labeled_folder_path = os.path.join(label_path, labeled_idx ,domain, subdomain, directory)
+                    labeled_file_paths = sorted([
+                        os.path.join(labeled_folder_path, file)
+                        for file in os.listdir(labeled_folder_path)
+                    ])
+                    df = make_new_dataset(output_file_paths, labeled_file_paths)
+                    dfs = pd.concat([dfs, df])
     dfs.to_csv('./dataset.csv')
 
 if __name__ == '__main__':
     # main()
-    dev()
-    # dataset()
+    # dev()
+    dataset()
