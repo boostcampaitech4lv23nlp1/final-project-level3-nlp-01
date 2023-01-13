@@ -279,10 +279,6 @@ def dev():
                     split_wav.folder = folder_path
                     all_scps.append(split_wav.make_split_scp_file(split=cfg.num_process))
 
-                    break
-                break
-            break
-        break
     parser = get_parser()
     args = parser.parse_args()
 
