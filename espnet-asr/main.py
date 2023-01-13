@@ -312,7 +312,6 @@ def dev():
                     target=inference,
                     kwargs=kwargs
                 )
-                inference(**kwargs)
 
                 process.start()
                 processes.append(process)
