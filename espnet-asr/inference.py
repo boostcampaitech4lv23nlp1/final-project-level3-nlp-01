@@ -128,5 +128,7 @@ def inference(
 
                     if text is not None:
                         ibest_writer["text"][key] = text
-        except soundfile.LibsndfileError as libsndfileerror:
-            print("error occurred : ", libsndfileerror)
+        except TypeError as typeerror:
+                print("error occurred : ", typeerror)
+        except BaseException as e:
+                print("error occurred : ", e)

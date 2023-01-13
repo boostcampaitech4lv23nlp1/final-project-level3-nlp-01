@@ -158,22 +158,25 @@ class SplitWavAudioMubin():
             idx += 1
         return scps
 
-def change_sampling_rate(file, resample_sr=16000):
-    filename = file.split('/')[-1].split('.')[0]
+
+# not splited wav file
+def change_sampling_rate_file_path(file_path, resample_sr=16000):
+    filename = file_path.split('/')[-1].split('.')[0]
 
     if not os.path.exists(f'./download/{filename}/{filename}.wav'):    
-        data, sr = librosa.load(file, sr=48000)
+        data, sr = librosa.load(file_path, sr=48000)
         resample = librosa.resample(data, sr, resample_sr)
 
         os.makedirs(f'./download/{filename}', exist_ok=True)
         sf.write(f'./download/{filename}/{filename}.wav', resample, resample_sr, format='WAV')
     return filename
 
+
 def main():
     start_time = time.time()
     cfg = OmegaConf.load('./decode_conf.yaml')
 
-    filename = change_sampling_rate('./bert.wav')
+    filename = change_sampling_rate_file_path('./bert.wav')
     folder = f'./download/{filename}'
     file = f'{filename}.wav'
     
@@ -233,31 +236,46 @@ def main():
     print(f"\n\nend(sec) : {time.time()-start_time:.2f}")
     print("-"*50)
 
+def change_sampling_rate_file_paths(file_paths, resampling_sr=16000):
+    no_error_file_paths = []
+    for file_path in file_paths:
+        try:
+            data, sr = librosa.load(file_path)
+            resample = librosa.resample(data, sr, resampling_sr)
+            sf.write(file_path, resample, resampling_sr, format='WAV')
+            no_error_file_paths.append(file_path)
+        except EOFError as e:
+            pass
+    return no_error_file_paths
 
 def dev():
     start_time = time.time()
     cfg = OmegaConf.load('./decode_conf.yaml')
 
-    data_path = os.path.join('dataset', 'validation', 'raw_data')
+    data_path = os.path.join('dataset', 'train', 'raw_data')
     split_wav = SplitWavAudioMubin(
         folder=None,
         filename=None
     )
 
     all_scps = []
-    for domain in [t for t in os.listdir(data_path) if t not in IGNORE_FOLDERS]:
-        for subdomain in [t for t in os.listdir(os.path.join(data_path, domain)) if t not in IGNORE_FOLDERS]:      
-            for directory in [t for t in os.listdir(os.path.join(data_path, domain, subdomain)) if t not in IGNORE_FOLDERS]:
-                folder_path = os.path.join(data_path, domain, subdomain, directory)                            # folder
-                file_paths = sorted([os.path.join(folder_path, file) for file in os.listdir(folder_path) if file.split('.')[1] == 'wav'])     # files
+    for idx in [t for t in os.listdir(data_path) if t not in IGNORE_FOLDERS]:
+        for domain in [t for t in os.listdir(os.path.join(data_path, idx)) if t not in IGNORE_FOLDERS]:
+            for subdomain in [t for t in os.listdir(os.path.join(data_path, idx, domain)) if t not in IGNORE_FOLDERS]:      
+                for directory in [t for t in os.listdir(os.path.join(data_path, idx, domain, subdomain)) if t not in IGNORE_FOLDERS]:
+                    folder_path = os.path.join(data_path, idx, domain, subdomain, directory)                            # folder
+                    file_paths = sorted([os.path.join(folder_path, file) for file in os.listdir(folder_path) if file.split('.')[1] == 'wav'])     # files
 
-                split_wav.scp_texts.clear()
-                for file_path in file_paths:
-                    name = file_path.split('/')[-1][:-4]
-                    split_wav.scp_texts.append(" ".join([name, file_path]) + '\n')
-                
-                split_wav.folder = folder_path
-                all_scps.append(split_wav.make_split_scp_file(split=cfg.num_process))
+                    # resampling wav files
+                    file_paths = change_sampling_rate_file_paths(file_paths)
+
+                    split_wav.scp_texts.clear()
+                    for file_path in file_paths:
+                        name = file_path.split('/')[-1][:-4]
+                        split_wav.scp_texts.append(" ".join([name, file_path]) + '\n')
+                    
+                    split_wav.folder = folder_path
+                    all_scps.append(split_wav.make_split_scp_file(split=cfg.num_process))
 
     parser = get_parser()
     args = parser.parse_args()
@@ -294,6 +312,7 @@ def dev():
                     target=inference,
                     kwargs=kwargs
                 )
+                inference(**kwargs)
 
                 process.start()
                 processes.append(process)
@@ -380,5 +399,5 @@ def dataset():
 
 if __name__ == '__main__':
     # main()
-    # dev()
-    dataset()
+    dev()
+    # dataset()
