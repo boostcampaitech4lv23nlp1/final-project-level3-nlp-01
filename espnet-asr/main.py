@@ -176,11 +176,11 @@ def change_sampling_rate_file_path(file_path, resample_sr=16000):
     return filename
 
 
-def main():
+def main(filepath):
     start_time = time.time()
     cfg = OmegaConf.load('./decode_conf.yaml')
 
-    filename = change_sampling_rate_file_path('./bert.wav')
+    filename = change_sampling_rate_file_path(filepath)
     folder = f'./download/{filename}'
     file = f'{filename}.wav'
     
@@ -460,7 +460,7 @@ def test():
     pass
 
 if __name__ == '__main__':
-    # main()
+    main(filepath='./bert.wav')
     # dev()
-    dataset()
+    # dataset()
     # test()
