@@ -32,6 +32,8 @@ from espnet_model_zoo.downloader import ModelDownloader
 from torch.cuda.amp import autocast
 from arguments import get_parser
 from typing import Optional, Sequence, Tuple, Union, List
+from hanspell import spell_checker
+
 
 from speech2text import Speech2Text
 from inference import inference
@@ -331,34 +333,76 @@ def make_new_dataset(output_file_paths: str, labeled_file_paths: str):
     output = defaultdict(list)
     idx = labeled_file_paths[0].split('/')[-5]      # KlecSpeech_train_D12_label_0
     folder = labeled_file_paths[0].split('/')[-2]   # S001007
+    print(labeled_file_paths)
+    print('\n\n')
     for labeled_file_path in labeled_file_paths:
         i = labeled_file_path.split('/')[-1].split('.')[0]
         extension = labeled_file_path.split('/')[-1].split('.')[1]
 
         domain = labeled_file_path.split('/')[-4]
         subdomain = labeled_file_path.split('/')[-3]
+
+        # json 파일 제외
         if extension == 'txt':
             with open(labeled_file_path, 'r+') as f:
                 line = f.readline().strip()
-            
-            # step 1. choose best word
-            for match in set(re.findall(r'\([^)]*\)[/]\([^)]*\)', line)):
+
+            # step  (그러니까)/(긍게*) 짧으니까 쓰기가 쉽죠.
+            for match in set(re.findall(r'\([^)]*\)[\s]*[/][\s]*\([^)]*\)', line)):
                 repl = match.split('/')[0][1:-1]
                 line = line.replace(match, repl)
             
-            # step 2. change '[kr]/' -> [kr] 
+            # step 이 작품이 쓰여진 건 (60)/)육십) 년대 와서야 이루어졌습니다. 왜냐하면 전쟁 때는,
+            for match in set(re.findall(r'\([^)]*\).*\)', line)):
+                repl = re.findall(r'\([^)]*\)', match)[0][1:-1]
+                line = line.replace(match, repl)
+            
+            # step  (그러니까)(긍게*) 짧으니까 쓰기가 쉽죠.
+            for match in set(re.findall(r'\([^)]*\)[^)]*\)', line)):
+                repl = re.findall(r'\([a-zA-Z가-힣]+\)', line)[0][1:-1]
+                line = line.replace(match, repl)
+            
+            # step . change '[kr]/' -> [kr] 
             for match in set(re.findall(r'[가-힣][/]', line)):
                 repl = match[:-1]
                 line = line.replace(match, repl)
 
-            # step 3. change '[en]/' -> ''
-            for match in set(re.findall(r'[a-z][/]', line)):
+            # step . change '[en]/' -> ''
+            for match in set(re.findall(r'[a-zA-Z][/]', line)):
                 repl = ''
                 line = line.replace(match, repl)
+
+            # step . change '[kr, en]+' -> ''
+            for match in set(re.findall(r'[a-zA-Z가-힣]{1}[+]\s', line)):
+                repl = ''
+                line = line.replace(match, repl)
+
+            # step . change '[kr, en]*' -> ''
+            repl = ''
+            line = line.replace('*', repl)
+
+            # step 4. @/ -> ''
+            line = re.sub(r'[@][/]', '', line)
             
+            # step 4. /, ／ -> ''
+            line = line.replace('/', '')
+            line = line.replace('／', '')
+            
+            # step 7. '  ' -> ' '
+            repl = ''
+            line = line.replace('  ', ' ')
+
+            # step 8. '+' -> ' '
+            repl = ' '
+            line = line.replace('+', ' ')
+            line = line.replace('＋', ' ')
+
+            # step
+            line = line.replace('ｌ', '')
+
             # key : KlecSpeech_train_D12_label_0-D12-G02-S001007-000625
             key = idx + '-' + domain + '-' + subdomain + '-' + folder + '-' + i
-            output[key].append(line)
+            output[key].append(line.strip())
 
     # 2. add output data in dictionary
     for output_file_path in output_file_paths:
@@ -386,10 +430,11 @@ def dataset():
     output_path = os.path.join('output', 'train', 'raw_data')
 
     dfs = pd.DataFrame({'label': [], 'output': []})
-    for idx in os.listdir(output_path):
-        for domain in os.listdir(os.path.join(output_path, idx)):
-            for subdomain in os.listdir(os.path.join(output_path, idx, domain)):
-                for directory in os.listdir(os.path.join(output_path, idx, domain, subdomain)):
+    for idx in sorted(os.listdir(output_path)):
+        for domain in sorted(os.listdir(os.path.join(output_path, idx))):
+            for subdomain in sorted(os.listdir(os.path.join(output_path, idx, domain))):
+                for directory in sorted(os.listdir(os.path.join(output_path, idx, domain, subdomain))):
+
                     output_folder_path = os.path.join(output_path, idx, domain, subdomain, directory)
                     output_file_paths = sorted([
                         os.path.join(output_folder_path, file, '1best_recog', 'text')
@@ -406,9 +451,16 @@ def dataset():
                     ])
                     df = make_new_dataset(output_file_paths, labeled_file_paths)
                     dfs = pd.concat([dfs, df])
-    dfs.to_csv('./dataset.csv')
+    dfs.to_csv('./dataset.csv', encoding='utf-8-sig')
+
+def test():
+    cfg = OmegaConf.load('./decode_conf.yaml')
+    d = ModelDownloader('.cache/espnet')
+    o = d.download_and_unpack(cfg.mdl)
+    pass
 
 if __name__ == '__main__':
     # main()
-    dev()
+    # dev()
     dataset()
+    # test()
