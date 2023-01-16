@@ -189,8 +189,9 @@ def dev(stage='train'):
 
 
 if __name__ == '__main__':
-    main(filepath="./김상욱 교수님의 '양자역학' 강의.wav")
-    # dev(stage='validation')
+    # main(filepath="./김상욱 교수님의 '양자역학' 강의.wav")
+    # inference_dataset("김상욱교수님의'양자역학'강의")
     
-    # aihub_dataset(stage='validation')
-    inference_dataset("김상욱교수님의'양자역학'강의")
+    
+    dev(stage='sample')     # stage : 'train', 'validation', 'sample'
+    aihub_dataset(stage='sample')
