@@ -129,15 +129,19 @@ class SplitWavAudioMubin():
             idx += 1
         return scps
 
-def change_sampling_rate_file_path(file_path, resampling_sr=16000):
-    try:
+def change_sampling_rate_file_path(
+        file_path, 
+        resampling_sr: Optional[int]=16000
+    ):
+    filename = file_path.split('/')[-1].split('.')[0].replace(' ', '')
+    new_path = os.path.join('download', filename)
+    os.makedirs(new_path, exist_ok=True)
+    
+    if resampling_sr is not None:
         data, sr = librosa.load(file_path)
         resample = librosa.resample(data, sr, resampling_sr)
-
-        filename = file_path.split('/')[-1].split('.')[0].replace(' ', '')
-        new_path = os.path.join('download', filename)
-        os.makedirs(new_path, exist_ok=True)
         sf.write(os.path.join(new_path, filename+'.wav'), resample, resampling_sr, format='WAV')
-    except EOFError as e:
-        print(f"error occurred - {file_path}")
+    else:
+        shutil.copy(file_path, os.path.join(new_path, filename+'.wav'))
+
     return filename
