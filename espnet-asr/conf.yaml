@@ -1,0 +1,19 @@
+default:
+    num_process: 1
+
+espnet:
+    mdl: mdl/ksponspeech.zip
+    config: conf/decode_asr.yaml
+    ngpu: 1
+    log_level: INFO      # ("INFO", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET")
+    dtype: float32
+    num_workers: 1
+    ctc_weight: 0.5
+    lm_weight: 1.0
+    beam_size: 10
+
+whisper:
+    model_size: 'small'
+    language: ko
+    fp16: True
+    beam_size: 10

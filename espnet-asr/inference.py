@@ -1,5 +1,6 @@
 import logging
 import soundfile
+import torch
 
 from typing import Optional, Sequence, Tuple, Union, List
 from omegaconf import OmegaConf
@@ -10,7 +11,6 @@ from typeguard import check_argument_types
 from espnet2.tasks.asr import ASRTask
 from espnet.nets.scorer_interface import BatchScorerInterface
 
-
 from espnet.utils.cli_utils import get_commandline_args
 from espnet2.fileio.datadir_writer import DatadirWriter
 from espnet2.torch_utils.set_all_random_seed import set_all_random_seed
@@ -18,10 +18,56 @@ from espnet_model_zoo.downloader import ModelDownloader
 from torch.cuda.amp import autocast
 from arguments import get_parser
 from typing import Optional, Sequence, Tuple, Union, List
-
+from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq, AutoConfig
 from speech2text import Speech2Text
 
-def inference(
+import subprocess
+import whisper
+import os
+
+def whisper_inference(
+    output_dir: str,
+    fp16: bool,
+    beam_size: int,
+    data_path_and_name_and_type: Sequence[Tuple[str, str, str]],
+    language: Optional[str],
+    model_size: str,
+) -> None:
+    print('whisper inference')
+    scp_path, _, _ = data_path_and_name_and_type[0]
+    with open(scp_path, 'r+') as f:
+        lines = f.readlines()
+
+    options = whisper.DecodingOptions(
+        language=language,
+        beam_size=beam_size,
+        fp16=fp16
+    )
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    model = whisper.load_model(model_size, device=device)
+    
+    output = []
+    for line in lines:
+        i, path = line.strip().split(' ')
+        audio = whisper.load_audio(path)
+        audio = whisper.pad_or_trim(audio)
+
+        mel = whisper.log_mel_spectrogram(audio).to(model.device)
+
+        # decode the audio
+        result = whisper.decode(model, mel, options)
+        print(result.text)
+
+        output.append(" ".join([i, result.text]) + '\n')
+    
+    # make directory
+    os.makedirs(path:=os.path.join(output_dir, '1best_recog'), exist_ok=True)
+    with open(os.path.join(path, 'text'), 'w+') as f:
+        for s in output:
+            f.write(s)
+        f.close()
+    
+def espnet_inference(
     output_dir: str,
     maxlenratio: float,
     minlenratio: float,
@@ -102,7 +148,6 @@ def inference(
     )
 
     # 7 .Start for-loop
-    # FIXME(kamo): The output format should be discussed about
     with DatadirWriter(output_dir) as writer:
         try:
             for keys, batch in loader:
@@ -132,3 +177,4 @@ def inference(
                 print("error occurred : ", typeerror)
         except BaseException as e:
                 print("error occurred : ", e)
+    return
