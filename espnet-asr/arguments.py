@@ -10,8 +10,6 @@ def get_parser():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
-    # Note(kamo): Use '_' instead of '-' as separator.
-    # '-' is confusing if written in yaml.
     parser.add_argument(
         "--log_level",
         type=lambda x: x.upper(),
