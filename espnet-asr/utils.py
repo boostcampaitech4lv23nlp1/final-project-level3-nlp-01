@@ -88,14 +88,14 @@ class SplitWavAudioMubin():
             self.count += 1
               
     
-    def multiple_silent_split(self, min_per_split):
+    def multiple_silent_split(self, min_per_split, min_silence_len):
         paths = self.multiple_split(min_per_split=min_per_split)
         self.scp_texts.clear()
         self.count = 0
         
         os.makedirs(os.path.join(self.folder, 'silent_split'), exist_ok=True)
         for path in paths:
-            self.single_silent_split(path)
+            self.single_silent_split(path, min_silence_len=min_silence_len)
         shutil.rmtree(os.path.join(self.folder, 'normal_split'))
         print("silent splited successfully")
 
