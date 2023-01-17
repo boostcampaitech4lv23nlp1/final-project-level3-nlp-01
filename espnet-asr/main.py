@@ -46,7 +46,7 @@ warnings.filterwarnings(action='ignore', category=UserWarning)
 # warnings.filterwarnings(action='ignore', category=FutureWarning)
 
 
-def main(filepath):
+def main(filepath, min_per_split=None, min_silence_len=None):
     start_time = time.time()
     cfg = OmegaConf.load('./decode_conf.yaml')
 
@@ -55,9 +55,12 @@ def main(filepath):
     file = f'{filename}.wav'
     
     split_wav = SplitWavAudioMubin(folder, file)
-    # split_wav.multiple_split(min_per_split=1)                                         # 1분 단위 split
-    split_wav.single_silent_split(os.path.join(folder, file), min_silence_len=500)      # wav 파일 전체를 침묵 기준으로 분리
-    # split_wav.multiple_silent_split(min_per_split=2)
+
+    if min_per_split == None:
+        split_wav.single_silent_split(os.path.join(folder, file), min_silence_len=min_silence_len)      # wav 파일 전체를 침묵 기준으로 분리
+    else:
+        split_wav.multiple_split(min_per_split=min_per_split)                                 # 1분 단위로 split
+        # split_wav.multiple_silent_split(min_per_split=1, min_silence_len=1000)    # 1분 단위로 split + 침묵 기준 split
 
     print(f'num process : {cfg.num_process}')
     
@@ -189,9 +192,9 @@ def dev(stage='train'):
 
 
 if __name__ == '__main__':
-    # main(filepath="./김상욱 교수님의 '양자역학' 강의.wav")
-    # inference_dataset("김상욱교수님의'양자역학'강의")
+    main(filepath="./김상욱 교수님의 '양자역학' 강의.wav", min_per_split=None, min_silence_len=500)
+    inference_dataset("김상욱교수님의'양자역학'강의")
     
     
-    dev(stage='sample')     # stage : 'train', 'validation', 'sample'
-    aihub_dataset(stage='sample')
+    # dev(stage='sample')     # stage : 'train', 'validation', 'sample'
+    # aihub_dataset(stage='sample')
