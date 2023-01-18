@@ -1,9 +1,35 @@
 
 from collections import defaultdict
+from itertools import combinations
 from typing import Optional
 import re
 import os
 import pandas as pd
+
+def delete_loop(text):
+    new_text = text[:]
+    tmp = text.split()
+    arr = [i for i in range(len(tmp)+1)]
+    can_list = [com for com in combinations(arr, 2) if com[1] - com[0] + 1 <= len(arr)-com[1]]
+    for can in can_list:
+        string = tmp[can[0]:can[1]]
+        stick = can[1]
+        len_string = len(string)
+        cnt = 0
+        for i in range((len(arr) - can[1]) // (can[1] - can[0])):
+            end_stick = stick + len_string
+            if string != tmp[stick:end_stick]:
+                continue
+            cnt += 1
+            stick = end_stick
+        if cnt != 0:
+            new_tmp = tmp[:can[1]] + tmp[can[1] + len_string*cnt:]
+            new_text = ' '.join(new_tmp)
+            break
+    if text == new_text:
+        return text
+    else:
+        return delete_loop(new_text)
 
 def make_new_dataset(output_file_paths: str, labeled_file_paths: Optional[str]):
     # 1. create dictionary and add labeled data
@@ -11,9 +37,8 @@ def make_new_dataset(output_file_paths: str, labeled_file_paths: Optional[str]):
     if labeled_file_paths:
         idx = labeled_file_paths[0].split('/')[-5]      # KlecSpeech_train_D12_label_0
         folder = labeled_file_paths[0].split('/')[-2]   # S001007
-        print(labeled_file_paths)
-        print('\n\n')
         for labeled_file_path in labeled_file_paths:
+            print(labeled_file_path)
             i = labeled_file_path.split('/')[-1].split('.')[0]
             extension = labeled_file_path.split('/')[-1].split('.')[1]
 
@@ -25,6 +50,7 @@ def make_new_dataset(output_file_paths: str, labeled_file_paths: Optional[str]):
                 with open(labeled_file_path, 'r+') as f:
                     line = f.readline().strip()
 
+                # preprocessing
                 # step  (그러니까)/(긍게*) 짧으니까 쓰기가 쉽죠.
                 for match in set(re.findall(r'\([^)]*\)[\s]*[/][\s]*\([^)]*\)', line)):
                     repl = match.split('/')[0][1:-1]
@@ -94,6 +120,9 @@ def make_new_dataset(output_file_paths: str, labeled_file_paths: Optional[str]):
         for line in lines:
             line_split = line.split(' ') 
             i, line = line_split[0], " ".join(line_split[1:])
+            
+            # TODO : output 후처리
+            line = delete_loop(line)
 
             try:
                 key = idx + '-' + domain + '-' + subdomain + '-' + folder + '-' + i
@@ -124,7 +153,10 @@ def inference_dataset(filename):
 
     df = make_new_dataset(output_file_paths, None)
     dfs = pd.concat([dfs, df])
-    dfs.to_csv('./inference_dataset.csv', encoding='utf-8-sig')
+    
+    dfs.index = [int(idx.split('-')[-1]) for idx in dfs.index]
+    dfs = dfs.sort_index()
+    dfs.to_csv(f'./{filename}_dataset.csv', encoding='utf-8-sig')
 
 
 # make train or validataion dataset -> stage: train, validataion

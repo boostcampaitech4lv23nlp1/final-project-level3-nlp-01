@@ -10,6 +10,8 @@ import time
 import numpy as np
 import whisper
 import torch
+import torch.multiprocessing as mp
+
 import warnings
 import re
 
@@ -41,9 +43,10 @@ from make_dataset import inference_dataset, aihub_dataset
 from utils import SplitWavAudioMubin, change_sampling_rate_file_path
 
 
+ROOT_PATH = '/opt/ml'
 IGNORE_FOLDERS = ['.DS_Store']
 warnings.filterwarnings(action='ignore', category=UserWarning)
-# warnings.filterwarnings(action='ignore', category=FutureWarning)
+
 
 def main(
         filepath, 
@@ -53,17 +56,22 @@ def main(
     ):
     cfg = OmegaConf.load('./conf.yaml')
 
-    filename = change_sampling_rate_file_path(filepath, resampling_sr=None)     # 얘
+    filename = change_sampling_rate_file_path(filepath, resampling_sr=cfg.default.resampling_sr)
     folder = f'./download/{filename}'
     file = f'{filename}.wav'
     
     start_time = time.time()
     split_wav = SplitWavAudioMubin(folder, file)
 
+    # split step
     if min_per_split == None:
-        split_wav.single_silent_split(os.path.join(folder, file), min_silence_len=min_silence_len)      # wav 파일 전체를 침묵 기준으로 분리
+        # wav 파일 전체를 침묵 기준으로 분리
+        split_wav.single_silent_split(
+            filepath=os.path.join(folder, file), 
+            min_silence_len=min_silence_len
+        )      
     else:
-        split_wav.multiple_split(min_per_split=min_per_split)                                 # 1분 단위로 split
+        split_wav.multiple_split(min_per_split=min_per_split)   # 1분 단위로 split
 
     print(f'num process : {cfg.default.num_process}')
     scps = split_wav.make_split_scp_file(split=cfg.default.num_process)
@@ -84,7 +92,7 @@ def main(
         args = parser.parse_args()
         kwargs.update(vars(args))
         kwargs.update(o)
-        kwargs.update({'ngpu': torch.cuda.device_count()})
+        kwargs.update({'ngpu': 1 if torch.cuda.device_count() > 0 else 0})
         
         # unused argument
         kwargs.pop('mdl_file')
@@ -111,7 +119,7 @@ def main(
             process.start()
             print(f"process {i} start")
             processes.append(process)
-            time.sleep(0.1)
+            time.sleep(0.5)
 
         for process in processes:
             process.join()
@@ -162,6 +170,10 @@ def dev(stage='train', stt='whisper'):
     
     assert stt in ['whisper', 'espnet'], "choose 'whisper', 'espnet'"
     if stt == 'whisper':
+        model_size = cfg.whisper.model_size
+        
+        if not os.path.exists(f'{ROOT_PATH}/.cache/whisper/{model_size}.pt'): 
+            whisper.load_model(model_size)
         inference = whisper_inference
     elif stt == 'espnet':
         d = ModelDownloader('.cache/espnet')
@@ -172,7 +184,7 @@ def dev(stage='train', stt='whisper'):
         args = parser.parse_args()
         kwargs.update(vars(args))
         kwargs.update(o)
-        kwargs.update({'ngpu': torch.cuda.device_count()})
+        kwargs.update({'ngpu': 1 if torch.cuda.device_count() > 0 else 0})
         
         # unused argument
         kwargs.pop('mdl_file')
@@ -222,13 +234,13 @@ def dev(stage='train', stt='whisper'):
 
 
 if __name__ == '__main__':
-    filename = main(
-        filepath="./김상욱 교수님의 '양자역학' 강의.wav", 
-        min_per_split=None, 
-        min_silence_len=500,
-        stt='whisper'
-    )
-    inference_dataset(filename)
+    # filename = main(
+    #     filepath="./[#한국사능력검정] 설민석 – 10분 순삭! 한 번에 정리되는 일제강점기!.wav", 
+    #     min_per_split=0.25, 
+    #     min_silence_len=None,
+    #     stt='whisper'
+    # )
+    # inference_dataset(filename)
     
     # dev(stage='sample')     # stage : 'train', 'validation', 'sample'
-    # aihub_dataset(stage='sample')
+    aihub_dataset(stage='train')

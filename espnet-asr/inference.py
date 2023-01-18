@@ -38,17 +38,24 @@ def whisper_inference(
     with open(scp_path, 'r+') as f:
         lines = f.readlines()
 
-    options = whisper.DecodingOptions(
-        language=language,
-        beam_size=beam_size,
-        fp16=fp16
-    )
+    options = {
+        'language': language,
+        'beam_size': beam_size,
+        'fp16': fp16,
+    }
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model = whisper.load_model(model_size, device=device)
+    model = whisper.load_model(model_size, device=device).eval()
     
     output = []
     for line in lines:
         i, path = line.strip().split(' ')
+        result = model.transcribe(
+            path,
+            temperature=0,
+            no_speech_threshold=0.6,
+            **options
+        )
+        '''        
         audio = whisper.load_audio(path)
         audio = whisper.pad_or_trim(audio)
 
@@ -57,8 +64,9 @@ def whisper_inference(
         # decode the audio
         result = whisper.decode(model, mel, options)
         print(result.text)
-
-        output.append(" ".join([i, result.text]) + '\n')
+        '''
+        print(result['text'])
+        output.append(" ".join([i, result['text']]) + '\n')
     
     # make directory
     os.makedirs(path:=os.path.join(output_dir, '1best_recog'), exist_ok=True)
