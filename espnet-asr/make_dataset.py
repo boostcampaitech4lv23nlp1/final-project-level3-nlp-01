@@ -140,7 +140,7 @@ def make_new_dataset(output_file_paths: str, labeled_file_paths: Optional[str]):
     return df
 
 # make inference dataset
-def inference_dataset(filename):
+def inference_dataset(filename) -> pd.DataFrame:
     output_path = os.path.join('output', filename)
 
     dfs = pd.DataFrame({'label': [], 'output': []})
@@ -157,6 +157,8 @@ def inference_dataset(filename):
     dfs.index = [int(idx.split('-')[-1]) for idx in dfs.index]
     dfs = dfs.sort_index()
     dfs.to_csv(f'./{filename}_dataset.csv', encoding='utf-8-sig')
+
+    return dfs
 
 
 # make train or validataion dataset -> stage: train, validataion
