@@ -27,7 +27,7 @@ if __name__ == '__main__':
                                                 help='huggingface model name to train')
     parser.add_argument('--prefix', default='summarize: ', type=str,
                                                 help='inference input prefix')
-    parser.add_argument('--max_input_length', default=512, type=int,
+    parser.add_argument('--max_input_length', default=768, type=int,
                                                 help='max input length for summarization')
     parser.add_argument('--max_target_length', default=64, type=int,
                                                 help='max target length for summarization')
