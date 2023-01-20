@@ -42,9 +42,7 @@ if __name__ == '__main__':
     parser.add_argument('--lr', default=1e-5, type=int,
                                                 help='learning rate for training')
     parser.add_argument('--wd', default=0.01, type=int,
-                                                help='weight decay for training')
-    parser.add_argument('--steps', default=30000, type=int,
-                                                help='evaluation, logging, saving step for training')                                            
+                                                help='weight decay for training')                                          
     parser.add_argument('--model_name', default='t5-base-korean-finetuned-for-summary', type=str,
                                                 help='model name for saving')
     parser.add_argument('--base_path', default='./data/', type=str,
