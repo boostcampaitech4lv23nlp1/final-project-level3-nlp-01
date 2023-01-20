@@ -71,11 +71,12 @@ if __name__ == '__main__':
     if args.use_auto_find_batch_size:
         training_args = Seq2SeqTrainingArguments(
             model_dir,
-            evaluation_strategy="steps", eval_steps=args.steps,
-            logging_strategy="steps", logging_steps=args.steps,
-            save_strategy="steps", save_steps=args.steps,
+            evaluation_strategy="epoch",
+            logging_strategy="epoch",
+            save_strategy="epoch",
             learning_rate=args.lr,
             weight_decay=args.wd,
+            warmup_ratio=0.1,
             auto_find_batch_size=True,
             num_train_epochs=args.num_train_epochs,
             save_total_limit=3,
@@ -87,11 +88,12 @@ if __name__ == '__main__':
     else:
         training_args = Seq2SeqTrainingArguments(
             model_dir,
-            evaluation_strategy="steps", eval_steps=args.steps,
-            logging_strategy="steps", logging_steps=args.steps,
-            save_strategy="steps", save_steps=args.steps,
+            evaluation_strategy="epoch",
+            logging_strategy="epoch",
+            save_strategy="epoch",
             learning_rate=args.lr,
             weight_decay=args.wd,
+            warmup_ratio=0.1,
             per_device_train_batch_size=args.train_batch_size,
             per_device_eval_batch_size=args.eval_batch_size,
             num_train_epochs=args.num_train_epochs,
