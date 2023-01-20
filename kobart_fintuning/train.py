@@ -68,7 +68,7 @@ class Base(pl.LightningModule):
 
         parser.add_argument('--lr',
                             type=float,
-                            default=4e-5,
+                            default=1e-5,
                             help='The initial learning rate')
 
         parser.add_argument('--warmup_ratio',

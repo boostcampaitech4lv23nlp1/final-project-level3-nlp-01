@@ -27,9 +27,9 @@ if __name__ == '__main__':
                                                 help='huggingface model name to train')
     parser.add_argument('--prefix', default='summarize: ', type=str,
                                                 help='inference input prefix')
-    parser.add_argument('--max_input_length', default=1024, type=int,
+    parser.add_argument('--max_input_length', default=512, type=int,
                                                 help='max input length for summarization')
-    parser.add_argument('--max_target_length', default=256, type=int,
+    parser.add_argument('--max_target_length', default=64, type=int,
                                                 help='max target length for summarization')
     parser.add_argument('--use_auto_find_batch_size', default=False, type=bool,
                                                 help='if you want to find batch size automatically, set True')
@@ -37,9 +37,9 @@ if __name__ == '__main__':
                                                 help='train batch size')
     parser.add_argument('--eval_batch_size', default=8, type=int,
                                                 help='eval batch size')
-    parser.add_argument('--num_train_epochs', default=3, type=int,
+    parser.add_argument('--num_train_epochs', default=15, type=int,
                                                 help='train epoch size')
-    parser.add_argument('--lr', default=4e-5, type=int,
+    parser.add_argument('--lr', default=1e-5, type=int,
                                                 help='learning rate for training')
     parser.add_argument('--wd', default=0.01, type=int,
                                                 help='weight decay for training')
