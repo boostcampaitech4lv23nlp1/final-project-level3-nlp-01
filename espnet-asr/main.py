@@ -233,17 +233,17 @@ def dev(stage='train', stt='whisper'):
     print("-"*50)
 
 if __name__ == '__main__':
-    # dev(stage='sample')     # stage : 'train', 'validation', 'sample'
-    # aihub_dataset(stage='train')
-    
-    filename = main(
-        filepath="./[#한국사능력검정] 설민석 – 10분 순삭! 한 번에 정리되는 일제강점기!.wav", 
-        min_per_split=0.25, 
-        min_silence_len=None,
-        stt='whisper'
-    )
+    # dev(stage='train')     # stage : 'train', 'validation', 'sample'
+    aihub_dataset(stage='train')
 
-    # output -> df
-    df = inference_dataset(filename)
+    # filename = main(
+    #     filepath="./[#한국사능력검정] 설민석 – 10분 순삭! 한 번에 정리되는 일제강점기!.wav", 
+    #     min_per_split=0.25, 
+    #     min_silence_len=None,
+    #     stt='whisper'
+    # )
+
+    # # output -> df
+    # df = inference_dataset(filename)
     
     
