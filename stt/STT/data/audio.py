@@ -94,28 +94,36 @@ class SplitWavAudio():
         shutil.rmtree(os.path.join(self.folder, 'normal_split'))
         print("silent splited successfully")
 
-    def single_silent_split(self, filepath, min_silence_len=500, silence_thresh=-40):
+    def single_silent_split(self, filepath, min_silence_len=1000):
         '''
         description:
             wav 파일 하나에 대해 min_silence 기준으로 silence split 진행하는 함수
         '''
         audio = AudioSegment.from_wav(filepath)
         os.makedirs(os.path.join(self.folder, 'silent_split'), exist_ok=True)
+
         chunks = silence.split_on_silence(
             audio, 
-            min_silence_len=min_silence_len, 
-            silence_thresh=silence_thresh,
-            keep_silence=200,
-            seek_step=100
+            min_silence_len=min_silence_len,            # split on silence longer than min_silence_len(ms)
+            silence_thresh=audio.dBFS*1.9,             # min dBPS 
+            seek_step=50
         )
 
-        for i, chunk in enumerate(chunks):
+        target_length = 5 * 1000                        # ms
+        output_chunks = [chunks[0]]
+        for chunk in chunks[1:]:
+            
+            if len(output_chunks[-1]) < target_length:
+                output_chunks[-1] += chunk
+            else:
+                output_chunks.append(chunk)
+
+        for output_chunk in output_chunks:
+            # save splited wav file
             path = os.path.join(
                 self.folder, 'silent_split' ,self.filename[:-4]+'-'+str(self.count).rjust(2, '0')+self.filename[-4:]
             )[2:]
-
-            # save splited wav file
-            chunk.export(path, format='wav')
+            output_chunk.export(path, format='wav')
 
             # save metadata
             name = path.split('/')[-1][:-4]

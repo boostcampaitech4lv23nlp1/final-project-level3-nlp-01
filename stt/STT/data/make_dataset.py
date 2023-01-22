@@ -98,7 +98,6 @@ class MakeInferenceDataset(object):
         self.file = f'{self.filename}.wav'
         self.split_wav = SplitWavAudio(self.folder, self.file)
         
-
     def __call__(self, min_per_split=None, min_silence_len=None) -> str:
         if min_per_split is None:
             # wav 파일 전체에 대해서 slience 기준으로 분리

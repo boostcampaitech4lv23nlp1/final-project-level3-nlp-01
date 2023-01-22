@@ -1,11 +1,13 @@
 
 import re
 import os
+import kss
 import pandas as pd
 
 from collections import defaultdict
 from typing import Optional
 from .delete_loop import delete_loop
+from .custom_split import custom_split
 
 def make_new_dataset(output_file_paths: str, labeled_file_paths: Optional[str]):
     # 1. create dictionary and add labeled data
@@ -100,6 +102,17 @@ def make_new_dataset(output_file_paths: str, labeled_file_paths: Optional[str]):
             # TODO : output 후처리
             line = delete_loop(line)
 
+            # 하냐면 바로 애니<|pt|><|transcribe|><|pt|><|transcribe|> 
+            line = re.sub(r'[<].*[>]', '', line)
+
+            # 나 뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜렁뚜
+            outlier_len = 20
+            line_split = line.split(' ')
+            for k in range(len(line_split)):
+                if len(line_split[k]) > outlier_len:
+                    line_split[k] = ''
+            line = ' '.join(line_split)
+
             try:
                 key = idx + '-' + domain + '-' + subdomain + '-' + folder + '-' + i
             except UnboundLocalError as e:
@@ -132,8 +145,9 @@ def inference_dataset(filename: str) -> pd.DataFrame:
     
     dfs.index = [int(idx.split('-')[-1]) for idx in dfs.index]
     dfs = dfs.sort_index()
-    dfs.to_csv(f'output/STT/{filename}_dataset.csv', encoding='utf-8-sig')
+    dfs = custom_split(dfs)
 
+    dfs.to_csv(f'output/STT/{filename}_dataset.csv', encoding='utf-8-sig')
     return dfs
 
 # make train or validataion dataset -> stage: train, validataion
