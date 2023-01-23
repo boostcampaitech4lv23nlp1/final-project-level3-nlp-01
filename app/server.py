@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from .summary.main import main_test
+from .summary.main import main
 from .stt_postprocessing.test import main_inference
 import json
 
@@ -16,7 +16,7 @@ def STT_postprocessing(docs):
 
 
 def summary(data):
-    output = main_test(data = data,
+    output = main(data = data,
                         sum_model_path='/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
                         sum_model= 'kobart')
     print('finish summarization')
