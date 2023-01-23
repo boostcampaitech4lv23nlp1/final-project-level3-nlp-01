@@ -160,14 +160,14 @@ class KoBARTConditionalGeneration(Base):
 
 if __name__ == '__main__':
 
-    # try:
-    #     wandb.login(key="4144d847761a14e5160041ccffc9eb7105a788dc")
-    # except:
-    #     anony = "must"
-    #     print('If you want to use your W&B account, go to Add-ons -> Secrets and provide your W&B access token. Use the Label name as wandb_api. \nGet your W&B access token from here: https://wandb.ai/authorize')
+    try:
+        wandb.login(key="4144d847761a14e5160041ccffc9eb7105a788dc")
+    except:
+        anony = "must"
+        print('If you want to use your W&B account, go to Add-ons -> Secrets and provide your W&B access token. Use the Label name as wandb_api. \nGet your W&B access token from here: https://wandb.ai/authorize')
 
-    # wandb.init(project="level3", name= 'gogamza/kobart-base-v1_test')
-    # wandb_logger = WandbLogger('level3')   
+    wandb.init(project="level3", name= 'gogamza/kobart-base-v1')
+    wandb_logger = WandbLogger('level3')   
 
     parser = Base.add_model_specific_args(parser)
     parser = ArgsBase.add_model_specific_args(parser)
@@ -193,7 +193,7 @@ if __name__ == '__main__':
                                                        save_top_k=3)
     tb_logger = pl_loggers.TensorBoardLogger(os.path.join(args.default_root_dir, 'tb_logs'))
     lr_logger = pl.callbacks.LearningRateMonitor()
-    trainer = pl.Trainer.from_argparse_args(args, logger=tb_logger,
+    trainer = pl.Trainer.from_argparse_args(args, logger=(tb_logger, wandb_logger),
                                             callbacks=[checkpoint_callback, lr_logger])
 
     model = KoBARTConditionalGeneration(args, trainer)
