@@ -1,2 +1,4 @@
 # level3_productserving-level3-nlp-01
-level3_productserving-level3-nlp-01 created by GitHub Classroom
+
+- [model link]()
+- model_path = f'/opt/ml/project_models/{model_name}'
