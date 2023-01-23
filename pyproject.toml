@@ -15,12 +15,13 @@ transformer-in-transformer = "^0.1.2"
 kss = "^4.4.0"
 sentence-transformers = "^2.2.2"
 tqdm = "^4.64.1"
-pandas = "^1.5.3"
+pandas = "1.5.3"
 nltk = "^3.8.1"
 mecab = "^0.996.3"
 uvicorn = "0.15.0"
 streamlit = "1.2.0"
 protobuf = "^3.20.1"
+scikit-learn = "^1.2.0"
 
 
 [build-system]
