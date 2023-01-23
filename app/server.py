@@ -1,3 +1,9 @@
+# TODO: validation check
+# TODO: stt function
+# TODO: keyword extraction function
+# TODO: question generation function
+# TODO: async test
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from .summary.main import main
