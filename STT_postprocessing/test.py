@@ -6,7 +6,7 @@ from transformers import PreTrainedTokenizerFast
 from transformers import GPT2LMHeadModel
 import warnings
 warnings.filterwarnings("ignore")
-####
+
 
 def main_inference(model_path, max_len, df):
 
