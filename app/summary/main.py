@@ -18,18 +18,18 @@
 import pickle
 import sys
 import time
-from dataloader import DataLoader
-from preprocess import PreProcessor
-from summary import Summarizer
-from postprocess import PostProcessor
+from .dataloader import DataLoader
+from .preprocess import PreProcessor
+from .summary import Summarizer
+from .postprocess import PostProcessor
 
 
-def main_test(data_path, sum_model_path, sum_model): # inference 시간 확인을 위한 임시 함수 -> 추후 삭제 예정
+def main_test(data, sum_model_path, sum_model): # inference 시간 확인을 위한 임시 함수 -> 추후 삭제 예정
     start = time.time()
 
     # 1. STT output 파일 데이터셋 가져오기 (STT 후처리 완료된 파일)
     ## 추후 STT output 형식 바뀔 수도 있으니까 따로 분리함
-    loader = DataLoader(data_path = data_path)
+    loader = DataLoader(data = data)
     stt_data = loader.load()
 
     # 2. 요약 전, 데이터 전처리 진행
@@ -66,10 +66,10 @@ def main_test(data_path, sum_model_path, sum_model): # inference 시간 확인�
     print('time for postprocessing :', postprocess_time - summary_time) # 48.77 초 -> 후처리에 드는 시간 상당 ... 
     return postprocessed
 
-def main(data_path, sum_model_path, sum_model):
+def main(data, sum_model_path, sum_model):
     # 1. STT output 파일 데이터셋 가져오기 (STT 후처리 완료된 파일)
     ## 추후 STT output 형식 바뀔 수도 있으니까 따로 분리함
-    loader = DataLoader(data_path = data_path)
+    loader = DataLoader(data = data)
     stt_data = loader.load()
 
     # 2. 요약 전, 데이터 전처리 진행

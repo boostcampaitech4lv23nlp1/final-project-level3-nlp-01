@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import nltk
 nltk.download('punkt')
 import torch
@@ -31,7 +32,7 @@ class Summarizer:
         if self.model_ == 't5':
             model, tokenizer = model_init_for_t5(self.model_path, self.max_target_length)
             
-            for paragraph in self.data:
+            for paragraph in tqdm(self.data):
                 inputs = ['summarize: ' + paragraph]
                 inputs = tokenizer(inputs, max_length=self.max_input_length, truncation=True, return_tensors="pt")
                 output = model.generate(**inputs, num_beams=3, do_sample=True, min_length=10, max_length=self.max_target_length)
@@ -42,7 +43,7 @@ class Summarizer:
         else:
             model, tokenizer = model_init_for_bart(self.model_path)
 
-            for paragraph in self.data:
+            for paragraph in tqdm(self.data):
                 raw_input_ids = tokenizer.encode(paragraph)
                 input_ids = [tokenizer.bos_token_id] + raw_input_ids + [tokenizer.eos_token_id]
                 summary_ids = model.generate(torch.tensor([input_ids]),  num_beams=5,  max_length=self.max_target_length,  eos_token_id=1)

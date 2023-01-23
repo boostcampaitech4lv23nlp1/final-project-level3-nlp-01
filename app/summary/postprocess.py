@@ -7,7 +7,7 @@ from itertools import combinations
 import torch
 from transformers import ElectraForPreTraining, ElectraTokenizer
 from transformers import pipeline
-from preprocess import PreProcessor
+from .preprocess import PreProcessor
 
 
 class PostProcessor(PreProcessor):
