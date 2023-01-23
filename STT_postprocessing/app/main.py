@@ -8,7 +8,7 @@ app = FastAPI()
 
 
 @app.post("/STT")
-def keyword_extraction(docs):
+def STT_postprocessing(docs):
     input = json.loads(docs)
     output = main_inference(model_path='/opt/ml/espnet-asr/final/GPT_2',max_len=64, df = input)
     return {'output' : json.dumps(output)}

@@ -6,7 +6,7 @@ import pandas as pd
 
 
 
-def keyword(docs):
+def STT_postprocessing(docs):
     data = {
         'docs': json.dumps(docs)
     }
@@ -35,6 +35,6 @@ def main():
             sentences.append(item['output'])
         st.write(docs)
         st.subheader("csv")
-        keyword(sentences)
+        STT_postprocessing(sentences)
 
 main()
