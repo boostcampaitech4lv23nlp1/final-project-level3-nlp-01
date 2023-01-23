@@ -1,6 +1,3 @@
-# TODO: 문장 분리기 사용해서 문장 단위로 분리하기 =>> finish
-# TODO: 유사도 기반으로 문단 생성하기 -> min, max 고려하도록 =>> finish
-
 import kss
 from sentence_transformers import SentenceTransformer, util
 

@@ -1,22 +1,4 @@
-# STT에서 csv 파일 전달
-# csv 파일 합쳐서 -> .기준으로 문장 분리 후 -> 문단 분리
-# 문단 분리한 내용으로 요약문 생성 -> 후처리
-
-# TODO: dataloader 만들기 -> dataloader.py
-    # TODO: csv 파일에서 후처리된 내용 모두 합쳐서 하나의 str로 만든 뒤, 온점 기준으로 나누어 문장 세트 구성 - input : csv -> output : 문장 세트 =>> finish
-#TODO: 전처리 class 제작 -> preprocess.py
-    # TODO: 문장 분리 - input : STT 문장 세트를 하나로 합친 덩어리 -> output : 문장 세트 (문장 단위로 분리된) =>> finish
-    # TODO: 문단 분리 기능 - input : 문장 세트 -> output : 분리된 문단 =>> finish
-# TODO: summarization class 제작 -> summary.py 
-    # input : 분리된 문단 -> output : 문단 별 요약문 list
-# TODO: 요약 후처리 class 제작 -> postprocess.py
-    # input : 문단 별 요약문 -> output : 후처리된 요약문 결과
-    # 후처리 내용
-        # 반복 어구 제거
-        # 어색한 단어 변경
-        # 유사한 문장으로 묶어서 문단 생성하기 ~ 문단 분리 class 재사용
 import pickle
-import sys
 import time
 from .dataloader import DataLoader
 from .preprocess import PreProcessor
