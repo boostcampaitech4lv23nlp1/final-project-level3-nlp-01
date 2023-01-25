@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "keyword"
+version = "0.1.0"
+description = ""
+authors = ["malinmalin2 <blog704@naver.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.9.7"
+fastapi = "0.89.1"
+gluonnlp = "0.10.0"
+keybert = "0.7.0"
+konlpy = "0.5.2"
+numpy = "1.22.0"
+packaging = "20.9"
+pandas = "1.2.4"
+pytorch-crf = "0.7.2"
+requests = "2.25.1"
+scikit-learn = "1.2.0"
+six = "1.15.0"
+streamlit = "1.17.0"
+tensorflow = "2.9.3"
+torch = "1.13.1"
+torchcrf = "1.1.0"
+tqdm = "4.60.0"
+transformers = "4.25.1"
+uvicorn = "0.20.0"
+mxnet = "^1.9.1"
+tweepy = "3.10.0"
+sentencepiece = "0.1.96"
+mecab = "^0.996.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
