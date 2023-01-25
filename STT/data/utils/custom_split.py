@@ -11,9 +11,13 @@ def custom_split(dfs: pd.DataFrame) -> pd.DataFrame:
     for c in text:
         if end_flag is False:
             if c == ' ' and len(output) > max_length:
-                if len(outputs[-1]) < max_length:
-                    outputs[-1] += output
-                else:
+                # FIXME: output의 길이가 20인 경우에 대해서는 처리하지 못하는 오류 처리
+                try:
+                    if len(outputs[-1]) < max_length:
+                        outputs[-1] += output
+                    else:
+                        outputs.append(output + ' ')
+                except IndexError as indexError:
                     outputs.append(output + ' ')
                 output = ""
                 continue
