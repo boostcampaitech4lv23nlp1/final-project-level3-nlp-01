@@ -101,13 +101,13 @@ class PreProcessor:
 if __name__ == '__main__':
     import pandas as pd
     import pickle
-    data = pd.read_csv('/opt/ml/Segmentation/data/dataset_0118.csv', index_col = 0)
+    data = pd.read_csv('/opt/ml/inference (1).csv', index_col = 0)
     data['result'] = data['result'].astype(str)
     data = ' '.join(data['result'])
     preprocesser = PreProcessor(data = data, stride = 4, min_len=300, max_len=1000)
     split_data = preprocesser.preprocess()
     # print(split_data)
     print(len(split_data))
-    with open('/opt/ml/output/seg_300.pickle', 'wb') as f:
+    with open('/opt/ml/output/seg_0125.pickle', 'wb') as f:
         pickle.dump(split_data, f)
     
