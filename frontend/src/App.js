@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import './App.css';
-import { withCookies, Cookies } from 'react-cookie'
 import SttPage from './sttPage';
 import PostProcessingPage from './postProcessingPage';
 
@@ -222,4 +221,4 @@ function App() {
     );
 }
 
-export default withCookies(App);
+export default App;
