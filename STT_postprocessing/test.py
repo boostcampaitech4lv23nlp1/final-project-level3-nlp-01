@@ -1,74 +1,103 @@
-import numpy as np
+import math
+import os
 import pandas as pd
 import torch
 import time
 from transformers import PreTrainedTokenizerFast
 from transformers import GPT2LMHeadModel
 import warnings
+from multiprocessing import Process
+from inference import inference
 warnings.filterwarnings("ignore")
 
 
-def main_inference(model_path, max_len, df):
-
-    OUTPUT_TKN = "<usr>"
-    RESULT_TKN = "<sys>"
+def main_inference(model_path, dataset_path):
+    
     BOS = '</s>'
     EOS = '</s>'
     MASK = '<unused0>'
-    SENT = '<unused1>'
     PAD = '<pad>'
 
-    start_time = time.time()
+    num_process = 8
+    
+    print(f'num process : {num_process}')
+    
+    scps = split_file(dataset_path, split = 8)
+
+    # parameter setting
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
     tokenizer = PreTrainedTokenizerFast.from_pretrained(model_path,
                 bos_token=BOS, eos_token=EOS, unk_token='<unk>',
                 pad_token=PAD, mask_token=MASK) 
-    model = GPT2LMHeadModel.from_pretrained(model_path)
-
-    sent = '0'
+    model = GPT2LMHeadModel.from_pretrained(model_path).to(device)
+    max_len = 64
+    processes = []
     sentences = []
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
-    answer=""
+    outputs = []
+    if len(scps) > 1:
+        model.share_memory()
 
-    with torch.no_grad():
-        
-        # df = pd.read_csv('/opt/ml/espnet-asr/[심화별개념5]_2_1구석기_신석기시대_2강선사시대_dataset.csv')
-        # for idx, item in df.iterrows():
-        #     query = item['output']
-        for sentence in df :
-            query = sentence
-            print(f'query : {query}')
-            answer = ""
-            
-            if query is not np.nan:
-                while 1:
-                    # print(OUTPUT_TKN + query + SENT + sent + RESULT_TKN + answer)
-                    input_ids = torch.LongTensor(tokenizer.encode(OUTPUT_TKN + query + SENT + sent + RESULT_TKN + answer)).unsqueeze(dim=0)
-                    input_ids = input_ids.to(device)
-                    pred = model(input_ids)
-                    pred = pred.logits
-                    if pred.shape[1]>max_len:
-                        print("error!!")
-                        break
-                    gen = tokenizer.convert_ids_to_tokens(torch.argmax(pred, dim=-1).squeeze().cpu().numpy().tolist())[-1]
-                    if gen == EOS:
-                        break
-                    answer += gen.replace("▁", " ")
-                print(f"answer : {answer.strip()}")
-                sentences.append(answer.strip())
-            else:
-                sentences.append(query)
-                
-    # df = pd.DataFrame({
-    #     'output' : df['output'],
-    #     'result' : sentences,
-    # })
-    # df.to_csv('./inference.csv', index=False)
-    print(f'sec : {time.time()-start_time}')
+        for i, scp in enumerate(scps):
+            output_dir= f'./output/inference_{i}'
+            args = [model, tokenizer, scp, max_len, output_dir]
+ 
+            process = Process(target=inference,args=args)
+            process.start()
+            processes.append(process)
+            time.sleep(0.1)
+
+        for process in processes:
+            process.join()
+        processes.clear()
+    else:
+        args = [model, tokenizer, scp, max_len, output_dir]
+        inference(*args)
+    
+    for i in range(num_process):
+        df = pd.read_csv(f'./output/inference_{i}.csv')
+        for idx, item in df.iterrows():
+            sentences.append(item['result'])
+            outputs.append(item['output'])
+    data = pd.DataFrame({
+        'output' : outputs,
+        'result' : sentences
+    })
+    data.to_csv('./inference.csv', index=False)
+    
     return sentences
 
 
-if __name__ == '__main__':
-    result = main_inference(model_path = '/opt/ml/espnet-asr/final/GPT_2/', max_len = 64,
-                       df = '/opt/ml/espnet-asr/[심화별개념5]_2_1구석기_신석기시대_2강선사시대_dataset.csv/')
+def split_file(dataset_path ,split = 8):
     
+    dfs = pd.read_csv(dataset_path)
+    div = math.ceil(len(dfs) / split)
+    left, right = 0, div
+    idx = 0
+    scps = []
+    if os.path.exists('./output'):
+        pass
+    else:
+        os.makedirs('./output')
+    while True:
+        scp = os.path.join('/opt/ml/espnet-asr/STT_postprocessing/output',f'csv_{idx}.csv')
+        df = dfs[left:right]
+        if len(dfs[left:right]) > 0:
+            scps.append(scp)
+            df.to_csv(scp,index=False)
+        if right < 0 or split == 1: break
+        
+        left = right
+        if right + div < len(dfs):
+            right += div
+        else:
+            right = -1
+        idx += 1
+    return scps        
+
+if __name__ == '__main__':
+
+    start_time = time.time()
+    torch.multiprocessing.set_start_method('spawn',force=True)
+    results = main_inference(model_path = '/opt/ml/espnet-asr/final/GPT_2', dataset_path = '/opt/ml/espnet-asr/real_dataset.csv')
+    print(results)
+    print(f'sec : {time.time()-start_time}')
