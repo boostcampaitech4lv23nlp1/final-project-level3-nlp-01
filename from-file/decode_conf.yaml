@@ -1,5 +1,0 @@
-mdl: mdl/ksponspeech.zip
-config: conf/decode_asr.yaml
-ngpu: 1
-batch_size: 1
-num_process: 1
