@@ -33,8 +33,9 @@ def main_inference(model_path, max_len, data):
     answer=""
 
     with torch.no_grad():
-        for sentence in kss.split_sentences(data) :
-            query = sentence
+        setences = list(kss.split_sentences(data))
+        for i in range(0,len(setences)-2,3):
+            query = ' '.join(setences[i:i+3])
             print(f'query : {query}')
             answer = ""
             
@@ -61,6 +62,11 @@ def main_inference(model_path, max_len, data):
 
 
 if __name__ == '__main__':
-    result = main_inference(model_path = '/opt/ml/espnet-asr/final/GPT_2/', max_len = 64,
-                       df = '/opt/ml/espnet-asr/[심화별개념5]_2_1구석기_신석기시대_2강선사시대_dataset.csv/')
-    
+    import pandas as pd
+    data = pd.read_csv('/opt/ml/[심화별개념5]_2_1구석기_신석기시대_2강선사시대_dataset.csv')
+
+    result = main_inference(model_path = '/opt/ml/project_models/stt/postprocessing_gpt/', max_len = 64,
+                       data = data)
+
+    print(result)
+                       
