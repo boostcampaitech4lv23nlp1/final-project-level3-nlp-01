@@ -14,6 +14,15 @@ import pickle
 
 app = FastAPI()
 
+origins = ['*']
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
+)
+
 def STT_postprocessing(docs):
     input = json.loads(docs)
     output = main_inference(model_path='/opt/ml/project_models/stt/postprocessing_gpt',max_len=64, data = input)
