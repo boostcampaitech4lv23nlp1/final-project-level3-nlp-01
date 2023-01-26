@@ -10,7 +10,7 @@ from transformers import GPT2LMHeadModel
 
 
 
-def stt_postprocess(model_path, max_len, data):
+def postprocess(model_path, max_len, data):
 
     OUTPUT_TKN = "<usr>"
     RESULT_TKN = "<sys>"
