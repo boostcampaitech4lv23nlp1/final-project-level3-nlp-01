@@ -492,17 +492,6 @@ doc = ["mdx-include (>=1.4.1,<2.0.0)", "mkdocs (>=1.1.2,<2.0.0)", "mkdocs-markdo
 test = ["anyio[trio] (>=3.2.1,<4.0.0)", "black (==22.10.0)", "coverage[toml] (>=6.5.0,<8.0)", "databases[sqlite] (>=0.3.2,<0.7.0)", "email-validator (>=1.1.1,<2.0.0)", "flask (>=1.1.2,<3.0.0)", "httpx (>=0.23.0,<0.24.0)", "isort (>=5.0.6,<6.0.0)", "mypy (==0.982)", "orjson (>=3.2.1,<4.0.0)", "passlib[bcrypt] (>=1.7.2,<2.0.0)", "peewee (>=3.13.3,<4.0.0)", "pytest (>=7.1.3,<8.0.0)", "python-jose[cryptography] (>=3.3.0,<4.0.0)", "python-multipart (>=0.0.5,<0.0.6)", "pyyaml (>=5.3.1,<7.0.0)", "ruff (==0.0.138)", "sqlalchemy (>=1.3.18,<1.4.43)", "types-orjson (==3.6.2)", "types-ujson (==5.6.0.0)", "ujson (>=4.0.1,!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0,<6.0.0)"]
 
 [[package]]
-name = "ffmpeg"
-version = "1.4"
-description = "ffmpeg python package url [https://github.com/jiashaokun/ffmpeg]"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "ffmpeg-1.4.tar.gz", hash = "sha256:6931692c890ff21d39938433c2189747815dca0c60ddc7f9bb97f199dba0b5b9"},
-]
-
-[[package]]
 name = "ffmpeg-python"
 version = "0.2.0"
 description = "Python bindings for FFmpeg - with complex filtering support"
@@ -591,14 +580,14 @@ files = [
 
 [[package]]
 name = "huggingface-hub"
-version = "0.11.1"
+version = "0.12.0"
 description = "Client library to download and publish models, datasets and other repos on the huggingface.co hub"
 category = "main"
 optional = false
 python-versions = ">=3.7.0"
 files = [
-    {file = "huggingface_hub-0.11.1-py3-none-any.whl", hash = "sha256:11eed7aab4fa4d1fb532f2aea3379ef4998d9f6bc24a330834dfedd3dac7f441"},
-    {file = "huggingface_hub-0.11.1.tar.gz", hash = "sha256:8b9ebf9bbb1782f6f0419ec490973a6487c6c4ed84293a8a325d34c4f898f53f"},
+    {file = "huggingface_hub-0.12.0-py3-none-any.whl", hash = "sha256:93809eabbfb2058a808bddf8b2a70f645de3f9df73ce87ddf5163d4c74b71c0c"},
+    {file = "huggingface_hub-0.12.0.tar.gz", hash = "sha256:da82c9ec8f9d8f976ffd3fd8249d20bb35c2dd3145a9f7ca1106f0ebefd9afa0"},
 ]
 
 [package.dependencies]
@@ -606,17 +595,17 @@ filelock = "*"
 packaging = ">=20.9"
 pyyaml = ">=5.1"
 requests = "*"
-tqdm = "*"
+tqdm = ">=4.42.1"
 typing-extensions = ">=3.7.4.3"
 
 [package.extras]
-all = ["InquirerPy (==0.3.4)", "Jinja2", "black (==22.3)", "flake8 (>=3.8.3)", "flake8-bugbear", "isort (>=5.5.4)", "jedi", "mypy (==0.982)", "pytest", "pytest-cov", "pytest-env", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3"]
+all = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "black (==22.3)", "flake8 (>=3.8.3)", "flake8-bugbear", "isort (>=5.5.4)", "jedi", "mypy (==0.982)", "pytest", "pytest-cov", "pytest-env", "pytest-xdist", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3"]
 cli = ["InquirerPy (==0.3.4)"]
-dev = ["InquirerPy (==0.3.4)", "Jinja2", "black (==22.3)", "flake8 (>=3.8.3)", "flake8-bugbear", "isort (>=5.5.4)", "jedi", "mypy (==0.982)", "pytest", "pytest-cov", "pytest-env", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3"]
+dev = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "black (==22.3)", "flake8 (>=3.8.3)", "flake8-bugbear", "isort (>=5.5.4)", "jedi", "mypy (==0.982)", "pytest", "pytest-cov", "pytest-env", "pytest-xdist", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3"]
 fastai = ["fastai (>=2.4)", "fastcore (>=1.3.27)", "toml"]
 quality = ["black (==22.3)", "flake8 (>=3.8.3)", "flake8-bugbear", "isort (>=5.5.4)", "mypy (==0.982)"]
 tensorflow = ["graphviz", "pydot", "tensorflow"]
-testing = ["InquirerPy (==0.3.4)", "Jinja2", "isort (>=5.5.4)", "jedi", "pytest", "pytest-cov", "pytest-env", "soundfile"]
+testing = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "isort (>=5.5.4)", "jedi", "pytest", "pytest-cov", "pytest-env", "pytest-xdist", "soundfile"]
 torch = ["torch"]
 typing = ["types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3"]
 
@@ -737,13 +726,13 @@ format-nongpl = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-
 
 [[package]]
 name = "kss"
-version = "4.4.0"
+version = "4.5.1"
 description = "A Toolkit for Korean sentence segmentation"
 category = "main"
 optional = false
 python-versions = ">=3"
 files = [
-    {file = "kss-4.4.0.tar.gz", hash = "sha256:6e581e95c588240c57c9a01844bb49f6b725932ed30c8e52044ddd876a1b4db5"},
+    {file = "kss-4.5.1.tar.gz", hash = "sha256:f260f0aefcf0e4be39bf922800e1b28a8995e6012edf6322dd253a9201fcd845"},
 ]
 
 [package.dependencies]
@@ -2628,4 +2617,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.10"
-content-hash = "4f5fb23531c6c6092f2cdfb86daf79ce4e734ec16d1750119dd36a36ad76b4b1"
+content-hash = "40d6141d4ea3cabfdc63298847a08226360870bd182eb88ebfeebbc25bd0a985"
