@@ -37,25 +37,19 @@ def stt(docs):
         data = json.dumps(data),
         headers = headers
     )
-
+    print('>>>>>>>>>>>> finish load WAV file')
     response = requests.get(
         url = f"{backend_address}/speechToText/"
     )
-
+    print('>>>>>>>>>>>> finish STT inference')
     response = requests.get(
         url = f"{backend_address}/sttPostProcessing/",
-        data = response
     )
-
+    print('>>>>>>>>>>>> finish STT postprocess')
     response = requests.get(
         url = f"{backend_address}/segmentation/"
     )
-
-    response = requests.get(
-        url = f"{backend_address}/summarization/",
-        data = response
-    )
-    print('>>>>>>>>>>>> finish summarization')
+    print('>>>>>>>>>>>> finish segment')
 
     results = response.json()['output']
     json_data = json.loads(results)
@@ -69,7 +63,7 @@ def main():
 
     uploaded_file = '/opt/ml/stt/backend/stt_example_1.wav'
     if uploaded_file:
-        with st.spinner('wait for summarization'):
+        with st.spinner('wait for stt'):
             result = stt(uploaded_file)
     st.write(result)
     

@@ -18,7 +18,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 
 from summary.main import segment, summarize
-from stt_postprocessing.main import stt_postprocess
+from stt_postprocessing.main import postprocess
 from STT.setup import stt_setup
 
 
@@ -33,6 +33,11 @@ app.add_middleware(
     allow_headers=['*']
 )
 
+# def model_init(model_path):
+#     return model, tokenizer
+
+# app.stt_model, app.stt_tokenizer = model_init(fmalsdfjkadskl)
+
 class FileName(BaseModel):
     file:str
 
@@ -41,33 +46,6 @@ class STTOutput(BaseModel):
 
 class STTPostprocessed(BaseModel):
     stt_postprocessed:str
-
-# STT + postprocess + segmentation
-@app.post('speechToText', description = 'stt inference')
-def stt_inference(file: FileName):
-    if file is None:
-        return {'output':None}
-    else:
-         # with open(str(file.file), 'rb') as f:
-        #     shutil.copyfileobj(file.file, f) ## commit 할때는 주석 풀기
-        app.wav_filename = file.file
-        
-        torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
-        app.stt_output = stt_setup(
-            make_dataset=False, 
-            inference_wav_file=app.wav_filename
-        )
-        stt_postprocessed = stt_postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt',max_len=64, data = app.stt_output)
-
-        segmentations = segment(stt_postprocessed)
-        
-        return JSONResponse(
-            status_code = 200,
-            content = {
-            "output": json.dumps(segmentations)
-            }
-        )
-
 
 # input WAV file to save
 @app.post('/saveWavFile/', description='save wav file')
@@ -87,54 +65,47 @@ def save_wav_file(file: FileName):
 
 # STT inference
 @app.get('/speechToText/', description='stt inference')
-def stt_inference(file: FileName):
-    try:
-        filename = file
-        torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
-        output = stt_setup(
-            make_dataset=False, 
-            inference_wav_file=filename
-        )
-        return JSONResponse(
-            status_code = 200,
-            content = {
-            "output": json.dumps(output)
-            })
-    except AttributeError as e:
-        return {'error':'start STT inference error'}
+def stt_inference():
+    # try:
+    filename = app.wav_filename
+    torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
+    output = stt_setup(
+        make_dataset=False, 
+        inference_wav_file=filename
+    )
+    app.stt_output = output
+    return {'response': 'success'}
+    # except AttributeError as e:
+    #     return {'error':'start STT inference error'}
 
 ## AttributeError: 'FastAPI' object has no attribute 'stt_output' -> error 발생
 ## client에서 requests 보낼때의 문제 ~ json 구성 바꾸기
 
 # STT postprocess
 @app.get('/sttPostProcessing/', description='stt postprocessing')
-def stt_postprocess(stt_output: STTOutput):
-    try:
-        input = stt_output
-        output = stt_postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt',max_len=64, data = input)
-        return JSONResponse(
-            status_code = 200,
-            content = {
-            "output": json.dumps(output)
-            }
-        )
-    except AttributeError as e:
-        return {'error':'start STT inference error'}
+def stt_postprocess():
+    # try:
+    input = app.stt_output
+    output = postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt',max_len=64, data = input)
+    app.stt_postprocessed = output
+    return {'response': 'success'}
+    # except AttributeError as e:
+    #     return {'error':'start STT inference error'}
 
 # Make phrase
 @app.get('/segmentation/', description='make phrase')
-def preprocess(stt_postprocessed: STTPostprocessed):
-    try:
-        input = stt_postprocessed
-        output = summ_preprocess(input)
-        return JSONResponse(
-            status_code = 200,
-            content = {
-            "output": json.dumps(output)
-            }
-        )
-    except AttributeError as e:
-        return {'error':'start preprocessing error'}
+def preprocess():
+    # try:
+    input = app.stt_postprocessed
+    output = segment(input)
+    return JSONResponse(
+        status_code = 200,
+        content = {
+        "output": json.dumps(output)
+        }
+    )
+    # except AttributeError as e:
+    #     return {'error':'start preprocessing error'}
 
 
 #######################################
