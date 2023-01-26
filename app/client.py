@@ -5,29 +5,6 @@ import pandas as pd
 
 backend_address = "http://localhost:8001"
 
-# def stt(docs):
-#     data = {
-#         'docs':json.dumps(docs)
-#     }
-#     response = requests.post(
-#         url = f'{backend_address}/saveWavFile/',
-#         params = data
-#     )
-#     response = requests.get(
-#         url=f'{backend_address}/sppechToText/',
-#     )
-#     return response
-
-# def stt_postprocess(docs):
-#     data = {
-#         'docs':json.dumps(docs)
-#     }
-#     response = requests.get(
-#         url = f'{backend_address}/sppechToText/',
-#         params = data
-#     )
-#     return response
-
 def stt(docs):
     data = {"file": docs}
     headers = {"Content-type": "application/json"}
@@ -61,7 +38,7 @@ def stt(docs):
 def main():
     st.title("STT -> postprocessing -> preprocessing -> Summary")
 
-    uploaded_file = '/opt/ml/stt/backend/stt_example_1.wav'
+    uploaded_file = '/opt/ml/level3_productserving-level3-nlp-01/history-03.wav'
     if uploaded_file:
         with st.spinner('wait for stt'):
             result = stt(uploaded_file)

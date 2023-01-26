@@ -49,13 +49,13 @@ class STTPostprocessed(BaseModel):
 
 # input WAV file to save
 @app.post('/saveWavFile/', description='save wav file')
-# def save_wav_file(file: UploadFile=File(...)): ## commit 할때는 이 형식으로 데이터 불러오기
-def save_wav_file(file: FileName):
+def save_wav_file(file: UploadFile=File(...)):
+# def save_wav_file(file: FileName): # for streamlit test
     if file is None:
         return {'output': None}
     else:
-        # with open(str(file.file), 'rb') as f:
-        #     shutil.copyfileobj(file.file, f) ## commit 할때는 주석 풀기
+        with open(str(file.file), 'rb') as f:
+            shutil.copyfileobj(file.file, f) ## commit 할때는 주석 풀기
         app.wav_filename = file.file
         return JSONResponse(
             status_code = 200,
@@ -66,59 +66,37 @@ def save_wav_file(file: FileName):
 # STT inference
 @app.get('/speechToText/', description='stt inference')
 def stt_inference():
-    # try:
-    filename = app.wav_filename
-    torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
-    output = stt_setup(
-        make_dataset=False, 
-        inference_wav_file=filename
-    )
-    app.stt_output = output
-    return {'response': 'success'}
-    # except AttributeError as e:
-    #     return {'error':'start STT inference error'}
+    try:
+        filename = app.wav_filename
+        torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
+        output = stt_setup(
+            make_dataset=False, 
+            inference_wav_file=filename
+        )
+        app.stt_output = output
+        return {'response': 'success'}
+    except AttributeError as e:
+        return {'error':'start STT inference error'}
 
-## AttributeError: 'FastAPI' object has no attribute 'stt_output' -> error 발생
-## client에서 requests 보낼때의 문제 ~ json 구성 바꾸기
 
 # STT postprocess
 @app.get('/sttPostProcessing/', description='stt postprocessing')
 def stt_postprocess():
-    # try:
-    input = app.stt_output
-    output = postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt',max_len=64, data = input)
-    app.stt_postprocessed = output
-    return {'response': 'success'}
-    # except AttributeError as e:
-    #     return {'error':'start STT inference error'}
+    try:
+        input = app.stt_output
+        output = postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt', df = input)
+        app.stt_postprocessed = output
+        return {'response': 'success'}
+
+    except AttributeError as e:
+        return {'error':'start STT inference error'}
 
 # Make phrase
 @app.get('/segmentation/', description='make phrase')
 def preprocess():
-    # try:
-    input = app.stt_postprocessed
-    output = segment(input)
-    return JSONResponse(
-        status_code = 200,
-        content = {
-        "output": json.dumps(output)
-        }
-    )
-    # except AttributeError as e:
-    #     return {'error':'start preprocessing error'}
-
-
-#######################################
-
-# Summarization
-@app.get('/summarization/', description='start summarization')
-def summary():
     try:
-        input = app.preprocessed
-        output = summarize(data = input,
-                            sum_model_path='/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
-                            sum_model= 'kobart')
-        print('finish summarization')
+        input = app.stt_postprocessed
+        output = segment(input)
         return JSONResponse(
             status_code = 200,
             content = {
@@ -126,9 +104,30 @@ def summary():
             }
         )
     except AttributeError as e:
-        return {'error':'start summarization error'}
+        return {'error':'start preprocessing error'}
 
-########################################
+
+#######################################
+
+# Summarization
+# @app.get('/summarization/', description='start summarization')
+# def summary():
+#     try:
+#         input = app.preprocessed
+#         output = summarize(data = input,
+#                             sum_model_path='/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
+#                             sum_model= 'kobart')
+#         print('finish summarization')
+#         return JSONResponse(
+#             status_code = 200,
+#             content = {
+#             "output": json.dumps(output)
+#             }
+#         )
+#     except AttributeError as e:
+#         return {'error':'start summarization error'}
+
+# ########################################
 
 
 # TODO: add keyword_extraction function - async ?
