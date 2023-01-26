@@ -42,20 +42,17 @@ class FileName(BaseModel):
     file:str
 
 class STTOutput(BaseModel):
-    stt_output:str
-
-class STTPostprocessed(BaseModel):
-    stt_postprocessed:str
+    stt_output:list
 
 # input WAV file to save
 @app.post('/saveWavFile/', description='save wav file')
-def save_wav_file(file: UploadFile=File(...)):
-# def save_wav_file(file: FileName): # for streamlit test
+# def save_wav_file(file: UploadFile=File(...)):
+def save_wav_file(file: FileName): # for streamlit test
     if file is None:
         return {'output': None}
     else:
-        with open(str(file.file), 'rb') as f:
-            shutil.copyfileobj(file.file, f) ## commit 할때는 주석 풀기
+        # with open(str(file.file), 'rb') as f:
+        #     shutil.copyfileobj(file.file, f) ## commit 할때는 주석 풀기
         app.wav_filename = file.file
         return JSONResponse(
             status_code = 200,
@@ -68,7 +65,7 @@ def save_wav_file(file: UploadFile=File(...)):
 def stt_inference():
     try:
         filename = app.wav_filename
-        torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
+        # torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
         output = stt_setup(
             make_dataset=False, 
             inference_wav_file=filename
@@ -106,26 +103,26 @@ def preprocess():
     except AttributeError as e:
         return {'error':'start preprocessing error'}
 
-
-#######################################
-
 # Summarization
-# @app.get('/summarization/', description='start summarization')
-# def summary():
-#     try:
-#         input = app.preprocessed
-#         output = summarize(data = input,
-#                             sum_model_path='/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
-#                             sum_model= 'kobart')
-#         print('finish summarization')
-#         return JSONResponse(
-#             status_code = 200,
-#             content = {
-#             "output": json.dumps(output)
-#             }
-#         )
-#     except AttributeError as e:
-#         return {'error':'start summarization error'}
+@app.post('/summarization/', description='start summarization')
+def summary(stt_output):
+    print('<<<<<<<<here>>>>>>>>')
+    print(type(stt_output))
+    stt_output = json.loads(stt_output)
+    try:
+        input = stt_output
+        output = summarize(data = input,
+                            sum_model_path='/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
+                            sum_model= 'kobart')
+        print('finish summarization')
+        return JSONResponse(
+            status_code = 200,
+            content = {
+            "output": json.dumps(output)
+            }
+        )
+    except AttributeError as e:
+        return {'error':'start summarization error'}
 
 # ########################################
 

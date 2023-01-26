@@ -5,7 +5,7 @@ import pandas as pd
 
 backend_address = "http://localhost:8001"
 
-def stt(docs):
+def stt(docs:str): # for streamlit test -> str (filepath)
     data = {"file": docs}
     headers = {"Content-type": "application/json"}
 
@@ -14,35 +14,50 @@ def stt(docs):
         data = json.dumps(data),
         headers = headers
     )
-    print('>>>>>>>>>>>> finish load WAV file')
+
     response = requests.get(
         url = f"{backend_address}/speechToText/"
     )
-    print('>>>>>>>>>>>> finish STT inference')
+
     response = requests.get(
         url = f"{backend_address}/sttPostProcessing/",
     )
-    print('>>>>>>>>>>>> finish STT postprocess')
+
     response = requests.get(
         url = f"{backend_address}/segmentation/"
     )
-    print('>>>>>>>>>>>> finish segment')
 
     results = response.json()['output']
     json_data = json.loads(results)
-    st.write(json_data)
-    
+    return json_data
 
-    return response
+def summary(docs:list):
+    data = {'segments':json.dumps(docs)}
+    headers = {"Content-type": "application/json"}
+    response = requests.post(
+        url = f"{backend_address}/summarization/",
+        data = data,
+        headers = headers
+    )
+
+    results = response.json()['output']
+    json_data = json.loads(results)
+    return json_data
 
 def main():
-    st.title("STT -> postprocessing -> preprocessing -> Summary")
+    st.title("BACKEND test")
 
     uploaded_file = '/opt/ml/level3_productserving-level3-nlp-01/history-03.wav'
     if uploaded_file:
         with st.spinner('wait for stt'):
-            result = stt(uploaded_file)
-    st.write(result)
+            stt_inferenced = stt(uploaded_file)
+    st.subheader("STT segments")
+    st.write(stt_inferenced)
+    print(type(stt_inferenced))
+
+    summarized = summary(stt_inferenced)
+    st.subheader("Summarization result")
+    st.write(summarized)
     
 if __name__ == '__main__':        
     main()
