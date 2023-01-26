@@ -17,9 +17,9 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
 
-from summary.main import segment, summarize
-from stt_postprocessing.main import postprocess
-from STT.setup import stt_setup
+from .summary.main import segment, summarize
+from .stt_postprocessing.main import postprocess
+from .STT.setup import stt_setup
 
 
 app = FastAPI()
@@ -83,17 +83,22 @@ def stt_postprocess():
         input = app.stt_output
         output = postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt', df = input)
         app.stt_postprocessed = output
+        
+        print('<<<<<<<<postprocess passed>>>>>>>>')
         return {'response': 'success'}
-
+        
     except AttributeError as e:
         return {'error':'start STT inference error'}
+
 
 # Make phrase
 @app.get('/segmentation/', description='make phrase')
 def preprocess():
     try:
         input = app.stt_postprocessed
+        print('<<<<<<<<<<<<segmentation start>>>>>>>>>>>>>')
         output = segment(input)
+        print('<<<<<<<<<<<<segmentation passed>>>>>>>>>>>>>')
         return JSONResponse(
             status_code = 200,
             content = {
@@ -105,13 +110,14 @@ def preprocess():
 
 # Summarization
 @app.post('/summarization/', description='start summarization')
-def summary(stt_output):
+def summary(segments):
     print('<<<<<<<<here>>>>>>>>')
-    print(type(stt_output))
-    stt_output = json.loads(stt_output)
+
+    stt_output = json.loads(segments)
+    print(stt_output)
     try:
         input = stt_output
-        output = summarize(data = input,
+        output = summarize(preprocessed = input,
                             sum_model_path='/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
                             sum_model= 'kobart')
         print('finish summarization')

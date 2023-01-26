@@ -33,11 +33,10 @@ def stt(docs:str): # for streamlit test -> str (filepath)
 
 def summary(docs:list):
     data = {'segments':json.dumps(docs)}
-    headers = {"Content-type": "application/json"}
+    # headers = {"Content-type": "application/json"}
     response = requests.post(
         url = f"{backend_address}/summarization/",
-        data = data,
-        headers = headers
+        params = data,
     )
 
     results = response.json()['output']
@@ -53,6 +52,8 @@ def main():
             stt_inferenced = stt(uploaded_file)
     st.subheader("STT segments")
     st.write(stt_inferenced)
+    st.write(type(stt_inferenced))
+    st.write(stt_inferenced[0])
     print(type(stt_inferenced))
 
     summarized = summary(stt_inferenced)
