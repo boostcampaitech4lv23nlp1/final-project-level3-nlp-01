@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from qg.question_generation import main_qg
+from qg.main import main
 import json
 import pickle
 
@@ -14,7 +14,7 @@ app = FastAPI()
 @app.get("/qg")
 def qg_task(docs):
     input = json.loads(docs)
-    output = main_qg(datas)
+    output = main("kobart", input)
     print("Finish Question Generation")
     print(type(output))
     return output
