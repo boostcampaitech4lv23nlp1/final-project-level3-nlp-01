@@ -6,4 +6,4 @@ whisper:
     model_size: small
     language: ko
     fp16: True
-    beam_size: 10
+    beam_size: 3

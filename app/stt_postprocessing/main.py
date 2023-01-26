@@ -17,11 +17,11 @@ def postprocess(model_path, df):
     MASK = '<unused0>'
     PAD = '<pad>'
 
-    num_process = 8
+    num_process = 1
     
     print(f'num process : {num_process}')
     
-    scps = split_file(df, split = 1)
+    scps = split_file(df, split = num_process)
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     tokenizer = PreTrainedTokenizerFast.from_pretrained(model_path,
