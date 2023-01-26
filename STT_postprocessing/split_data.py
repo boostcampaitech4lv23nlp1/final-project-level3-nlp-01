@@ -2,7 +2,7 @@ import pandas as pd
 import math
 import os
 
-def split_file(dfs,split = 8):
+def split_file(dfs,split):
     
     div = math.ceil(len(dfs) / split)
     left, right = 0, div

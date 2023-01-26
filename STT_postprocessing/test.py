@@ -21,7 +21,7 @@ def main_inference(model_path, df):
     
     print(f'num process : {num_process}')
     
-    scps = split_file(df, split = 8)
+    scps = split_file(df, split = num_process)
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     tokenizer = PreTrainedTokenizerFast.from_pretrained(model_path,
@@ -48,7 +48,8 @@ def main_inference(model_path, df):
             process.join()
         processes.clear()
     else:
-        args = [model, tokenizer, scp, max_len, output_dir]
+        output_dir = f'./output/inference_0.csv'
+        args = [model, tokenizer, scps[0], max_len, output_dir]
         inference(*args)
     
     for i in range(num_process):
