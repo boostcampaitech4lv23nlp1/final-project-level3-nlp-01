@@ -20,7 +20,6 @@ class PreProcessor:
             tmp = [x.strip() for x in sent_data[i:i+self.stride]]
             tmp_phrase = ' '.join(tmp)
             phrase_list.append(tmp_phrase)
-
         model = SentenceTransformer('snunlp/KR-SBERT-V40K-klueNLI-augSTS')
         vectors = model.encode(phrase_list)
 

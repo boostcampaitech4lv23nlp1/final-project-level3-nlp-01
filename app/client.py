@@ -1,37 +1,48 @@
 import requests
-import pickle
 import json
 import streamlit as st
 import pandas as pd
 
 backend_address = "http://localhost:8001"
 
-def stt_sum(docs):
-    data = {
-        'docs': json.dumps(docs)
-    }
+def stt(docs):
+    data = {"file": docs}
+    headers = {"Content-type": "application/json"}
 
-    response = requests.get(
-        url = f"{backend_address}/service",
-        params = data
+    response = requests.post(
+        url = f"{backend_address}/saveWavFile/",
+        data = json.dumps(data),
+        headers = headers
     )
+    print('>>>>>>>>>>>> finish load WAV file')
+    response = requests.get(
+        url = f"{backend_address}/speechToText/"
+    )
+    print('>>>>>>>>>>>> finish STT inference')
+    response = requests.get(
+        url = f"{backend_address}/sttPostProcessing/",
+    )
+    print('>>>>>>>>>>>> finish STT postprocess')
+    response = requests.get(
+        url = f"{backend_address}/segmentation/"
+    )
+    print('>>>>>>>>>>>> finish segment')
 
     results = response.json()['output']
     json_data = json.loads(results)
     st.write(json_data)
     
-    return
 
+    return response
 
 def main():
-    st.title("STT postprocessing + Summarization")
-    uploaded_file = st.file_uploader("Choose a file!", type=['csv'])
-    if uploaded_file:
-        docs = pd.read_csv(uploaded_file)
-        sentences = ' '.join(list(docs['output']))
-        st.write(docs)
-        st.subheader("Summary")
-        with st.spinner('Wait for Summarization ...'):
-            stt_sum(sentences)
+    st.title("STT -> postprocessing -> preprocessing -> Summary")
 
-main()
+    uploaded_file = '/opt/ml/level3_productserving-level3-nlp-01/history-03.wav'
+    if uploaded_file:
+        with st.spinner('wait for stt'):
+            result = stt(uploaded_file)
+    st.write(result)
+    
+if __name__ == '__main__':        
+    main()
