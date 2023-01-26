@@ -6,7 +6,7 @@ warnings.filterwarnings("ignore")
 
 
 def inference(model, tokenizer, data_path , max_len, output_dir):
-    
+
     OUTPUT_TKN = "<usr>"
     RESULT_TKN = "<sys>"
     EOS = '</s>'
@@ -17,7 +17,7 @@ def inference(model, tokenizer, data_path , max_len, output_dir):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     with torch.no_grad():
-        
+
         df = pd.read_csv(data_path)
         for idx, item in df.iterrows():
             answer=""
@@ -37,8 +37,13 @@ def inference(model, tokenizer, data_path , max_len, output_dir):
                     if gen == EOS:
                         break
                     answer += gen.replace("▁", " ")
+                answer = answer.strip()
+                if answer[0] == '아' and answer[1] == ' ':
+                    answer = answer[2:]
+                elif answer[0] == '어' and answer[1] == ' ':
+                    answer = answer[2:]
 
-                if '<pad>' in answer : 
+                if '<pad>' in answer :
                     sentences.append(query)
                     print(f"answer : {query.strip()}")
                 elif '<unk>' in answer : 
@@ -48,15 +53,15 @@ def inference(model, tokenizer, data_path , max_len, output_dir):
                 else:
                     sentences.append(answer.strip())
                     print(f"answer : {answer.strip()}")
-                
+
             else:
                 sentences.append(query)
                 print(f"answer : {query.strip()}")
-                
+
     df = pd.DataFrame({
         'output' : df['output'],
         'result' : sentences,
     })
     df.to_csv(f'{output_dir}.csv', index=False)
-    
+
     return sentences
