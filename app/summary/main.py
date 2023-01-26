@@ -95,8 +95,8 @@ def main(data_path, sum_model_path, sum_model):
     return postprocessed
 
 if __name__ == '__main__':
-    result = main_test(data_path = '/opt/ml/Segmentation/data/dataset_0118.csv',
-              sum_model_path = '/opt/ml/KoBART-summarization/MODEL/binary_models/kobart_all_preprocessed_without_news',
+    result = main_test(data_path = '/opt/ml/stt_0126.csv',
+              sum_model_path = '/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
               sum_model = 'kobart')
 
     import pickle
