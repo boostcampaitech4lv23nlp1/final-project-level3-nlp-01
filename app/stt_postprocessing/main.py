@@ -10,7 +10,7 @@ from transformers import GPT2LMHeadModel
 
 
 
-def main_inference(model_path, max_len, data):
+def stt_postprocess(model_path, max_len, data):
 
     OUTPUT_TKN = "<usr>"
     RESULT_TKN = "<sys>"
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     import pandas as pd
     data = pd.read_csv('/opt/ml/[심화별개념5]_2_1구석기_신석기시대_2강선사시대_dataset.csv')
 
-    result = main_inference(model_path = '/opt/ml/project_models/stt/postprocessing_gpt/', max_len = 64,
+    result = stt_postprocess(model_path = '/opt/ml/project_models/stt/postprocessing_gpt/', max_len = 64,
                        data = data)
 
     print(result)
