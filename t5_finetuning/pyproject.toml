@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "t5-finetuning"
+version = "0.1.0"
+description = ""
+authors = ["wooy0ng <yygg9800@naver.com>"]
+readme = "README.md"
+packages = [{include = "t5_finetuning"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+numpy = "^1.24.1"
+nltk = "^3.8.1"
+transformers = "^4.26.0"
+datasets = "^2.8.0"
+torch = "1.13.1"
+rouge-score = "^0.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
