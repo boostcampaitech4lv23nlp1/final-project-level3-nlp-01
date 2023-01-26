@@ -4,7 +4,7 @@ from .preprocess import PreProcessor
 from .summary import Summarizer
 from .postprocess import PostProcessor
 
-def main(data, sum_model_path, sum_model):
+def segment(data):
     # 1. STT output 파일 데이터셋 가져오기 (STT 후처리 완료된 파일)
     ## 추후 STT output 형식 바뀔 수도 있으니까 따로 분리함
     loader = DataLoader(data = data)
@@ -16,7 +16,9 @@ def main(data, sum_model_path, sum_model):
                                 min_len = 300,
                                 max_len = 1000)
     preprocessed = preprocessor.preprocess()
+    return preprocessed
 
+def summarize(preprocessed, sum_model_path, sum_model):
     # 3. Summarization
     summarizer = Summarizer(data = preprocessed,
                             model_path = sum_model_path,
@@ -32,7 +34,8 @@ def main(data, sum_model_path, sum_model):
     return postprocessed
 
 if __name__ == '__main__':
-    result = main_test(data_path = '/opt/ml/Segmentation/data/dataset_0118.csv',
+    prerpocessed = summ_preprocess(data = '/opt/ml/Segmentation/data/dataset_0118.csv')
+    result = summarize(data = prerpocessed,
               sum_model_path = '/opt/ml/KoBART-summarization/MODEL/binary_models/kobart_all_preprocessed_without_news',
               sum_model = 'kobart')
 

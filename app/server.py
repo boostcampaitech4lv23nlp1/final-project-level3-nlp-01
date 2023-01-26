@@ -17,7 +17,7 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
 
-from summary.main import summ_preprocess, summarize
+from summary.main import segment, summarize
 from stt_postprocessing.main import stt_postprocess
 from STT.setup import stt_setup
 
@@ -57,7 +57,16 @@ def stt_inference(file: FileName):
             make_dataset=False, 
             inference_wav_file=app.wav_filename
         )
-        postprocessed = stt_postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt',max_len=64, data = app.stt_output)
+        stt_postprocessed = stt_postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt',max_len=64, data = app.stt_output)
+
+        segmentations = segment(stt_postprocessed)
+        
+        return JSONResponse(
+            status_code = 200,
+            content = {
+            "output": json.dumps(segmentations)
+            }
+        )
 
 
 # input WAV file to save
