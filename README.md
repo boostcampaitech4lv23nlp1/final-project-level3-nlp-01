@@ -5,3 +5,4 @@
 
 # settings
 `apt-get install libsndfile1-dev`
+`apt-get install ffmpeg`
