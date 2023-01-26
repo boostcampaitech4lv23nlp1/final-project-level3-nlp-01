@@ -1,9 +1,0 @@
-default:
-    num_process: 8
-    resampling_sr: 16000
-
-whisper:
-    model_size: small
-    language: ko
-    fp16: True
-    beam_size: 10
