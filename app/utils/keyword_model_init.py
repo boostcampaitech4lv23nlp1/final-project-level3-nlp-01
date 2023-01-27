@@ -13,3 +13,4 @@ def kw_model_init():
 
 def filtering_model_init():
     filter_model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+    return filter_model

@@ -159,8 +159,8 @@ def keyword_extraction(seg_docs, summary_docs):
 
     summary_docs = json.loads(summary_docs)
     keywords = main_filtering(filter_model = app.filter_model,
-                                    summary_datas = summary_docs, 
-                                    keyword_datas = temp_keywords) #2차 키워드 추출
+                                summary_datas = summary_docs, 
+                                keyword_datas = temp_keywords) #2차 키워드 추출
     keywords = keywords.to_json()
     
     return JSONResponse(
@@ -175,7 +175,7 @@ def keyword_extraction(seg_docs, summary_docs):
 def qg_task(keywords):
     input = json.loads(keywords)
     input = pd.DataFrame(input)
-    output = generation("kobart", input)
+    output = generation("t5", input)
 
     return JSONResponse(
         status_code = 200,
