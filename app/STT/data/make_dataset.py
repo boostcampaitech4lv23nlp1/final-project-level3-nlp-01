@@ -90,7 +90,7 @@ class MakeDatasetUsingAIHUB(object):
         
 class MakeInferenceDataset(object):
     def __init__(self, inference_wav_path: str) -> None:
-        self.cfg = OmegaConf.load('/opt/ml/level3_productserving-level3-nlp-01/app/STT/data/conf.yaml') # original : ./STT/data/conf.yaml
+        self.cfg = OmegaConf.load('./STT/data/conf.yaml') # original : ./STT/data/conf.yaml
         resampling_sr = self.cfg.default.resampling_sr
 
         self.filename = change_sampling_rate(file_path=inference_wav_path, resampling_sr=resampling_sr)

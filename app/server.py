@@ -54,29 +54,29 @@ def save_wav_file(file: UploadFile=File(...)):
     if file is None:
         return {'output': None}
     else:
-        with open(str(file.file), 'rb') as f:
+        with open(file.filename, 'wb') as f:
             shutil.copyfileobj(file.file, f) ## commit 할때는 주석 풀기
-        app.wav_filename = file.file
-        return JSONResponse(
+        app.wav_filename = file.filename
+        return {JSONResponse(
             status_code = 200,
             content = {
-            "output": json.dumps(file.file)
-            })
+            "output": file.filename
+            })}
 
 # STT inference
 @app.get('/speechToText/', description='stt inference')
 def stt_inference():
     try:
         filename = app.wav_filename
-        torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
+        
         output = stt_setup(
             make_dataset=False, 
             inference_wav_file=filename
         )
         app.stt_output = output
-        return {'response': 'success'}
+        return {'status' : True}
     except AttributeError as e:
-        return {'error':'start STT inference error'}
+        return {'status': False}
 
 
 # STT postprocess
@@ -84,27 +84,24 @@ def stt_inference():
 def stt_postprocess():
     try:
         input = app.stt_output
-        output = postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt', df = input)
+        output = postprocess(model_path='./GPT_2', df = input)
         app.stt_postprocessed = output
-        return {'response': 'success'}
+
+        output = " ".join(output)
+        return {'text': output}
 
     except AttributeError as e:
         return {'error':'start STT inference error'}
 
-# Make phrase
+# STT 후에 바로 처리하는 segmentation
 @app.get('/segmentation/', description='make phrase')
 def preprocess():
     try:
         input = app.stt_postprocessed
         output = segment(input)
-        return JSONResponse(
-            status_code = 200,
-            content = {
-            "output": json.dumps(output)
-            }
-        )
-    except AttributeError as e:
-        return {'error':'start preprocessing error'}
+        return {'output': output}
+    except BaseException as e:
+        return {'error': e}
 
 
 #######################################
@@ -153,5 +150,5 @@ def preprocess():
 #     return summarized
 
 if __name__ == "__main__":
-    
+    torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
     uvicorn.run(app, host="127.0.0.1", port=8001)
