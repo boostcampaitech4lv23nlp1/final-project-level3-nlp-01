@@ -1,8 +1,5 @@
-# TODO: validation check
-
-# TODO: keyword extraction function
-# TODO: question generation function
-# TODO: async test
+# TODO: add model init function
+# TODO: add validation check class
 
 import json
 import shutil
@@ -17,13 +14,14 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 import pandas as pd
 
-# from .summary.main import segment, summarize
-# from .stt_postprocessing.main import postprocess
-# from .STT.setup import stt_setup
-from app.keyword_extraction.main import main_extraction
-from app.keyword_extraction.filtering import main_filtering
-from app.question_generation.main import generation
+from .summary.main import segment, summarize
+from .stt_postprocessing.main import postprocess
+from .STT.setup import stt_setup
+from .keyword_extraction.main import main_extraction
+from .keyword_extraction.filtering import main_filtering
+from .question_generation.main import generation
 
+from .utils.stt_model_init import stt_model_init, stt_post_model_init, segment_model_init
 
 app = FastAPI()
 
@@ -36,10 +34,11 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-# def model_init(model_path):
-#     return model, tokenizer
+# model init
+app.stt_model = stt_model_init()
+app.stt_post_model, app.stt_post_tokenizer = stt_post_model_init()
+app.segment_model = segment_model_init()
 
-# app.stt_model, app.stt_tokenizer = model_init(fmalsdfjkadskl)
 
 class FileName(BaseModel):
     file:str
@@ -69,6 +68,7 @@ def stt_inference():
     try:
         filename = app.wav_filename
         output = stt_setup(
+            model= app.stt_model,
             make_dataset=False, 
             inference_wav_file=filename
         )
@@ -83,7 +83,9 @@ def stt_inference():
 def stt_postprocess():
     try:
         input = app.stt_output
-        output = postprocess(model_path='/opt/ml/project_models/stt/postprocessing_gpt', df = input)
+        output = postprocess(model = app.stt_post_model,
+                            tokenizer = app.stt_post_tokenizer,
+                            df = input)
         app.stt_postprocessed = output
         
         print('<<<<<<<<postprocess passed>>>>>>>>')
@@ -99,7 +101,7 @@ def preprocess():
     try:
         input = app.stt_postprocessed
         print('<<<<<<<<<<<<segmentation start>>>>>>>>>>>>>')
-        output = segment(input)
+        output = segment(app.segment_model, input)
         print('<<<<<<<<<<<<segmentation passed>>>>>>>>>>>>>')
         return JSONResponse(
             status_code = 200,
@@ -175,6 +177,6 @@ def qg_task(keywords):
 #     # extracted_keyword = keyword_extraction(stt_post_processed)
 #     return summarized
 
-if __name__ == "__main__":
-    torch.multiprocessing.set_start_method('spawn', force=True)     # multiprocess mode
-    uvicorn.run(app, host="127.0.0.1", port=8001)
+# if __name__ == "__main__":
+#     torch.multiprocessing.set_start_method('spawn', force=True)     # multiprocess mode
+#     uvicorn.run(app, host="127.0.0.1", port=8001)

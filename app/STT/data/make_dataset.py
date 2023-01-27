@@ -18,7 +18,8 @@ warnings.filterwarnings(action='ignore', category=UserWarning)
 
 # TODO: GPT2에 학습할 데이터셋 생성 모듈 제작 -> MakeDatasetUsingAIHUB()
 class MakeDatasetUsingAIHUB(object):
-    def __init__(self) -> None:
+    def __init__(self, model) -> None:
+        self.model = model
         self.cfg = OmegaConf.load('./STT/data/conf.yaml')        
         self.split_wav = SplitWavAudio(folder=None, filename=None)
         self.all_scps = []
@@ -47,11 +48,9 @@ class MakeDatasetUsingAIHUB(object):
 
         # parameter setting
         kwargs = dict(getattr(self.cfg, 'whisper'))
-        model_size = kwargs.pop('model_size')
         
         processes = []
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        model = whisper.load_model(model_size).to(device=device)
+        model = self.model
         for scps in self.all_scps:
             if len(scps) > 1:
                 model.share_memory()
@@ -89,7 +88,8 @@ class MakeDatasetUsingAIHUB(object):
                 inference()
         
 class MakeInferenceDataset(object):
-    def __init__(self, inference_wav_path: str) -> None:
+    def __init__(self, model, inference_wav_path: str) -> None:
+        self.model = model
         self.cfg = OmegaConf.load('/opt/ml/level3_productserving-level3-nlp-01/app/STT/data/conf.yaml') # original : ./STT/data/conf.yaml
         resampling_sr = self.cfg.default.resampling_sr
 
@@ -116,10 +116,8 @@ class MakeInferenceDataset(object):
 
         # parameter setting
         kwargs = dict(getattr(self.cfg, 'whisper'))
-        model_size = kwargs.pop('model_size')
 
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        model = whisper.load_model(model_size).to(device=device)
+        model = self.model
         output_dir = f'./output/STT/{self.filename}/{self.filename}'
         processes = []
         if len(scps) > 1:

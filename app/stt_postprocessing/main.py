@@ -10,12 +10,9 @@ from .split_data import split_file
 warnings.filterwarnings("ignore")
 
 
-def postprocess(model_path, df):
+def postprocess(model, tokenizer, df):
     
-    BOS = '</s>'
-    EOS = '</s>'
-    MASK = '<unused0>'
-    PAD = '<pad>'
+    
 
     num_process = 1
     
@@ -24,14 +21,12 @@ def postprocess(model_path, df):
     scps = split_file(df, split = num_process)
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    tokenizer = PreTrainedTokenizerFast.from_pretrained(model_path,
-                bos_token=BOS, eos_token=EOS, unk_token='<unk>',
-                pad_token=PAD, mask_token=MASK) 
-    model = GPT2LMHeadModel.from_pretrained(model_path).to(device)
+    tokenizer = tokenizer
+    model = model.to(device)
     max_len = 64
     processes = []
     sentences = []
-    outputs = []
+    # outputs = [] # for making csv file
     if len(scps) > 1:
         model.share_memory()
 
@@ -57,7 +52,7 @@ def postprocess(model_path, df):
         df = pd.read_csv(f'./output/inference_{i}.csv')
         for _, item in df.iterrows():
             sentences.append(item['result'])
-    #         outputs.append(item['output'])
+    #         outputs.append(item['output']) # for making csv file
     # data = pd.DataFrame({
     #     'output' : outputs,
     #     'result' : sentences

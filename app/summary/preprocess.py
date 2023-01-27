@@ -1,8 +1,9 @@
 import kss
-from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import util
 
 class PreProcessor:
-    def __init__(self, data, stride=4, min_len=300, max_len=1000):
+    def __init__(self, model, data, stride=4, min_len=300, max_len=1000):
+        self.model = model
         self.data = data
         self.stride = stride
         self.min_len = min_len
@@ -19,7 +20,7 @@ class PreProcessor:
             tmp = [x.strip() for x in sent_data[i:i+self.stride]]
             tmp_phrase = ' '.join(tmp)
             phrase_list.append(tmp_phrase)
-        model = SentenceTransformer('snunlp/KR-SBERT-V40K-klueNLI-augSTS')
+        model = self.model
         vectors = model.encode(phrase_list)
 
         similarities = util.cos_sim(vectors, vectors)
@@ -96,12 +97,13 @@ class PreProcessor:
 
 if __name__ == '__main__':
     import pandas as pd
-    import pickle
+    from sentence_transformers import SentenceTransformer
     data = pd.read_csv('/opt/ml/level3_productserving-level3-nlp-01/output/inference_large_beam10_len20.csv', index_col = 0)
     
     data['result'] = data['result'].astype(str)
     data = ' '.join(data['result'])
-    preprocesser = PreProcessor(data = data, stride = 4, min_len=300, max_len=1000)
+    model = SentenceTransformer('snunlp/KR-SBERT-V40K-klueNLI-augSTS')
+    preprocesser = PreProcessor(model = model, data = data, stride = 4, min_len=300, max_len=1000)
     split_data = preprocesser.preprocess()
     # print(split_data)
     print(len(split_data))

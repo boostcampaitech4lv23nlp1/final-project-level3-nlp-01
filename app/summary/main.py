@@ -4,14 +4,15 @@ from .preprocess import PreProcessor
 from .summary import Summarizer
 from .postprocess import PostProcessor
 
-def segment(data):
+def segment(model, data):
     # 1. STT output 파일 데이터셋 가져오기 (STT 후처리 완료된 파일)
     ## 추후 STT output 형식 바뀔 수도 있으니까 따로 분리함
     loader = DataLoader(data = data)
     stt_data = loader.load()
 
     # 2. 요약 전, 데이터 전처리 진행
-    preprocessor = PreProcessor(data = stt_data,
+    preprocessor = PreProcessor(model = model,
+                                data = stt_data,
                                 stride = 4,
                                 min_len = 300,
                                 max_len = 1000)
