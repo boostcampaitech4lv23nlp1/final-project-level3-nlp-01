@@ -65,7 +65,6 @@ def save_wav_file(file: FileName): # for streamlit test
 def stt_inference():
     try:
         filename = app.wav_filename
-        # torch.multiprocessing.set_start_method('spawn')     # multiprocess mode
         output = stt_setup(
             make_dataset=False, 
             inference_wav_file=filename
@@ -156,5 +155,5 @@ def summary(segments):
 #     return summarized
 
 if __name__ == "__main__":
-    
+    torch.multiprocessing.set_start_method('spawn', force=True)     # multiprocess mode
     uvicorn.run(app, host="127.0.0.1", port=8001)

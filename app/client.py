@@ -46,7 +46,7 @@ def summary(docs:list):
 def main():
     st.title("BACKEND test")
 
-    uploaded_file = '/opt/ml/level3_productserving-level3-nlp-01/history-03.wav'
+    uploaded_file = '/opt/ml/level3_productserving-level3-nlp-01/history.wav'
     if uploaded_file:
         with st.spinner('wait for stt'):
             stt_inferenced = stt(uploaded_file)
