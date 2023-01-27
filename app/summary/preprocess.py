@@ -9,13 +9,12 @@ class PreProcessor:
         self.max_len = max_len
 
     def sentence_split(self):
-        sent_data = kss.split_sentences(self.data)
+        sent_data = kss.split_sentences(self.data, backend = 'mecab', num_workers=8)
         return sent_data # list 형태
         
     def phrase_split(self, sent_data):
 
         phrase_list = []
-
         for i in range(len(sent_data)):
             tmp = [x.strip() for x in sent_data[i:i+self.stride]]
             tmp_phrase = ' '.join(tmp)
@@ -89,6 +88,7 @@ class PreProcessor:
 
     def preprocess(self):
         sent_data = self.sentence_split()
+        print('finish sent_data')
         phrase_data = self.phrase_split(sent_data)
 
         return phrase_data
@@ -97,13 +97,14 @@ class PreProcessor:
 if __name__ == '__main__':
     import pandas as pd
     import pickle
-    data = pd.read_csv('/opt/ml/Segmentation/data/dataset_0118.csv', index_col = 0)
+    data = pd.read_csv('/opt/ml/level3_productserving-level3-nlp-01/output/inference_large_beam10_len20.csv', index_col = 0)
+    
     data['result'] = data['result'].astype(str)
     data = ' '.join(data['result'])
     preprocesser = PreProcessor(data = data, stride = 4, min_len=300, max_len=1000)
     split_data = preprocesser.preprocess()
     # print(split_data)
     print(len(split_data))
-    with open('/opt/ml/output/seg_300.pickle', 'wb') as f:
-        pickle.dump(split_data, f)
+    # with open('/opt/ml/output/seg_300.pickle', 'wb') as f:
+    #     pickle.dump(split_data, f)
     
