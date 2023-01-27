@@ -15,11 +15,14 @@ from typing import Optional
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
+import pandas as pd
 
-
-from .summary.main import segment, summarize
-from .stt_postprocessing.main import postprocess
-from .STT.setup import stt_setup
+# from .summary.main import segment, summarize
+# from .stt_postprocessing.main import postprocess
+# from .STT.setup import stt_setup
+from app.keyword_extraction.main import main_extraction
+from app.keyword_extraction.filtering import main_filtering
+from app.question_generation.main import generation
 
 
 app = FastAPI()
@@ -132,18 +135,36 @@ def summary(segments):
 # ########################################
 
 
-# TODO: add keyword_extraction function - async ?
-# async def keyword_extraction(docs):
-#     input = json.loads(docs)
-#     output = main_test(input)
-#     return JSONResponse(
-#         status_code = 200,
-#         content = {
-#         "output": json.dumps(output)
-#         }
-#     )
+# Keyword Extraction
+@app.get("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
+def keyword_extraction(seg_docs, summary_docs):
+    seg_docs = json.loads(seg_docs)
+    temp_keywords = main_extraction(seg_docs) #1차 키워드 추출
 
-# TODO: add question_generation function
+    summary_docs = json.loads(summary_docs)
+    keywords = main_filtering(summary_docs, temp_keywords) #2차 키워드 추출
+    keywords = keywords.to_json()
+    
+    return JSONResponse(
+        status_code = 200,
+        content = {
+        "output": keywords
+        }
+    )
+
+# Question Generation
+@app.get("/qg")
+def qg_task(keywords):
+    input = json.loads(keywords)
+    input = pd.DataFrame(input)
+    output = generation("kobart", input)
+
+    return JSONResponse(
+        status_code = 200,
+        content = {
+            "output": json.dumps(output)
+        }
+    )
 
 # @app.get("/service")
 # def main(docs):
