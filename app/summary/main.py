@@ -19,10 +19,11 @@ def segment(model, data):
     preprocessed = preprocessor.preprocess()
     return preprocessed
 
-def summarize(preprocessed, sum_model_path, sum_model):
+def summarize(model, tokenizer, preprocessed: list, sum_model: str):
     # 3. Summarization
     summarizer = Summarizer(data = preprocessed,
-                            model_path = sum_model_path,
+                            model = model,
+                            tokenizer = tokenizer, 
                             max_input_length = 512,
                             max_target_length = 64,
                             model_ = sum_model) # kobart or t5

@@ -22,6 +22,7 @@ from .keyword_extraction.filtering import main_filtering
 from .question_generation.main import generation
 
 from .utils.stt_model_init import stt_model_init, stt_post_model_init, segment_model_init
+from .utils.summary_model_init import summary_model_init
 
 app = FastAPI()
 
@@ -36,8 +37,13 @@ app.add_middleware(
 
 # model init
 app.stt_model = stt_model_init()
-app.stt_post_model, app.stt_post_tokenizer = stt_post_model_init()
+app.stt_post_model, app.stt_post_tokenizer = stt_post_model_init(
+            model_path = '/opt/ml/project_models/stt/postprocessing_gpt')
 app.segment_model = segment_model_init()
+
+app.summary_model, app.summary_tokenizer, app.summary_model_name = summary_model_init(
+    model_path = '/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
+    model_name = 'kobart')
 
 
 class FileName(BaseModel):
@@ -121,9 +127,10 @@ def summary(segments):
     print(stt_output)
     try:
         input = stt_output
-        output = summarize(preprocessed = input,
-                            sum_model_path='/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
-                            sum_model= 'kobart')
+        output = summarize(model = app.summary_model,
+                            tokenizer = app.summary_tokenizer,
+                            preprocessed = input,
+                            sum_model = app.summary_model_name)
         print('finish summarization')
         return JSONResponse(
             status_code = 200,

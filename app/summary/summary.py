@@ -1,28 +1,16 @@
 from tqdm import tqdm
 import nltk
-nltk.download('punkt')
+# nltk.download('punkt') # first init
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-from transformers import PreTrainedTokenizerFast, BartForConditionalGeneration
 
-def model_init_for_t5(model_path, max_target_length):
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
-    tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True, stride=128)
-    
-    model.config.max_length = max_target_length
-    tokenizer.model_max_length = max_target_length
-    return model, tokenizer
 
-def model_init_for_bart(model_path):
-    model = BartForConditionalGeneration.from_pretrained(model_path)
-    tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v1')
 
-    return model, tokenizer
 
 class Summarizer:
-    def __init__(self, data, model_path, max_input_length, max_target_length, model_):
+    def __init__(self, data, model, tokenizer, max_input_length: int, max_target_length: int, model_: str):
         self.data = data
-        self.model_path = model_path
+        self.model = model
+        self.tokenizer = tokenizer
         self.max_input_length = max_input_length
         self.max_target_length = max_target_length
         self.model_ = model_
@@ -30,7 +18,9 @@ class Summarizer:
     def summarize(self):
         result_list = []
         if self.model_ == 't5':
-            model, tokenizer = model_init_for_t5(self.model_path, self.max_target_length)
+            model, tokenizer = self.model, self.tokenizer
+            model.config.max_length = self.max_target_length
+            tokenizer.model_max_length = self.max_target_length
             
             for paragraph in tqdm(self.data):
                 inputs = ['summarize: ' + paragraph]
@@ -41,7 +31,7 @@ class Summarizer:
                 result_list.append(result)
         
         else:
-            model, tokenizer = model_init_for_bart(self.model_path)
+            model, tokenizer = self.model, self.tokenizer
 
             for paragraph in tqdm(self.data):
                 raw_input_ids = tokenizer.encode(paragraph)
