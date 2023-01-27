@@ -16,9 +16,11 @@ class Summarizer:
         self.model_ = model_
 
     def summarize(self):
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
         result_list = []
         if self.model_ == 't5':
             model, tokenizer = self.model, self.tokenizer
+            model.to(device)
             model.config.max_length = self.max_target_length
             tokenizer.model_max_length = self.max_target_length
             
@@ -32,7 +34,8 @@ class Summarizer:
         
         else:
             model, tokenizer = self.model, self.tokenizer
-
+            model.to(device)
+            
             for paragraph in tqdm(self.data):
                 raw_input_ids = tokenizer.encode(paragraph)
                 input_ids = [tokenizer.bos_token_id] + raw_input_ids + [tokenizer.eos_token_id]
