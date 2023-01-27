@@ -23,6 +23,7 @@ from .question_generation.main import generation
 
 from .utils.stt_model_init import stt_model_init, stt_post_model_init, segment_model_init
 from .utils.summary_model_init import summary_model_init
+from .utils.keyword_model_init import ner_model_init, kw_model_init, filtering_model_init
 
 app = FastAPI()
 
@@ -44,6 +45,10 @@ app.segment_model = segment_model_init()
 app.summary_model, app.summary_tokenizer, app.summary_model_name = summary_model_init(
     model_path = '/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
     model_name = 'kobart')
+
+app.ner_model = ner_model_init()
+app.kw_model = kw_model_init()
+app.filter_model = filtering_model_init()
 
 
 class FileName(BaseModel):
@@ -148,10 +153,14 @@ def summary(segments):
 @app.get("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
 def keyword_extraction(seg_docs, summary_docs):
     seg_docs = json.loads(seg_docs)
-    temp_keywords = main_extraction(seg_docs) #1차 키워드 추출
+    temp_keywords = main_extraction(ner_model = app.ner_model, 
+                                    kw_model = app.kw_model,
+                                    docs = seg_docs) #1차 키워드 추출
 
     summary_docs = json.loads(summary_docs)
-    keywords = main_filtering(summary_docs, temp_keywords) #2차 키워드 추출
+    keywords = main_filtering(filter_model = app.filter_model,
+                                    summary_datas = summary_docs, 
+                                    keyword_datas = temp_keywords) #2차 키워드 추출
     keywords = keywords.to_json()
     
     return JSONResponse(

@@ -6,8 +6,6 @@ from data_utils.vocab_tokenizer import Tokenizer
 from data_utils.pad_sequence import keras_pad_fn
 from pathlib import Path
 
-from app.keyword_extraction.keybert_model import KeyBERT
-from transformers import BertModel
 from konlpy.tag import *
 
 import torch
@@ -155,17 +153,17 @@ def get_nouns_sentence(text):
     nouns_sentence = ' '.join([word[0] for word in tokenized_doc if (word[1] == 'NNG' or word[1] == 'NNP')])
     return nouns_sentence
 
-def main_extraction(docs):
+def main_extraction(ner_model, kw_model, docs):
     stopwords = []
     with open('app/keyword_extraction/stopwords.txt', 'r', encoding='UTF-8') as f:
         for line in f:
             stopwords.append(line.replace('\n',''))
 
     #ner model
-    ner_model = ner()
+    ner_model = ner_model
 
     #keybert model
-    kw_model = KeyBERT(BertModel.from_pretrained('sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens'))
+    kw_model = kw_model
 
     list_of_key_word = []
 
