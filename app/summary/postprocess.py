@@ -74,8 +74,7 @@ class PostProcessor(PreProcessor):
         all_subs = []
         for data in tqdm(self.data, desc='postprocessing'):
             del_loop_data = self.delete_loop(data)
-            subs_data = self.awkward_subs(del_loop_data)
-            all_subs.append(subs_data)
+            all_subs.append(del_loop_data)
         phrases = self.phrase_split(all_subs)
         return phrases
 
