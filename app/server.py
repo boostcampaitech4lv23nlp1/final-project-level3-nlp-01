@@ -1,4 +1,5 @@
 # TODO: add model init function
+    # TODO: QG model init ~~~ 혜빈님 도움 받기~~
 # TODO: add validation check class
 
 import json

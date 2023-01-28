@@ -4,6 +4,7 @@ from transformers import BertModel
 from sentence_transformers import SentenceTransformer
 
 def ner_model_init():
+    # TODO: change model path in ner function
     ner_model = ner()
     return ner_model
 
