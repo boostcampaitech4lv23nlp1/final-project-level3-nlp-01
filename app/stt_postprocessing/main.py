@@ -11,8 +11,20 @@ warnings.filterwarnings("ignore")
 
 
 def postprocess(model, tokenizer, df):
+
+    '''
+    ## postprocess
+    description:
+    - stt 작업 후 후처리를 진행합니다.
     
-    
+    args:
+    - model: 후처리에 사용하는 모델
+        - GPT2LMHeadModel
+    - tokenizer: 후처리에 사용하는 tokenizer 모델
+        - PreTrainedTokenizerFast
+    - df: 후처리 입력으로 활용되는 stt output
+        - pd.DataFrame
+    '''
 
     num_process = 1
     

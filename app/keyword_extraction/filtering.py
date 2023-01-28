@@ -32,6 +32,20 @@ def get_use_keyword(filter_model, docs, keywords, top_n):
 
 
 def main_filtering(filter_model, summary_datas, keyword_datas):
+    '''
+    ## main_filtering
+    description:
+    - 추출한 answer words 중, 요약문과의 유사도를 계산하여 주요 답안을 걸러냅니다.
+    
+    args:
+    - filter_model : filtering 진행 시 사용하는 모델
+        - KobertCRF
+    - summary_datas : 요약된 결과물
+        - list
+    - keyword_datas : 1차 answer 추출 후 결과물
+        - list(dict)
+    '''
+
     summary_docs = ""
     for data in summary_datas:
         summary_docs += str(data)

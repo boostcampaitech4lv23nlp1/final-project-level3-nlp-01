@@ -1,5 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-from app.keyword_extraction.ner_model.net import KobertCRF
+from app.keyword_extraction.ner_config.net import KobertCRF
 from gluonnlp.data import SentencepieceTokenizer
 from data_utils.utils import Config
 from data_utils.vocab_tokenizer import Tokenizer
@@ -85,12 +85,12 @@ class DecoderFromNamedEntitySequence():
 
 class ner():
     def __init__(self):
-        model_dir = 'app/keyword_extraction/ner_model'
+        model_dir = 'app/keyword_extraction/ner_config'
 
         model_dir = Path(model_dir)
         model_config = Config(json_path=model_dir / 'config.json')
 
-        tok_path = "app/keyword_extraction/ner_model/tokenizer_78b3253a26.model"
+        tok_path = "/opt/ml/project_models/ner/tokenizer_78b3253a26.model"
         ptr_tokenizer = SentencepieceTokenizer(tok_path)
 
         with open("app/keyword_extraction/vocab.pkl", 'rb') as f:
@@ -154,6 +154,19 @@ def get_nouns_sentence(text):
     return nouns_sentence
 
 def main_extraction(ner_model, kw_model, docs):
+    '''
+    ## main_extraction
+    description:
+    - answer word를 추출합니다.
+    
+    args:
+    - ner_model : ner 진행 시 사용하는 모델
+        - KobertCRF
+    - kw_model : keyword extraction 진행 시 사용하는 모델
+        - KeyBERT
+    - docs : stt 이후 생성된 문단 리스트
+        - list
+    '''
     stopwords = []
     with open('app/keyword_extraction/stopwords.txt', 'r', encoding='UTF-8') as f:
         for line in f:

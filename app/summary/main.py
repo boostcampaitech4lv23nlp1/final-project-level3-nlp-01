@@ -7,6 +7,18 @@ from .postprocess import PostProcessor
 def segment(model, data):
     # 1. STT output 파일 데이터셋 가져오기 (STT 후처리 완료된 파일)
     ## 추후 STT output 형식 바뀔 수도 있으니까 따로 분리함
+
+    '''
+    ## segment
+    description:
+    - stt 후처리된 결과를 입력받아 문단을 분리하는 작업을 수행합니다.
+    
+    args:
+    - model : 문단 분리 시 유사도 계산을 위한 모델
+        - SentenceTransformer
+    - data : stt 후처리된 결과
+        - list
+    '''
     loader = DataLoader(data = data)
     stt_data = loader.load()
 
@@ -20,6 +32,23 @@ def segment(model, data):
     return preprocessed
 
 def summarize(model, tokenizer, preprocessed: list, sum_model: str):
+    '''
+    ## summarize
+    description:
+    - 문단 리스트를 입력받아 각 문단별 요약 결과를 반환하는 역할을 수행합니다.
+    
+    args:
+    - model : 요약 시 사용하는 모델
+        - t5 사용시 : AutoModelForSeq2SeqLM
+        - kobart 사용시 : BartForConditionalGeneration
+    - tokeniaer : 요약 시 사용하는 tokenizer 모델
+        - t5 사용시 : AutoTokenizer
+        - kobart 사용시 : PreTrainedTokenizerFast
+    - preprocessed : 요약 시 입력으로 들어오는 문단 리스트
+        - list
+    - sum_model : 요약 시 사용하는 모델의 종류
+        - str 형태로 ['t5', 'kobart'] 중 하나
+    '''
     # 3. Summarization
     summarizer = Summarizer(data = preprocessed,
                             model = model,
