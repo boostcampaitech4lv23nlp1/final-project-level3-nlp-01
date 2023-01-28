@@ -1,33 +1,160 @@
 import React, { useRef, useState } from 'react';
 import './App.css';
 import SttPage from './sttPage';
-import PostProcessingPage from './postProcessingPage';
+import SummarizationPage from './summarizationPage';
+import QuestionGenerationPage from './questionGenerationPage';
 
 function App() {
-    const serverUrl = 'http://127.0.0.1:8000/'
-    const inputRef = useRef();
+    const [, updateState] = useState();
+    const forceUpdate = () => {updateState({})}
+
+    const serverUrl = 'http://127.0.0.1:8001/'
     const [inputList, setInputList] = useState([]);
-    let [taskBarList, setTaskBarList] = useState([true, false, false, false, false])
+
+    let [taskBarList, setTaskBarList] = useState([true, false, false, false]);
     let [loddingFlag, setLoddingFlag] = useState(false);
     
+    const inputRef = useRef();
+    let sttStatus = useRef([false, false, false]);
+    let postProcessingResult = useRef("");
+    let segmentationResult = useRef([]);
+    let summarizationResult = useRef("");
+    let keywordExtractionResult = useRef([]);
+    let questionGenerationResult = useRef([]);
     
+
     const onSaveRequest = (task, file) => {
       const formData = new FormData();
       formData.append("file", file)
       for (let value of formData.values()){
         console.log(value)
       }
-      const url = serverUrl + task
+      const url = serverUrl + task;
       fetch(url, {
         method: 'POST',
         body: formData
       }).then((response) => {
+        sttStatus.current = [true, false, false, false];
         setLoddingFlag(false);
       }).catch((error) => {
         console.log(error);
       })
-    }    
+    }
+
+    // get 
+    const onSttRequest = () => {
+      const url = serverUrl + 'speechToText';
+      fetch(url, {
+        method: 'GET'
+      }).then((response) => response.json())
+      .then((response) => {
+        if (response.status){
+          sttStatus.current = [true, true, false, false];
+        }
+        forceUpdate();
+      }).then(() => {
+        onSttPostProcessRequest();
+      }).catch(() => {
+        setLoddingFlag(false);
+      })
+    }
     
+    const onSttPostProcessRequest = () => {
+      const url = serverUrl + 'sttPostProcessing';
+      fetch(url, {
+        method: 'GET'
+      }).then((response) => response.json())
+      .then((response) => {
+        postProcessingResult.current = response.text;
+        console.log(postProcessingResult.current)
+
+        sttStatus.current = [true, true, true, false];
+        forceUpdate();
+      }).then(() => {
+        onSegmentationRequest();
+      }).catch(() => {
+        setLoddingFlag(false);
+      })
+    }
+
+    const onSegmentationRequest = () => {
+      const url = serverUrl + 'segmentation';
+      fetch(url, {
+        method: 'GET'
+      }).then((response) => response.json())
+      .then((response) => {
+        segmentationResult.current = response.text;
+
+        sttStatus.current = [true, true, true, true];
+        forceUpdate();
+      }).then(() => {
+        setLoddingFlag(false);
+      }).catch(() => {
+        setLoddingFlag(false);
+      })
+    }
+
+    const onSummarizationRequest = () => {
+      const url = serverUrl + 'summarization';
+      const sent_data = JSON.stringify({
+        'stt_output': segmentationResult.current
+      })
+      console.log(sent_data);
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type' : 'application/json'},
+        body: sent_data
+      }).then((response) => response.json())
+      .then((response) => {
+        summarizationResult.current = response.summarization_output;
+        console.log(summarizationResult.current);
+      }).then(() => {
+        setLoddingFlag(false);
+        setTaskBarList((prev) => [false, false, true ,false]);
+      }).catch(() => {
+        setLoddingFlag(false);
+      })
+    }
+
+    const onKeywordExtractionRequest = () => {
+      const url = serverUrl + 'keyword';
+      const sent_data = JSON.stringify({
+        'seg_docs': segmentationResult.current,
+        'summary_docs': summarizationResult.current
+      });
+      
+      fetch(url,{
+        method: 'POST',
+        headers: { 'Content-Type' : 'application/json'},
+        body: sent_data
+      }).then((response) => response.json()).then((response) => {
+        keywordExtractionResult.current = response.output;
+        console.log(keywordExtractionResult.current); // {context: 'something', keyword: Array()}
+        forceUpdate();
+      }).then(() => {
+        onQuestionGenerationRequest();
+      })
+    }
+
+    const onQuestionGenerationRequest = () => {
+      const url = serverUrl + 'questionGeneration';
+      const sent_data = JSON.stringify({
+        'keywords': keywordExtractionResult.current
+      });
+
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type' : 'application/json'},
+        body: sent_data
+      }).then((response) => response.json())
+      .then((response) => {
+        questionGenerationResult.current = response.output;
+        console.log(questionGenerationResult.current);
+      }).then(() => {
+        setTaskBarList((prev) => [false, false, false, true]);
+      })
+    }
+
     return (
         <div className='App'>
             <div className='text-center text-bg-dark custom-bg' style={{minHeight: '100vh'}}>
@@ -37,11 +164,11 @@ function App() {
                           <li className="nav-item">
                               {
                                 taskBarList[0] ? 
-                                <a className="nav-link fw-bold py-1 px-2 active" href="#">
+                                <a className="nav-link fw-bold py-1 px-2 active" href="#!">
                                     intro
                                 </a>
-                                :<a className="nav-link fw-bold py-1 px-2" href="#" onClick={() => {
-                                  setTaskBarList((prev) => [true, false, false, false, false]);
+                                :<a className="nav-link fw-bold py-1 px-2" href="#!" onClick={() => {
+                                  setTaskBarList((prev) => [true, false, false, false]);
                                 }}>
                                     intro
                                 </a>
@@ -50,11 +177,11 @@ function App() {
                             <li className="nav-item">
                               {
                                 taskBarList[1] ? 
-                                <a className="nav-link fw-bold py-1 px-2 active" href="#">
+                                <a className="nav-link fw-bold py-1 px-2 active" href="#!">
                                     speech to text
                                 </a>
-                                :<a className="nav-link fw-bold py-1 px-2" href="#" onClick={()=>{
-                                  setTaskBarList((prev) => [false, true, false, false, false]);
+                                :<a className="nav-link fw-bold py-1 px-2" href="#!" onClick={()=>{
+                                  setTaskBarList((prev) => [false, true, false, false]);
                                 }}>
                                     speech to text
                                 </a>
@@ -63,41 +190,28 @@ function App() {
                             <li className="nav-item">
                               {
                                 taskBarList[2] ?
-                                <a className="nav-link fw-bold py-1 px-2 active" href="#">
-                                    post processing
+                                <a className="nav-link fw-bold py-1 px-2 active" href="#!">
+                                    summarization
                                 </a>
-                                :<a className="nav-link fw-bold py-1 px-2" href="#" onClick={()=>{
-                                  setTaskBarList((prev) => [false, false, true, false, false]);
+                                :<a className="nav-link fw-bold py-1 px-2" href="#!" onClick={()=>{
+                                  setTaskBarList((prev) => [false, false, true, false]);
                                 }}>
-                                    post processing
+                                    summarization
                                 </a>
                               }
                             </li>
                             <li className="nav-item">
                               {
                                 taskBarList[3] ?
-                                <a className="nav-link fw-bold py-1 px-2 active" href="#">
-                                    feature extraction
+                                <a className="nav-link fw-bold py-1 px-2 active" href="#!">
+                                    question generation
                                 </a>
-                                :<a className="nav-link fw-bold py-1 px-2" href="#" onClick={()=>{
-                                  setTaskBarList((prev) => [false, false, false, true, false]);
+                                :<a className="nav-link fw-bold py-1 px-2" href="#!" onClick={()=>{
+                                  setTaskBarList((prev) => [false, false, false, true]);
                                 }}>
-                                  feature extraction
+                                  question generation
                                 </a>
                               }
-                            </li>
-                            <li className="nav-item">
-                                {
-                                  taskBarList[4] ?
-                                  <a className="nav-link fw-bold py-1 px-2 active" href="#">
-                                    question generation
-                                  </a>
-                                  :<a className="nav-link fw-bold py-1 px-2" href="#" onClick={()=>{
-                                    setTaskBarList((prev) => [false, false, false, false, true]);
-                                  }}>
-                                    question generation
-                                  </a>
-                                }
                             </li>
                         </nav>
                     </div>
@@ -122,7 +236,7 @@ function App() {
                             <div className="d-flex">
                               <label className="file btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3" onClick={
                                 () => {
-                                  setTaskBarList((prev => [false, true, false, false, false]))
+                                  setTaskBarList((prev => [false, true, false, false]))
                                 }
                               }>
                                 시작하기
@@ -153,25 +267,25 @@ function App() {
                         : (taskBarList[1] && inputList.length !== 0) ?
                         <div className="d-flex justify-content-center align-items-center" style={{minHeight: '85vh'}}>
                           <div>
-                            <SttPage file={inputList}/>
+                            <SttPage file={inputList} segmentationResult={segmentationResult.current}/>
                             <div className="d-flex justify-content-center mt-2">
                               {loddingFlag ? 
                               <label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3 disabled">
-                                변환 시작
+                                작업 중
                               </label>
-                              :<label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3" onClick={() => {
-                                const url = serverUrl + 'speechToText';
+                              :segmentationResult.current.length < 1 ? <label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3" onClick={() => {
+                                sttStatus.current = [true, false, false]
                                 setLoddingFlag(true);
-                                fetch(url, {
-                                  method: 'GET',
-                                }).then((response) => {
-                                  setLoddingFlag(false);
-                                  setTaskBarList((prev => [false, false, true, false, false]));
-                                }).catch((error) => {
-                                  console.log(error)
-                                })
+                                onSttRequest();
                               }}>
                                 변환 시작
+                              </label>
+                              : 
+                              <label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3" onClick={() => {
+                                setLoddingFlag(true);
+                                onSummarizationRequest();
+                              }}>
+                                요약 시작
                               </label>
                               }
                               {loddingFlag && 
@@ -180,40 +294,52 @@ function App() {
                               </div>
                               }
                             </div>
+                            <div>
+                              {
+                                loddingFlag && 
+                                <div className='mt-2'>
+                                {
+                                  (sttStatus.current[0] === false) ?
+                                  <div></div>
+                                  : (sttStatus.current[1] === false) ? 
+                                  <div style={{fontSize: '1px'}}>
+                                    (0/2) stt 변환 중...
+                                  </div>
+                                  : (sttStatus.current[2] === false) ? 
+                                  <div style={{fontSize: '1px'}}>
+                                    (1/2) 교정 작업 중...
+                                  </div>
+                                  : (sttStatus.current[3] === false) ?
+                                  <div style={{fontSize: '1px'}}>
+                                    (2/2) segment 작업 중...
+                                  </div>
+                                  :<div></div>
+                                }
+                                </div>
+                              }
+                            </div>
                           </div>
                         </div>
                         : taskBarList[2] ? 
                         <div>
                           <div className="d-flex flex-column align-items-center mt-5" style={{minHeight: '85vh'}}>
-                            <PostProcessingPage/>
+                            <SummarizationPage summarizationResult={summarizationResult.current}/>
                             <label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3" onClick={() => {
-                              const url = serverUrl + 'postProcessing';
-                              fetch(url, {
-                                method: 'GET',
-                              }).then((response) => {
-                                console.log(response)
-                                setTaskBarList((prev => [false, false, false, true, false]))
-                              }).catch((error) => {
-                                console.log(error)
-                              })
+                              // keyward extraction -> question generation
+                              onKeywordExtractionRequest();
                             }}>
-                              후처리
+                              질문 생성
                             </label>
                           </div>
                         </div>
                         : taskBarList[3] ? 
                         <div>
-                          
-                        </div>
-                        : taskBarList[4] ? 
-                        <div>
-
+                          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '85vh'}}>
+                            <QuestionGenerationPage questionGenerationResult={questionGenerationResult.current}/>
+                          </div>
                         </div>
                         : <div>something error</div>
                       }
-                    </div>
-                    <div>
-                      
                     </div>
                 </main>
             </div>
