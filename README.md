@@ -8,6 +8,7 @@
 ```bash
 apt install ffmpeg
 apt-get install libsndfile1-dev
+apt install default-jdk
 ```
 
 # frontend settings

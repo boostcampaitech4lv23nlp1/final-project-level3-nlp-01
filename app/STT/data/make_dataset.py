@@ -8,7 +8,7 @@ from omegaconf import OmegaConf
 from tqdm import tqdm
 
 from .audio import SplitWavAudio, change_sampling_rate
-from app.STT.inference.inference import Inference
+from ..inference.inference import Inference
 
 from multiprocessing import Process, set_start_method
 

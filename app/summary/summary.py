@@ -1,6 +1,6 @@
 from tqdm import tqdm
 import nltk
-nltk.download('punkt')
+# nltk.download('punkt')
 import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import PreTrainedTokenizerFast, BartForConditionalGeneration

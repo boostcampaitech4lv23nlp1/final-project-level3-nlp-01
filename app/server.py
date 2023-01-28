@@ -11,19 +11,19 @@ import torch
 import uvicorn
 from pydantic import BaseModel
 
-from typing import Optional
-from fastapi import FastAPI, File, UploadFile
+from typing import Optional, List
+from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 import pandas as pd
 
-from .summary.main import segment, summarize
-from .stt_postprocessing.main import postprocess
-from .STT.setup import stt_setup
+from summary.main import segment, summarize
+from stt_postprocessing.main import postprocess
+from STT.setup import stt_setup
 
-from .keyword_extraction.main import main_extraction
-from .keyword_extraction.filtering import main_filtering
-from .question_generation.main import generation
+from keyword_extraction.main import main_extraction
+from keyword_extraction.filtering import main_filtering
+from question_generation.main import generation
 
 
 app = FastAPI()
@@ -43,10 +43,14 @@ app.add_middleware(
 # app.stt_model, app.stt_tokenizer = model_init(fmalsdfjkadskl)
 
 class FileName(BaseModel):
-    file:str
+    file: str
 
 class STTOutput(BaseModel):
-    stt_output:list
+    '''
+    input:
+        {"stt_output" : ["I'm baby", "I'm 26 years old]}
+    '''
+    stt_output: List[str]
 
 # input WAV file to save
 @app.post('/saveWavFile/', description='save wav file')
@@ -63,6 +67,7 @@ def save_wav_file(file: UploadFile=File(...)):
             "output": file.filename
             })}
 
+@app.get('/speechToText/', description='stt inference')
 def stt_inference():
     try:
         filename = app.wav_filename
@@ -91,36 +96,40 @@ def stt_postprocess():
     except AttributeError as e:
         return {'error':'start STT inference error'}
 
-# STT 후에 바로 처리하는 segmentation
+# STT 후에 바로 처리하는 segmentation (분리)
 @app.get('/segmentation/', description='make phrase')
 def preprocess():
     try:
         input = app.stt_postprocessed
         print('<<<<<<<<<<<<segmentation start>>>>>>>>>>>>>')
-        output = segment(input)
-        return {'output': output}
+        # output: list = segment(input)
+
+        output = ['나는 아기다.', 'segmentation 요청에 대한 결과입니다.']
+        return {'text': output}
     except BaseException as e:
         return {'error': e}
 
+
+
 # Summarization
 @app.post('/summarization/', description='start summarization')
-def summary(segments):
-    print('<<<<<<<<here>>>>>>>>')
+def summary(segments: STTOutput):
+    '''
+    description:
+        summarization 하는 요청을 받는 함수
+    '''
 
-    stt_output = json.loads(segments)
+    stt_output = segments.stt_output
     print(stt_output)
     try:
         input = stt_output
-        output = summarize(preprocessed = input,
-                            sum_model_path='/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
-                            sum_model= 'kobart')
+        # output: list = summarize(preprocessed = input,
+        #                     sum_model_path='/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
+        #                     sum_model= 'kobart')
+        output = ['나는 아기다.', 'summarization 요청에 대한 결과']
+        
         print('finish summarization')
-        return JSONResponse(
-            status_code = 200,
-            content = {
-            "output": json.dumps(output)
-            }
-        )
+        return {'summarization_output': output}
     except AttributeError as e:
         return {'error':'start summarization error'}
 
