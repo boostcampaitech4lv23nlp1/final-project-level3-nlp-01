@@ -1,4 +1,4 @@
-from ..keyword_extraction import ner
+from ..keyword_extraction.main import ner
 from app.keyword_extraction.keybert_model import KeyBERT
 from transformers import BertModel
 from sentence_transformers import SentenceTransformer
