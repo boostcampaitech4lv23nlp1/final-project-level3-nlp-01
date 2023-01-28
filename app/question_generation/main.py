@@ -4,7 +4,7 @@ from t5_pipeline import pipeline
 # KOBART_MODEL_PATH = "Sehong/kobart-QuestionGeneration"
 
 
-def main(model_type, task, docs, model, tokenizer):
+def question_generate(model_type, task, docs, model, tokenizer):
     if model_type == "kobart":
         kobart_result = main_qg(docs)
         return kobart_result

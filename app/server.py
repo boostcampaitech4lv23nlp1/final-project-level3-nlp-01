@@ -20,11 +20,12 @@ from .stt_postprocessing.main import postprocess
 from .STT.setup import stt_setup
 from .keyword_extraction.main import main_extraction
 from .keyword_extraction.filtering import main_filtering
-from .question_generation.main import generation
+from .question_generation.main import question_generate
 
 from .utils.stt_model_init import stt_model_init, stt_post_model_init, segment_model_init
 from .utils.summary_model_init import summary_model_init
 from .utils.keyword_model_init import ner_model_init, kw_model_init, filtering_model_init
+from .utils.qg_model_init import qg_model_init
 
 app = FastAPI()
 
@@ -51,14 +52,17 @@ app.ner_model = ner_model_init()
 app.kw_model = kw_model_init()
 app.filter_model = filtering_model_init()
 
+app.qg_model, app.qg_tokenizer = qg_model_init()
 
+# input validation
 class FileName(BaseModel):
-    file:str
+    file: str
 
 class STTOutput(BaseModel):
-    stt_output:list
+    stt_output: list
 
-# input WAV file to save
+
+# STT : input WAV file to save
 @app.post('/saveWavFile/', description='save wav file')
 # def save_wav_file(file: UploadFile=File(...)):
 def save_wav_file(file: FileName): # for streamlit test
@@ -74,7 +78,7 @@ def save_wav_file(file: FileName): # for streamlit test
             "output": json.dumps(file.file)
             })
 
-# STT inference
+# STT : STT inference
 @app.get('/speechToText/', description='stt inference')
 def stt_inference():
     try:
@@ -90,7 +94,7 @@ def stt_inference():
         return {'error':'start STT inference error'}
 
 
-# STT postprocess
+# STT : STT postprocess
 @app.get('/sttPostProcessing/', description='stt postprocessing')
 def stt_postprocess():
     try:
@@ -107,7 +111,7 @@ def stt_postprocess():
         return {'error':'start STT inference error'}
 
 
-# Make phrase
+# STT : Make phrase
 @app.get('/segmentation/', description='make phrase')
 def preprocess():
     try:
@@ -124,7 +128,7 @@ def preprocess():
     except AttributeError as e:
         return {'error':'start preprocessing error'}
 
-# Summarization
+# Summarization: Summarization
 @app.post('/summarization/', description='start summarization')
 def summary(segments):
     print('<<<<<<<<here>>>>>>>>')
@@ -150,7 +154,7 @@ def summary(segments):
 # ########################################
 
 
-# Keyword Extraction
+# Keyword Extraction : Keyword Extraction
 @app.get("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
 def keyword_extraction(seg_docs, summary_docs):
     seg_docs = json.loads(seg_docs)
@@ -171,12 +175,12 @@ def keyword_extraction(seg_docs, summary_docs):
         }
     )
 
-# Question Generation
+# QG : Question Generation
 @app.get("/qg")
 def qg_task(keywords):
     input = json.loads(keywords)
     input = pd.DataFrame(input)
-    output = generation("t5", input)
+    output = question_generate("t5", "question-generation", input, app.qg_model, app.qg_tokenizer) 
 
     return JSONResponse(
         status_code = 200,
@@ -185,14 +189,6 @@ def qg_task(keywords):
         }
     )
 
-# @app.get("/service")
-# def main(docs):
-#     stt_post_processed = STT_postprocessing(docs)
-#     with open('/opt/ml/stt_postprocessed.pickle', 'wb') as f:
-#         pickle.dump(stt_post_processed, f)
-#     summarized = summary(stt_post_processed)
-#     # extracted_keyword = keyword_extraction(stt_post_processed)
-#     return summarized
 
 # if __name__ == "__main__":
 #     torch.multiprocessing.set_start_method('spawn', force=True)     # multiprocess mode
