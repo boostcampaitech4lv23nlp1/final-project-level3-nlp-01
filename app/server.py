@@ -61,6 +61,15 @@ class FileName(BaseModel):
 class STTOutput(BaseModel):
     stt_output: list
 
+class SegmentsOutput(BaseModel):
+    segments: list
+
+class SummaryOutput(BaseModel):
+    summarization: list
+
+class KeywordOutput(BaseModel):
+    keywords: 
+
 
 # STT : input WAV file to save
 @app.post('/saveWavFile/', description='save wav file')
@@ -156,7 +165,7 @@ def summary(segments):
 
 # Keyword Extraction : Keyword Extraction
 @app.get("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
-def keyword_extraction(seg_docs, summary_docs):
+def keyword_extraction(seg_docs: SegmentsOutput, summary_docs: SummaryOutput):
     seg_docs = json.loads(seg_docs)
     temp_keywords = main_extraction(ner_model = app.ner_model, 
                                     kw_model = app.kw_model,
@@ -167,6 +176,7 @@ def keyword_extraction(seg_docs, summary_docs):
                                 summary_datas = summary_docs, 
                                 keyword_datas = temp_keywords) #2차 키워드 추출
     keywords = keywords.to_json()
+    # 혜빈님께 드렸던 형태 ... Kobart : DataFrame / T5 : Dictionary
     
     return JSONResponse(
         status_code = 200,
@@ -179,7 +189,6 @@ def keyword_extraction(seg_docs, summary_docs):
 @app.get("/qg")
 def qg_task(keywords):
     input = json.loads(keywords)
-    input = pd.DataFrame(input)
     output = question_generate("t5", "question-generation", input, app.qg_model, app.qg_tokenizer) 
 
     return JSONResponse(
