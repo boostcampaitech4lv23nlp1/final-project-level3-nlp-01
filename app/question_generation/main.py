@@ -24,6 +24,7 @@ def question_generate(model_type, task, docs, model, tokenizer):
         - t5 사용시 : T5TokenizerFast
         - kobart 사용시 : None - 코드 내에서 불러옴
     '''
+
     if model_type == "kobart":
         kobart_result = main_qg(docs)
         return kobart_result
@@ -33,5 +34,11 @@ def question_generate(model_type, task, docs, model, tokenizer):
         t5_result = []
         for data in docs:
             t5_result.append(nlp(data['context'], data['keyword']))
+
+        qg_result = []
+        for data in t5_result:
+            if '?' in data['question'] and len(data['question']) > 10:
+                qg_result.append(data)
+        qg_result = list({data['question']: data for data in qg_result}.values())
         
-        return t5_result
+        return qg_result
