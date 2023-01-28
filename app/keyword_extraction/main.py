@@ -104,7 +104,7 @@ class ner():
 
         self.model = KobertCRF(config=model_config, num_classes=len(ner_to_index), vocab=vocab)
         model_dict = self.model.state_dict()
-        checkpoint = torch.load("/opt/ml/project_models/best-epoch-12-step-1000-acc-0.960.bin", map_location="cuda")
+        checkpoint = torch.load("/opt/ml/project_models/ner/ner_model_epoch_12.bin", map_location="cuda")
         convert_keys = {}
         for k, v in checkpoint['model_state_dict'].items():
             new_key_name = k.replace("module.", '')
@@ -216,4 +216,4 @@ def main_extraction(ner_model, kw_model, docs):
             
         list_of_key_word.append({"context" : doc, "keyword": keywords})
 
-    return list_of_key_word
+    return list_of_key_word # dict list
