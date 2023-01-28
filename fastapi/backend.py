@@ -7,16 +7,19 @@ import pickle
 
 app = FastAPI()
 
-# data_path = '/opt/ml/input/data/KE/keyword_for_qg.pickle'
-# with open(data_path, 'rb') as f:
-#     datas = pickle.load(f)
+
+'''
+model_type = "kobart" or "t5
+task = "question_generation" or "e2e-qg"
+main(model_type, task, input, t5_model, t5_tokenizer)
+'''
 
 @app.get("/qg")
-def qg_task(docs):
-    input = json.loads(docs)
-    output = main("kobart", input)
+def qg_task(keyword_docs):
+    input = json.loads(keyword_docs)
+    output = main("t5", "question-generation", input, t5_model, t5_tokenizer) 
     print("Finish Question Generation")
-    print(type(output))
+
     return output
     # return JSONResponse(
     #     status_code = 200,
