@@ -4,6 +4,6 @@ from transformers import(
 )
 
 def qg_model_init():
-    model = T5ForConditionalGeneration.from_pretrained(ans_model)
-    tokenizer = T5TokenizerFast.from_pretrained(tokenizer)
+    model = T5ForConditionalGeneration.from_pretrained('/opt/ml/project_models/question_generation_t5/qg_models')
+    tokenizer = T5TokenizerFast.from_pretrained('/opt/ml/project_models/question_generation_t5/qg_tokenizer')
     return model, tokenizer
