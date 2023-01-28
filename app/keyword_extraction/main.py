@@ -167,44 +167,53 @@ def main_extraction(ner_model, kw_model, docs):
 
     list_of_key_word = []
 
-    for sen_list in docs:
-        temp_output = []
-        doc = sen_list
+    for doc in docs: #doc = 하나의 context
+        keywords_check = [] #중복 키워드 방지
 
-        #ner output
-        for i in sen_list.split('.'):
-            i = i+"."
+        sen_list = []
+        for i in doc.split('.'):
             if '?' in i:
                 for j in i.split('?'):
-                    temp_output += ner_model.extraction(j)
+                    if(len(j)>1):
+                        sen_list.append(j)
             else:
-                temp_output += ner_model.extraction(i)
-        
-        #ner output 조사 제거
-        temp_output = get_nouns(temp_output)
-        
-        output = []
-        # 한글자 제거 
-        for i, j in enumerate(temp_output):
-            if len(j)>1:
-                output.append(temp_output[i])
+                if(len(i)>1):
+                    sen_list.append(i+'.')
 
-        # keybert output
-        keywords = kw_model.extract_keywords(get_nouns_sentence(doc), keyphrase_ngram_range=(1,1), top_n=10)
+        keywords = []
+        for index, sen in enumerate(sen_list):
+            # ner output
+            temp_output = ner_model.extraction(sen)
+            # 조사 제거
+            temp_output = get_nouns(temp_output)
 
-        for i in keywords:
-            output.append(i[0])
+            output = []
+            # 한글자 제거 
+            for i, j in enumerate(temp_output):
+                if len(j)>1:
+                    output.append(temp_output[i])
+            
+            #keybert output
+            keyword = kw_model.extract_keywords(get_nouns_sentence(sen), keyphrase_ngram_range=(1,1), top_n=1)
 
-        # 중복 제거
-        temp = set(output)
-        output = list(temp)
+            if(keyword):
+                output.append(keyword[0][0])
 
-        # 불용어 제거
-        result = []
-        for token in output: 
-            if token not in stopwords: 
-                result.append(token) 
+            # 중복 제거
+            temp = set(output)
+            output = list(temp)
 
-        list_of_key_word.append({"context" : doc, "keyword": result})
+            # 불용어 제거  & 하나의 context에서 키워드 중복되지 않도록 진행
+            final_output = []
+            for token in output: 
+                if (token not in stopwords) and (token not in keywords_check): 
+                    final_output.append(token)
+                    keywords_check.append(token)
 
-    return pd.DataFrame(list_of_key_word)
+
+            for word in final_output:
+                keywords.append((index, word))
+            
+        list_of_key_word.append({"context" : doc, "keyword": keywords})
+
+    return list_of_key_word
