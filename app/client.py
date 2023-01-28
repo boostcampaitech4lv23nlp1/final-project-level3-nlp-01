@@ -71,21 +71,21 @@ def keyword(seg_docs, summary_docs):
             continue
 
 
-# def keyword(seg_docs, summary_docs):
-#     data = {
-#         'seg_docs': json.dumps(seg_docs),
-#         'summary_docs': json.dumps(summary_docs)
-#     }
+def keyword(seg_docs, summary_docs):
+    data = {
+        'seg_docs': json.dumps(seg_docs),
+        'summary_docs': json.dumps(summary_docs)
+    }
 
-#     response = requests.get(
-#         url = f"{backend_address}/keyword",
-#         params = data,
-#         verify = False
-#     )
+    response = requests.get(
+        url = f"{backend_address}/keyword",
+        params = data,
+        verify = False
+    )
 
-#     results = response.json()['output']
-#     json_data = json.loads(results)
-#     return pd.DataFrame(json_data)
+    results = response.json()['output']
+    json_data = json.loads(results)
+    return pd.DataFrame(json_data)
 
 
 def qg(keywords):
@@ -118,11 +118,11 @@ def main():
     print(type(stt_inferenced))
 
     summarized = summary(stt_inferenced)
-    st.subheader("Summarization result")
+    st.subheader("Summarization Result")
     st.write(summarized)
 
     #### keyword test
-    st.title("keyword extraction")
+    st.subheader("Keyword Extraction Result")
 
     with open('seg_0125.pickle', 'rb') as f:
         seg_docs = pickle.load(f)
@@ -134,7 +134,7 @@ def main():
     st.dataframe(keywords, 50000, 500)
 
     ##### qg test
-    st.title("qg")
+    st.subheader("Question Generation, Result")
     # with open('0126_keywords.pickle', 'rb') as f:
     #     keywords = pickle.load(f)
 

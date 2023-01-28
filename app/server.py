@@ -173,12 +173,11 @@ def keyword_extraction(seg_docs: SegmentsOutput, summary_docs: SummaryOutput):
     keywords = main_filtering(filter_model = app.filter_model,
                                 summary_datas = summary_docs, 
                                 keyword_datas = temp_keywords) #2차 키워드 추출
-    keywords = keywords.to_json()
     
     return JSONResponse(
         status_code = 200,
         content = {
-        "output": keywords
+        "output": json.dumps(keywords)
         }
     )
 
