@@ -11,7 +11,7 @@ import torch
 import uvicorn
 from pydantic import BaseModel
 
-from typing import Optional, List
+from typing import Optional, List, Tuple, Dict, Union
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
@@ -48,6 +48,17 @@ class STTOutput(BaseModel):
     '''
     stt_output: List[str]
 
+class KeyWordInput(BaseModel):
+    '''
+    example:
+        {
+            seg_docs: [],
+            summary_docs: [],
+        }
+    '''
+    seg_docs: List[str]
+    summary_docs: List[str]
+
 # input WAV file to save
 @app.post('/saveWavFile/', description='save wav file')
 def save_wav_file(file: UploadFile=File(...)):
@@ -83,7 +94,7 @@ def stt_inference():
 def stt_postprocess():
     try:
         input = app.stt_output
-        output = postprocess(model_path='./GPT_2', df = input)
+        output = postprocess(model_path='./models/stt/postprocessing_gpt', df = input)
         app.stt_postprocessed = output
 
         output = " ".join(output)
@@ -104,8 +115,6 @@ def preprocess():
         return {'text': output}
     except BaseException as e:
         return {'error': e}
-
-
 
 # Summarization
 @app.post('/summarization/', description='start summarization')
@@ -129,39 +138,63 @@ def summary(segments: STTOutput):
     except AttributeError as e:
         return {'error':'start summarization error'}
 
-# ########################################
-
-
 # Keyword Extraction
-@app.get("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
-def keyword_extraction(seg_docs, summary_docs):
-    seg_docs = json.loads(seg_docs)
-    temp_keywords = main_extraction(seg_docs) #1차 키워드 추출
+@app.post("/keyword", description='start keyword extraction') #input = seg&summary docs, output = context, keyword dataframe() to json
+def keyword_extraction(req: KeyWordInput):
+    '''
+    input:
+        seg_docs: list
+        summary_docs: list
+    output:
+        keywords: List[Dict[str, List[Tuple[int, str]]]]
+    '''
+    seg_docs = req.seg_docs
+    summary_docs = req.summary_docs
 
-    summary_docs = json.loads(summary_docs)
-    keywords = main_filtering(summary_docs, temp_keywords) #2차 키워드 추출
-    keywords = keywords.to_json()
+    # temp_keywords = main_extraction(seg_docs) #1차 키워드 추출
+    # keywords = main_filtering(summary_docs, temp_keywords) #2차 키워드 추출
     
-    return JSONResponse(
-        status_code = 200,
-        content = {
-        "output": keywords
-        }
-    )
+    keywords = [{
+        'context': "나는 아기다",
+        'keyword': [(1, "아기"), (2, "신생아")]
+    },
+    {
+        'context': "나는 어른이다",
+        'keyword': [(1, "어른"), (2, "성인")]
+    }
+    ]
+    return {
+        'output': keywords
+    }
+
+class QuestionGenerationInput(BaseModel):
+    '''
+    type:
+        List[Dict[str, Union[str, List]]]
+    example:
+        [{context: "string", keyword: [(18, "신사임당"), (19, '다른거')]}]
+    '''
+    keywords: List[Dict[str, Union[str, List]]]
+    
 
 # Question Generation
-@app.get("/qg")
-def qg_task(keywords):
-    input = json.loads(keywords)
-    input = pd.DataFrame(input)
-    output = generation("kobart", input)
+@app.post("/questionGeneration", description="start question generation")
+def qg_task(req: QuestionGenerationInput):
+    input = req.keywords
+    for idx in range(len(input)):
+        input[idx]['keyword'] = [tuple(keyword) for keyword in input[idx]['keyword']]
+        
+    # output = generation("kobart", input)
+    '''
+    example:
+        [{'question': "string" ,'answer': "string"}, {'question': "string" ,'answer': "string"}]
+    '''
+    output = [
+        {'question': "신생아는 왜 귀여운가?", "answer": "그냥 귀엽기 때문이다"},
+        {'question': "아기는 왜 귀여운가?", "answer": "그냥 귀엽기 때문이다"}
+    ]
 
-    return JSONResponse(
-        status_code = 200,
-        content = {
-            "output": json.dumps(output)
-        }
-    )
+    return {'output': output}
 
 # @app.get("/service")
 # def main(docs):
