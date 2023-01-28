@@ -37,10 +37,6 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-# def model_init(model_path):
-#     return model, tokenizer
-
-# app.stt_model, app.stt_tokenizer = model_init(fmalsdfjkadskl)
 
 class FileName(BaseModel):
     file: str
