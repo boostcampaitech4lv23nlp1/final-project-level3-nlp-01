@@ -15,7 +15,7 @@ from transformers import(
 logger = logging.getLogger(__name__)
 
 class QGPipeline:
-    """Poor man's QG pipeline"""
+    """only for question generation only. excluding answer extraction."""
     def __init__(
         self,
         model: PreTrainedModel,
@@ -39,16 +39,20 @@ class QGPipeline:
         if self.ans_model is not self.model:
             self.ans_model.to(self.device)
 
-        assert self.model.__class__.__name__ in ["T5ForConditionalGeneration", "BartForConditionalGeneration"]
-        
-        if "T5ForConditionalGeneration" in self.model.__class__.__name__:
-            self.model_type = "t5"
-        else:
-            self.model_type = "bart"
+        self.model_type = "t5"
 
-    def __call__(self, inputs: str):
-        inputs = " ".join(inputs.split())
-        sents, answers = self._extract_answers(inputs)
+    def __call__(self, context: str, answers: list):
+        # sents = sent_tokenize(context)
+        sents = []
+        for i in context.split('.'):
+            if '?' in i:
+                for j in i.split('?'):
+                    if(len(j)>1):
+                        sents.append(j)
+            else:
+                if(len(i)>1):
+                    sents.append(i+'.')
+
         flat_answers = list(itertools.chain(*answers))
         
         if len(flat_answers) == 0:
@@ -74,22 +78,6 @@ class QGPipeline:
         questions = [self.tokenizer.decode(ids, skip_special_tokens=True) for ids in outs]
         return questions
     
-    def _extract_answers(self, context):
-        sents, inputs = self._prepare_inputs_for_ans_extraction(context)
-        inputs = self._tokenize(inputs, padding=True, truncation=True)
-
-        outs = self.ans_model.generate(
-            input_ids=inputs['input_ids'].to(self.device), 
-            attention_mask=inputs['attention_mask'].to(self.device), 
-            max_length=32,
-        )
-        
-        dec = [self.ans_tokenizer.decode(ids, skip_special_tokens=False) for ids in outs]
-        answers = [item.split('<sep>') for item in dec]
-        answers = [i[:-1] for i in answers]
-        answers = [[ans[0].lstrip("<pad>")] for ans in answers]
-        
-        return sents, answers
     
     def _tokenize(self,
         inputs,
@@ -109,83 +97,32 @@ class QGPipeline:
         )
         return inputs
     
-    def _prepare_inputs_for_ans_extraction(self, text):
-        sents = sent_tokenize(text)
-
-        inputs = []
-        for i in range(len(sents)):
-            source_text = "extract answers:"
-            for j, sent in enumerate(sents):
-                if i == j:
-                    sent = "<hl> %s <hl>" % sent
-                source_text = "%s %s" % (source_text, sent)
-                source_text = source_text.strip()
-            
-            if self.model_type == "t5":
-                source_text = source_text + " </s>"
-            inputs.append(source_text)
-
-        return sents, inputs
     
     def _prepare_inputs_for_qg_from_answers_hl(self, sents, answers):
         inputs = []
-        for i, answer in enumerate(answers):
-            if len(answer) == 0: continue
-            for answer_text in answer:
-                sent = sents[i]
-                sents_copy = sents[:]
-                
-                answer_text = answer_text.strip()
-                if answer_text not in sent:
-                    continue
-                
-                ans_start_idx = sent.index(answer_text)
-                
-                sent = f"{sent[:ans_start_idx]} <hl> {answer_text} <hl> {sent[ans_start_idx + len(answer_text): ]}"
-                sents_copy[i] = sent
-                
-                source_text = " ".join(sents_copy)
-                source_text = f"generate question: {source_text}" 
-                if self.model_type == "t5":
-                    source_text = source_text + " </s>"
-                
-                inputs.append({"answer": answer_text, "source_text": source_text})
+        for answer in answers:
+            idx, answer_text = answer[0], answer[1]
+            
+            sent = sents[idx]
+            sents_copy = sents[:]
+
+            answer_text = answer_text.strip()
+            if answer_text not in sent:
+                continue
+
+            ans_start_idx = sent.index(answer_text)
+
+            sent = f"{sent[:ans_start_idx]} <hl> {answer_text} <hl> {sent[ans_start_idx + len(answer_text): ]}"
+            sents_copy[idx] = sent
+
+            source_text = " ".join(sents_copy)
+            source_text = f"generate question: {source_text}"
+            source_text = source_text + " </s>"
+            inputs.append({"answer": answer_text, "source_text": source_text})
         
         return inputs
     
     
-class MultiTaskQAQGPipeline(QGPipeline):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-    
-    def __call__(self, inputs: Union[Dict, str]):
-        if type(inputs) is str:
-            # do qg
-            return super().__call__(inputs)
-        else:
-            # do qa
-            return self._extract_answer(inputs["question"], inputs["context"])
-    
-    def _prepare_inputs_for_qa(self, question, context):
-        source_text = f"question: {question}  context: {context}"
-        if self.model_type == "t5":
-            source_text = source_text + " </s>"
-        return  source_text
-    
-    def _extract_answer(self, question, context):
-        source_text = self._prepare_inputs_for_qa(question, context)
-        inputs = self._tokenize([source_text], padding=False)
-    
-        outs = self.model.generate(
-            input_ids=inputs['input_ids'].to(self.device), 
-            attention_mask=inputs['attention_mask'].to(self.device), 
-            max_length=16,
-        )
-
-        answer = self.tokenizer.decode(outs[0], skip_special_tokens=True)
-        return answer
-
-
 class E2EQGPipeline:
     def __init__(
         self,
@@ -280,12 +217,6 @@ SUPPORTED_TASKS = {
             "ans_model": "/opt/ml/input/data/question_generation/t5_models/checkpoint-4000",
         }
     },
-    "multitask-qa-qg": {
-        "impl": MultiTaskQAQGPipeline,
-        "default": {
-            "model": "/opt/ml/input/data/question_generation/t5_models/checkpoint-4000",
-        }
-    },
     "e2e-qg": {
         "impl": E2EQGPipeline,
         "default": {
@@ -296,10 +227,10 @@ SUPPORTED_TASKS = {
 
 def pipeline(
     task: str,
-    model: Optional = None,
+    model: Optional[Union[str, PreTrainedModel]] = None,
     tokenizer: Optional[Union[str, PreTrainedTokenizer]] = None,
     qg_format: Optional[str] = "highlight",
-    ans_model: Optional = None,
+    ans_model: Optional[Union[str, PreTrainedModel]] = None,
     ans_tokenizer: Optional[Union[str, PreTrainedTokenizer]] = None,
     use_cuda: Optional[bool] = True,
     **kwargs,
@@ -369,7 +300,5 @@ def pipeline(
     
     if task == "e2e-qg":
         return task_class(model=model, tokenizer=tokenizer, use_cuda=use_cuda)
-    elif task == "question-generation":
+    else: # task == "question-generation":
         return task_class(model=model, tokenizer=tokenizer, ans_model=ans_model, ans_tokenizer=ans_tokenizer, qg_format=qg_format, use_cuda=use_cuda)
-    else:
-        return task_class(model=model, tokenizer=tokenizer, ans_model=model, ans_tokenizer=tokenizer, qg_format=qg_format, use_cuda=use_cuda)

@@ -26,8 +26,7 @@ def main_qg(docs):
         for keyword in docs["keyword"][idx]:
             text = docs['context'][idx] + sep_token + keyword
             question = generation(text)
-            #gen_questions.append({'question', question, 'answer', keyword})
-            gen_questions.append({"question" : question, "answer": keyword})
+            gen_questions.append({'question', question, 'answer', keyword})
    
 
     return gen_questions

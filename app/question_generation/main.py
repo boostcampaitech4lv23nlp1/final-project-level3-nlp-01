@@ -1,19 +1,18 @@
-from .kobart_qg import main_qg
-from .t5_pipeline import pipeline
+from kobart_qg import main_qg
+from t5_pipeline import pipeline
 
-T5_TOKENIZER_PATH = "/opt/ml/input/data/question_generation/t5_qg_tokenizer"
-T5_MODEL_PATH = ""
-KOBART_MODEL_PATH = ""
+# KOBART_MODEL_PATH = "Sehong/kobart-QuestionGeneration"
 
-def generation(model_type, docs):
+
+def main(model_type, task, docs, model, tokenizer):
     if model_type == "kobart":
         kobart_result = main_qg(docs)
         return kobart_result
     else:
-        nlp = pipeline("multitask-qa-qg", tokenizer=T5_TOKENIZER_PATH)
+        nlp = pipeline(task, model=model, tokenizer=tokenizer, ans_model=model, ans_tokenizer=tokenizer)
 
         t5_result = []
-        for doc in docs['context']:
-            t5_result.append(nlp(doc))
+        for data in docs:
+            t5_result.append(nlp(data['context'], data['keyword']))
         
         return t5_result
