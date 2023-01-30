@@ -59,10 +59,10 @@ def summary(segments):
     return json_data
 
 
-def keyword(seg_docs, summary_docs):
+def keyword(segments, summarized):
     data = {
-        'seg_docs': seg_docs,
-        'summary_docs': summary_docs
+        'segments': segments,
+        'summarized': summarized
     }
 
     page = ''

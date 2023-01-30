@@ -7,7 +7,7 @@ import torch
 import uvicorn
 from pydantic import BaseModel
 
-from typing import Optional
+from typing import Optional, List
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
@@ -58,17 +58,11 @@ app.qg_model, app.qg_tokenizer = qg_model_init()
 class FileName(BaseModel):
     file: str
 
-class STTOutput(BaseModel):
-    stt_output: list
-
 class SegmentsOutput(BaseModel):
-    segments: list
+    segments: List[str]
 
 class SummaryOutput(BaseModel):
-    summarization: list
-
-class KeywordOutput(BaseModel):
-    keywords: list
+    summarized: List[str]
 
 
 # STT : input WAV file to save
@@ -139,38 +133,38 @@ def preprocess():
 
 # Summarization: Summarization
 @app.post('/summarization/', description='start summarization') # input : list -> output : list
-def summary(segments):
+def summary(segments:SegmentsOutput):
 
     stt_output = json.loads(segments)
-    # try:
-    input = stt_output
-    output = summarize(model = app.summary_model,
-                        tokenizer = app.summary_tokenizer,
-                        postprocess_model = app.segment_model,
-                        preprocessed = input,
-                        sum_model = app.summary_model_name)
-    print('finish summarization')
-    return JSONResponse(
-        status_code = 200,
-        content = {
-        "output": json.dumps(output)
-        }
-    )
-    # except AttributeError as e:
-    #     return {'error':'start summarization error'}
+    try:
+        input = stt_output
+        output = summarize(model = app.summary_model,
+                            tokenizer = app.summary_tokenizer,
+                            postprocess_model = app.segment_model,
+                            preprocessed = input,
+                            sum_model = app.summary_model_name)
+        print('finish summarization')
+        return JSONResponse(
+            status_code = 200,
+            content = {
+            "output": json.dumps(output)
+            }
+        )
+    except AttributeError as e:
+        return {'error':'start summarization error'}
 
 # ########################################
 
 
 # Keyword Extraction : Keyword Extraction
 @app.post("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
-def keyword_extraction(segments, summarization):
+def keyword_extraction(segments:SegmentsOutput, summarized:SummaryOutput):
     segments = json.loads(segments)
     temp_keywords = main_extraction(ner_model = app.ner_model, 
                                     kw_model = app.kw_model,
                                     docs = segments) #1차 키워드 추출
 
-    summarization = json.loads(summarization)
+    summarization = json.loads(summarized)
     keywords = main_filtering(filter_model = app.filter_model,
                                 summary_datas = summarization, 
                                 keyword_datas = temp_keywords) #2차 키워드 추출
