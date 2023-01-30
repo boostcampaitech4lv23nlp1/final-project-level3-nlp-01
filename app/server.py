@@ -1,5 +1,5 @@
 # TODO: add validation check class
-
+import os
 import json
 import shutil
 import pickle
@@ -24,6 +24,8 @@ from .utils.stt_model_init import stt_model_init, stt_post_model_init, segment_m
 from .utils.summary_model_init import summary_model_init
 from .utils.keyword_model_init import ner_model_init, kw_model_init, filtering_model_init
 from .utils.qg_model_init import qg_model_init
+
+os.environ['TOKENIZERS_PARALLELISM'] = 'True'
 
 app = FastAPI()
 
