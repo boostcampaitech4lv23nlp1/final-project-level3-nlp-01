@@ -46,10 +46,12 @@ def stt(docs:str): # for streamlit test -> str (filepath)
 
 
 def summary(segments):
-    data = {'segments':json.dumps(segments)}
+    data = {
+        'segments' : segments
+    }
     response = requests.post(
         url = f"{backend_address}/summarization/",
-        params = data,
+        params = json.dumps(data),
     )
 
     results = response.json()['output']
@@ -59,8 +61,8 @@ def summary(segments):
 
 def keyword(seg_docs, summary_docs):
     data = {
-        'seg_docs': json.dumps(seg_docs),
-        'summary_docs': json.dumps(summary_docs)
+        'seg_docs': seg_docs,
+        'summary_docs': summary_docs
     }
 
     page = ''
@@ -68,7 +70,7 @@ def keyword(seg_docs, summary_docs):
         try:
             response = requests.post(
             url = f"{backend_address}/keyword",
-            params = data,
+            params = json.dumps(data),
             verify = False
             )
             results = response.json()['output']
@@ -85,7 +87,7 @@ def keyword(seg_docs, summary_docs):
 
 def qg(keywords):
     data = {
-        'keywords': json.dumps(keywords)
+        'keywords': keywords
     }
     response = requests.post(
         url = f"{backend_address}/qg",
@@ -107,6 +109,7 @@ def main():
     st.subheader("STT segments")
     st.write(segments)
     with st.spinner('wait for summarization'):
+        st.write(type(segments))
         summarized = summary(segments)
     st.subheader("Summarization Result")
     st.write(summarized)
