@@ -1,5 +1,5 @@
-from kobart_qg import main_qg
-from t5_pipeline import pipeline
+from .kobart_qg import main_qg
+from .t5_pipeline import pipeline
 
 # KOBART_MODEL_PATH = "Sehong/kobart-QuestionGeneration"
 
