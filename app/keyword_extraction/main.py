@@ -1,9 +1,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-from app.keyword_extraction.ner_config.net import KobertCRF
 from gluonnlp.data import SentencepieceTokenizer
-from data_utils.utils import Config
-from data_utils.vocab_tokenizer import Tokenizer
-from data_utils.pad_sequence import keras_pad_fn
+
+from app.keyword_extraction.ner_config.net import KobertCRF
+from app.keyword_extraction.keybert_model import KeyBERT
+from app.keyword_extraction.data_utils.utils import Config
+from app.keyword_extraction.data_utils.vocab_tokenizer import Tokenizer
+from app.keyword_extraction.data_utils.pad_sequence import keras_pad_fn
+
+from transformers import BertModel
 from pathlib import Path
 
 from konlpy.tag import *
