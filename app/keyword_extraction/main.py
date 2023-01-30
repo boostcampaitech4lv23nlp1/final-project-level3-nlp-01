@@ -98,6 +98,9 @@ class ner():
         tok_path = "/opt/ml/project_models/ner/tokenizer_78b3253a26.model"
         ptr_tokenizer = SentencepieceTokenizer(tok_path)
 
+        import sys # for path error handling
+        sys.path.append('/opt/ml/level3_productserving-level3-nlp-01/app/keyword_extraction') # data_utils가 위치하는 path 추가
+
         with open("app/keyword_extraction/vocab.pkl", 'rb') as f:
             vocab = pickle.load(f)
 
