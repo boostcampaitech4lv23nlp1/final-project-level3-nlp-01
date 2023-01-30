@@ -1,16 +1,15 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-from .ner_model.net import KobertCRF
-
 from gluonnlp.data import SentencepieceTokenizer
 
-from .data_utils.utils import Config
-from .data_utils.vocab_tokenizer import Tokenizer
-from .data_utils.pad_sequence import keras_pad_fn
-
-from .keybert_model import KeyBERT
+from app.keyword_extraction.ner_config.net import KobertCRF
+from app.keyword_extraction.keybert_model import KeyBERT
+from app.keyword_extraction.data_utils.utils import Config
+from app.keyword_extraction.data_utils.vocab_tokenizer import Tokenizer
+from app.keyword_extraction.data_utils.pad_sequence import keras_pad_fn
 
 from transformers import BertModel
 from pathlib import Path
+
 from konlpy.tag import *
 
 import torch
@@ -87,16 +86,20 @@ class DecoderFromNamedEntitySequence():
 
         return list_of_ner_word, decoding_ner_sentence
 
+# original NER model
 
 class ner():
     def __init__(self):
-        model_dir = 'app/keyword_extraction/ner_model'
+        model_dir = '/opt/ml/level3_productserving-level3-nlp-01/app/keyword_extraction/ner_config'
 
         model_dir = Path(model_dir)
         model_config = Config(json_path=model_dir / 'config.json')
 
-        tok_path = "app/keyword_extraction/ner_model/tokenizer_78b3253a26.model"
+        tok_path = "/opt/ml/project_models/ner/tokenizer_78b3253a26.model"
         ptr_tokenizer = SentencepieceTokenizer(tok_path)
+
+        import sys # for path error handling
+        sys.path.append('/opt/ml/level3_productserving-level3-nlp-01/app/keyword_extraction') # data_utils가 위치하는 path 추가
 
         with open("app/keyword_extraction/vocab.pkl", 'rb') as f:
             vocab = pickle.load(f)
@@ -109,7 +112,7 @@ class ner():
 
         self.model = KobertCRF(config=model_config, num_classes=len(ner_to_index), vocab=vocab)
         model_dict = self.model.state_dict()
-        checkpoint = torch.load("/opt/ml/project_models/best-epoch-12-step-1000-acc-0.960.bin", map_location="cuda")
+        checkpoint = torch.load("/opt/ml/project_models/ner/ner_model_epoch_12.bin", map_location="cuda")
         convert_keys = {}
         for k, v in checkpoint['model_state_dict'].items():
             new_key_name = k.replace("module.", '')
@@ -158,58 +161,80 @@ def get_nouns_sentence(text):
     nouns_sentence = ' '.join([word[0] for word in tokenized_doc if (word[1] == 'NNG' or word[1] == 'NNP')])
     return nouns_sentence
 
-def main_extraction(docs):
+def main_extraction(ner_model, kw_model, docs):
+    '''
+    ## main_extraction
+    description:
+    - answer word를 추출합니다.
+    
+    args:
+    - ner_model : ner 진행 시 사용하는 모델
+        - KobertCRF
+    - kw_model : keyword extraction 진행 시 사용하는 모델
+        - KeyBERT
+    - docs : stt 이후 생성된 문단 리스트
+        - list
+    '''
     stopwords = []
     with open('app/keyword_extraction/stopwords.txt', 'r', encoding='UTF-8') as f:
         for line in f:
             stopwords.append(line.replace('\n',''))
 
     #ner model
-    ner_model = ner()
+    ner_model = ner_model
 
     #keybert model
-    kw_model = KeyBERT(BertModel.from_pretrained('sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens'))
+    kw_model = kw_model
 
     list_of_key_word = []
 
-    for sen_list in docs:
-        temp_output = []
-        doc = sen_list
+    for doc in docs: #doc = 하나의 context
+        keywords_check = [] #중복 키워드 방지
 
-        #ner output
-        for i in sen_list.split('.'):
-            i = i+"."
+        sen_list = []
+        for i in doc.split('.'):
             if '?' in i:
                 for j in i.split('?'):
-                    temp_output += ner_model.extraction(j)
+                    if(len(j)>1):
+                        sen_list.append(j)
             else:
-                temp_output += ner_model.extraction(i)
-        
-        #ner output 조사 제거
-        temp_output = get_nouns(temp_output)
-        
-        output = []
-        # 한글자 제거 
-        for i, j in enumerate(temp_output):
-            if len(j)>1:
-                output.append(temp_output[i])
+                if(len(i)>1):
+                    sen_list.append(i+'.')
 
-        # keybert output
-        keywords = kw_model.extract_keywords(get_nouns_sentence(doc), keyphrase_ngram_range=(1,1), top_n=10)
+        keywords = []
+        for index, sen in enumerate(sen_list):
+            # ner output
+            temp_output = ner_model.extraction(sen)
+            # 조사 제거
+            temp_output = get_nouns(temp_output)
 
-        for i in keywords:
-            output.append(i[0])
+            output = []
+            # 한글자 제거 
+            for i, j in enumerate(temp_output):
+                if len(j)>1:
+                    output.append(temp_output[i])
+            
+            #keybert output
+            keyword = kw_model.extract_keywords(get_nouns_sentence(sen), keyphrase_ngram_range=(1,1), top_n=1)
 
-        # 중복 제거
-        temp = set(output)
-        output = list(temp)
+            if(keyword):
+                output.append(keyword[0][0])
 
-        # 불용어 제거
-        result = []
-        for token in output: 
-            if token not in stopwords: 
-                result.append(token) 
+            # 중복 제거
+            temp = set(output)
+            output = list(temp)
 
-        list_of_key_word.append({"context" : doc, "keyword": result})
+            # 불용어 제거  & 하나의 context에서 키워드 중복되지 않도록 진행
+            final_output = []
+            for token in output: 
+                if (token not in stopwords) and (token not in keywords_check): 
+                    final_output.append(token)
+                    keywords_check.append(token)
 
-    return pd.DataFrame(list_of_key_word)
+
+            for word in final_output:
+                keywords.append((index, word))
+            
+        list_of_key_word.append({"context" : doc, "keyword": keywords})
+
+    return list_of_key_word # dict list

@@ -10,28 +10,35 @@ from .split_data import split_file
 warnings.filterwarnings("ignore")
 
 
-def postprocess(model_path, df):
-    
-    BOS = '</s>'
-    EOS = '</s>'
-    MASK = '<unused0>'
-    PAD = '<pad>'
+def postprocess(model, tokenizer, df):
 
-    num_process = 1
+    '''
+    ## postprocess
+    description:
+    - stt 작업 후 후처리를 진행합니다.
+    
+    args:
+    - model: 후처리에 사용하는 모델
+        - GPT2LMHeadModel
+    - tokenizer: 후처리에 사용하는 tokenizer 모델
+        - PreTrainedTokenizerFast
+    - df: 후처리 입력으로 활용되는 stt output
+        - pd.DataFrame
+    '''
+
+    num_process = 8
     
     print(f'num process : {num_process}')
     
     scps = split_file(df, split = num_process)
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    tokenizer = PreTrainedTokenizerFast.from_pretrained(model_path,
-                bos_token=BOS, eos_token=EOS, unk_token='<unk>',
-                pad_token=PAD, mask_token=MASK) 
-    model = GPT2LMHeadModel.from_pretrained(model_path).to(device)
+    tokenizer = tokenizer
+    model = model.to(device)
     max_len = 64
     processes = []
     sentences = []
-    outputs = []
+    # outputs = [] # for making csv file
     if len(scps) > 1:
         model.share_memory()
 
@@ -57,7 +64,7 @@ def postprocess(model_path, df):
         df = pd.read_csv(f'./output/inference_{i}.csv')
         for _, item in df.iterrows():
             sentences.append(item['result'])
-    #         outputs.append(item['output'])
+    #         outputs.append(item['output']) # for making csv file
     # data = pd.DataFrame({
     #     'output' : outputs,
     #     'result' : sentences

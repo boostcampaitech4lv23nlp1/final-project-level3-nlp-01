@@ -7,7 +7,7 @@ from typing import Optional
 # TODO: GPT2에 학습할 데이터셋 생성 모듈 제작 -> make_dataset()
 # TODO: GPT2에 넘겨줄 inference 모듈 제작 -> inference()
 
-def stt_setup(make_dataset: bool, download_dir='./STT/dataset/train', **kwargs) -> Optional[pd.DataFrame]:
+def stt_setup(model, make_dataset: bool, download_dir='./STT/dataset/train', **kwargs) -> Optional[pd.DataFrame]:
     '''
     ## stt_setup
     description:
@@ -25,13 +25,13 @@ def stt_setup(make_dataset: bool, download_dir='./STT/dataset/train', **kwargs) 
             - STT를 진행할 wav 파일 위치를 지정.
     '''
     if make_dataset is True:
-        MakeDatasetUsingAIHUB()(download_dir=download_dir)
+        MakeDatasetUsingAIHUB(model=model)(download_dir=download_dir)
         aihub_dataset(stage='train')
         return None
     else:
         assert kwargs['inference_wav_file'], "you must input inference wav file's path."
         inference_wav_file = kwargs['inference_wav_file']
-        filename = MakeInferenceDataset(inference_wav_path=inference_wav_file)(
+        filename = MakeInferenceDataset(model=model, inference_wav_path=inference_wav_file)(
             min_per_split=None,
             min_silence_len=500,
         )

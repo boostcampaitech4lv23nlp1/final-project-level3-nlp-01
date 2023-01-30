@@ -1,6 +1,7 @@
 import os
 import torch
 import whisper
+from tqdm import tqdm
 
 from typing import Optional, Tuple, Sequence
 
@@ -13,10 +14,11 @@ class Inference():
             beam_size: int,
             data_path_and_name_and_type: Sequence[Tuple[str, str, str]],
             language: Optional[str],
+            model_size: Optional[str],
         ):
         self.model = model
         self.output_dir = output_dir
-
+        self.model_size = model_size # need for error handling
         self.scp_path, _, _ = data_path_and_name_and_type[0]
         self.options = {
             'language': language,
@@ -25,13 +27,13 @@ class Inference():
         }
         
     def __call__(self):
-        print('whisper inference')
+        # print('whisper inference')
 
         with open(self.scp_path, 'r+') as f:
             lines = f.readlines()
 
         output = []
-        for line in lines:
+        for line in tqdm(lines):
             i, path = line.strip().split(' ')
 
             # TODO: apt-get install ffmpeg README.md 파일에 명시하기
@@ -41,7 +43,7 @@ class Inference():
                 no_speech_threshold=0.6,
                 **self.options
             )
-            print(i, ' ', result['text'])
+            # print(i, ' ', result['text'])
             output.append(" ".join([i, result['text']]) + '\n')
     
         # make directory
