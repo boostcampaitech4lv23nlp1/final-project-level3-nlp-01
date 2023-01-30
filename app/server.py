@@ -164,15 +164,15 @@ def summary(segments):
 
 # Keyword Extraction : Keyword Extraction
 @app.post("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
-def keyword_extraction(seg_docs, summary_docs): #TODO: input 형식 확인해서 validation 추가
-    seg_docs = json.loads(seg_docs)
+def keyword_extraction(segments, summarization):
+    segments = json.loads(segments)
     temp_keywords = main_extraction(ner_model = app.ner_model, 
                                     kw_model = app.kw_model,
-                                    docs = seg_docs) #1차 키워드 추출
+                                    docs = segments) #1차 키워드 추출
 
-    summary_docs = json.loads(summary_docs)
+    summarization = json.loads(summarization)
     keywords = main_filtering(filter_model = app.filter_model,
-                                summary_datas = summary_docs, 
+                                summary_datas = summarization, 
                                 keyword_datas = temp_keywords) #2차 키워드 추출
     
     return JSONResponse(
