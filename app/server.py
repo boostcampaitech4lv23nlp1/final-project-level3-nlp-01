@@ -140,32 +140,31 @@ def preprocess():
 # Summarization: Summarization
 @app.post('/summarization/', description='start summarization') # input : list -> output : list
 def summary(segments):
-    print('<<<<<<<<here>>>>>>>>')
 
     stt_output = json.loads(segments)
-    print(stt_output)
-    try:
-        input = stt_output
-        output = summarize(model = app.summary_model,
-                            tokenizer = app.summary_tokenizer,
-                            preprocessed = input,
-                            sum_model = app.summary_model_name)
-        print('finish summarization')
-        return JSONResponse(
-            status_code = 200,
-            content = {
-            "output": json.dumps(output)
-            }
-        )
-    except AttributeError as e:
-        return {'error':'start summarization error'}
+    # try:
+    input = stt_output
+    output = summarize(model = app.summary_model,
+                        tokenizer = app.summary_tokenizer,
+                        postprocess_model = app.segment_model,
+                        preprocessed = input,
+                        sum_model = app.summary_model_name)
+    print('finish summarization')
+    return JSONResponse(
+        status_code = 200,
+        content = {
+        "output": json.dumps(output)
+        }
+    )
+    # except AttributeError as e:
+    #     return {'error':'start summarization error'}
 
 # ########################################
 
 
 # Keyword Extraction : Keyword Extraction
-@app.get("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
-def keyword_extraction(seg_docs: SegmentsOutput, summary_docs: SummaryOutput):
+@app.post("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
+def keyword_extraction(seg_docs, summary_docs): #TODO: input 형식 확인해서 validation 추가
     seg_docs = json.loads(seg_docs)
     temp_keywords = main_extraction(ner_model = app.ner_model, 
                                     kw_model = app.kw_model,
@@ -186,7 +185,7 @@ def keyword_extraction(seg_docs: SegmentsOutput, summary_docs: SummaryOutput):
 # ########################################    
 
 # QG : Question Generation
-@app.get("/qg")
+@app.post("/qg")
 def qg_task(keywords):
     input = json.loads(keywords)
     output = question_generate("t5", "question-generation", input, app.qg_model, app.qg_tokenizer) 
@@ -197,8 +196,6 @@ def qg_task(keywords):
             "output": json.dumps(output)
         }
     )
-
-
 # if __name__ == "__main__":
 #     torch.multiprocessing.set_start_method('spawn', force=True)     # multiprocess mode
 #     uvicorn.run(app, host="127.0.0.1", port=8001)

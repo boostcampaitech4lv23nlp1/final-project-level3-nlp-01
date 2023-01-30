@@ -66,14 +66,14 @@ def keyword(seg_docs, summary_docs):
     page = ''
     while page == '':
         try:
-            response = requests.get(
+            response = requests.post(
             url = f"{backend_address}/keyword",
             params = data,
             verify = False
             )
             results = response.json()['output']
             json_data = json.loads(results)
-            return pd.DataFrame(json_data)
+            return json_data
         except:
             print("Connection refused by the server..")
             print("Let me sleep for 5 seconds")
