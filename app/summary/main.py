@@ -27,7 +27,7 @@ def segment(model, data):
                                 data = stt_data,
                                 stride = 4,
                                 min_len = 300,
-                                max_len = 1000)
+                                max_len = 768)
     preprocessed = preprocessor.preprocess()
     return preprocessed
 

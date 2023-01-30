@@ -2,7 +2,7 @@ import kss
 from sentence_transformers import util
 
 class PreProcessor:
-    def __init__(self, model, data, stride=4, min_len=300, max_len=1000):
+    def __init__(self, model, data, stride=4, min_len=300, max_len=768):
         self.model = model
         self.data = data
         self.stride = stride
