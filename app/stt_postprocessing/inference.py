@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import numpy as np
 import pandas as pd
 import torch
@@ -19,10 +20,10 @@ def inference(model, tokenizer, data_path , max_len, output_dir):
     with torch.no_grad():
 
         df = pd.read_csv(data_path)
-        for idx, item in df.iterrows():
+        for idx, item in tqdm(df.iterrows()):
             answer=""
             query = item['output']
-            print(f'query : {query}')
+            # print(f'query : {query}')
 
             if query is not np.nan:
                 while True:
@@ -45,18 +46,18 @@ def inference(model, tokenizer, data_path , max_len, output_dir):
 
                 if '<pad>' in answer :
                     sentences.append(query)
-                    print(f"answer : {query.strip()}")
+                    # print(f"answer : {query.strip()}")
                 elif '<unk>' in answer : 
                     answer = answer.replace('<unk>','')
-                    print(f"answer : {answer.strip()}")
+                    # print(f"answer : {answer.strip()}")
                     sentences.append(answer.strip())
                 else:
                     sentences.append(answer.strip())
-                    print(f"answer : {answer.strip()}")
+                    # print(f"answer : {answer.strip()}")
 
             else:
                 sentences.append(query)
-                print(f"answer : {query.strip()}")
+                # print(f"answer : {query.strip()}")
 
     df = pd.DataFrame({
         'output' : df['output'],

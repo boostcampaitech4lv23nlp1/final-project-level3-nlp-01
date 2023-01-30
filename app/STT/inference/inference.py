@@ -1,6 +1,7 @@
 import os
 import torch
 import whisper
+from tqdm import tqdm
 
 from typing import Optional, Tuple, Sequence
 
@@ -25,13 +26,13 @@ class Inference():
         }
         
     def __call__(self):
-        print('whisper inference')
+        # print('whisper inference')
 
         with open(self.scp_path, 'r+') as f:
             lines = f.readlines()
 
         output = []
-        for line in lines:
+        for line in tqdm(lines):
             i, path = line.strip().split(' ')
 
             # TODO: apt-get install ffmpeg README.md 파일에 명시하기
@@ -41,7 +42,7 @@ class Inference():
                 no_speech_threshold=0.6,
                 **self.options
             )
-            print(i, ' ', result['text'])
+            # print(i, ' ', result['text'])
             output.append(" ".join([i, result['text']]) + '\n')
     
         # make directory
