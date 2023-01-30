@@ -33,7 +33,7 @@ def question_generate(model_type, task, docs, model, tokenizer):
 
         t5_result = []
         for data in docs:
-            t5_result.append(nlp(data['context'], data['keyword']))
+            t5_result.extend(nlp(data['context'], data['keyword']))
 
         qg_result = []
         for data in t5_result:
