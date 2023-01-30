@@ -68,7 +68,7 @@ class SummaryOutput(BaseModel):
     summarization: list
 
 class KeywordOutput(BaseModel):
-    keywords: dict
+    keywords: list
 
 
 # STT : input WAV file to save
