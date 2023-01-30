@@ -26,7 +26,7 @@ def postprocess(model, tokenizer, df):
         - pd.DataFrame
     '''
 
-    num_process = 1
+    num_process = 8
     
     print(f'num process : {num_process}')
     
