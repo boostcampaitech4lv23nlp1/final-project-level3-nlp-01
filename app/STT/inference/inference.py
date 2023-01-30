@@ -14,10 +14,11 @@ class Inference():
             beam_size: int,
             data_path_and_name_and_type: Sequence[Tuple[str, str, str]],
             language: Optional[str],
+            model_size: Optional[str],
         ):
         self.model = model
         self.output_dir = output_dir
-
+        self.model_size = model_size # need for error handling
         self.scp_path, _, _ = data_path_and_name_and_type[0]
         self.options = {
             'language': language,
