@@ -73,13 +73,13 @@ class KeywordOutput(BaseModel):
 
 # STT : input WAV file to save
 @app.post('/saveWavFile/', description='save wav file') # input : WAV -> output : str
-# def save_wav_file(file: UploadFile=File(...)):
-def save_wav_file(file: FileName): # for streamlit test
+def save_wav_file(file: UploadFile=File(...)):
+# def save_wav_file(file: FileName): # for streamlit test
     if file is None:
         return {'output': None}
     else:
-        # with open(str(file.file), 'rb') as f:
-        #     shutil.copyfileobj(file.file, f) ## commit 할때는 주석 풀기
+        with open(str(file.file), 'rb') as f:
+            shutil.copyfileobj(file.file, f) # for streamlit test -> to be comment
         app.wav_filename = file.file
         return JSONResponse(
             status_code = 200,
