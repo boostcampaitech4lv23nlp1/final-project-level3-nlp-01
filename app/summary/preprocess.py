@@ -89,7 +89,6 @@ class PreProcessor:
 
     def preprocess(self):
         sent_data = self.sentence_split()
-        print('finish sent_data')
         phrase_data = self.phrase_split(sent_data)
 
         return phrase_data
