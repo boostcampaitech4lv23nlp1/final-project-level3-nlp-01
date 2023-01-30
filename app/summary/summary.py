@@ -39,7 +39,7 @@ class Summarizer:
             for paragraph in tqdm(self.data):
                 raw_input_ids = tokenizer.encode(paragraph)
                 input_ids = [tokenizer.bos_token_id] + raw_input_ids + [tokenizer.eos_token_id]
-                summary_ids = model.generate(torch.tensor([input_ids]),  num_beams=5,  max_length=self.max_target_length,  eos_token_id=1)
+                summary_ids = model.generate(torch.tensor([input_ids]).to("cuda"),  num_beams=5,  max_length=self.max_target_length,  eos_token_id=1)
                 result = tokenizer.decode(summary_ids.squeeze().tolist(), skip_special_tokens=True)
                 result_list.append(result)
 
