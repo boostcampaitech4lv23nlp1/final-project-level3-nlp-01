@@ -9,6 +9,9 @@
 apt install ffmpeg
 apt-get install libsndfile1-dev
 apt install default-jdk
+
+apt-get install openjdk-8-jdk python3-dev 
+bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh)
 ```
 
 # frontend settings

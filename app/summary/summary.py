@@ -4,8 +4,6 @@ import nltk
 import torch
 
 
-
-
 class Summarizer:
     def __init__(self, data, model, tokenizer, max_input_length: int, max_target_length: int, model_: str):
         self.data = data

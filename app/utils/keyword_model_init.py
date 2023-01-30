@@ -10,7 +10,10 @@ def ner_model_init():
     return ner_model
 
 def kw_model_init():
-    kw_model = KeyBERT(AutoModel.from_pretrained('sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens', local_files_only=True))
+    kw_model = KeyBERT(
+        AutoModel.from_pretrained(
+        'sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens',)
+    )
     return kw_model
 
 def filtering_model_init():

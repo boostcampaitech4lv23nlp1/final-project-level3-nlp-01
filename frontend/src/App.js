@@ -151,7 +151,27 @@ function App() {
         questionGenerationResult.current = response.output;
         console.log(questionGenerationResult.current);
       }).then(() => {
+        setLoddingFlag(false);
         setTaskBarList((prev) => [false, false, false, true]);
+      }).then(() => {
+        onDonwloadResultRequest();
+      })
+    }
+
+    const onDonwloadResultRequest = () => {
+      const url = serverUrl + 'downloadResult';
+      
+      fetch(url, {
+        method: 'GET',
+      }).then((response) => {
+        return response.blob()
+      }).then((blob) => {
+        let data = blob;
+        let csvURL = window.URL.createObjectURL(data);
+        let tmpLink = document.createElement('a');
+        tmpLink.href = csvURL;
+        tmpLink.setAttribute('download', 'export.csv');
+        tmpLink.click();
       })
     }
 
@@ -324,12 +344,26 @@ function App() {
                         <div>
                           <div className="d-flex flex-column align-items-center mt-5" style={{minHeight: '85vh'}}>
                             <SummarizationPage summarizationResult={summarizationResult.current}/>
-                            <label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3" onClick={() => {
-                              // keyward extraction -> question generation
-                              onKeywordExtractionRequest();
-                            }}>
-                              질문 생성
-                            </label>
+                            <div className="d-flex justify-content-center mt-2">
+                              {
+                                loddingFlag ?
+                                <label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3 disabled">
+                                    작업 중
+                                </label>  
+                                :<label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3" onClick={() => {
+                                // keyward extraction -> question generation
+                                setLoddingFlag(true);
+                                onKeywordExtractionRequest();
+                              }}>
+                                질문 생성
+                              </label>
+                              }
+                              {loddingFlag && 
+                                <div class="spinner-border text-light" role="status" style={{marginLeft: '10px' ,marginTop: '22px'}}>
+                                  <span class="sr-only"></span>
+                                </div>
+                              }
+                            </div>
                           </div>
                         </div>
                         : taskBarList[3] ? 

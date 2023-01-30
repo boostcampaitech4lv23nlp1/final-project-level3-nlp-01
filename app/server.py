@@ -5,11 +5,13 @@ import shutil
 import pickle
 import torch
 import uvicorn
+import io
+import pandas as pd
 from pydantic import BaseModel
 
-from typing import Optional, List
+from typing import Optional, List, Dict, Union
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from starlette.middleware.cors import CORSMiddleware
 import pandas as pd
 
@@ -58,27 +60,48 @@ app.qg_model, app.qg_tokenizer = qg_model_init()
 class FileName(BaseModel):
     file: str
 
-class SegmentsOutput(BaseModel):
-    segments: List[str]
+class STTOutput(BaseModel):
+    '''
+    input:
+        {"stt_output" : ["I'm baby", "I'm 26 years old]}
+    '''
+    stt_output: List[str]
 
-class SummaryOutput(BaseModel):
-    summarized: List[str]
+class KeyWordInput(BaseModel):
+    '''
+    example:
+        {
+            seg_docs: [],
+            summary_docs: [],
+        }
+    '''
+    seg_docs: List[str]
+    summary_docs: List[str]
 
+class QuestionGenerationInput(BaseModel):
+    '''
+    type:
+        List[Dict[str, Union[str, List]]]
+    example:
+        [{context: "string", keyword: [(18, "신사임당"), (19, '다른거')]}]
+    '''
+    keywords: List[Dict[str, Union[str, List]]]
 
 # STT : input WAV file to save
 @app.post('/saveWavFile/', description='save wav file') # input : WAV -> output : str
 def save_wav_file(file: UploadFile=File(...)):
-# def save_wav_file(file: FileName): # for streamlit test
+
     if file is None:
         return {'output': None}
     else:
-        with open(str(file.file), 'rb') as f:
+        filename = file.filename
+        with open(filename, 'wb') as f:
             shutil.copyfileobj(file.file, f) # for streamlit test -> to be comment
-        app.wav_filename = file.file
-        return JSONResponse(
+        app.wav_filename = filename
+        return {JSONResponse(
             status_code = 200,
             content = {
-            "output": file.filename
+            "output": filename
             })}
 
 # STT : STT inference
@@ -123,20 +146,16 @@ def preprocess():
         print('<<<<<<<<<<<<segmentation start>>>>>>>>>>>>>')
         output = segment(app.segment_model, input)
         print('<<<<<<<<<<<<segmentation passed>>>>>>>>>>>>>')
-        return JSONResponse(
-            status_code = 200,
-            content = {
-            "output": json.dumps(output)
-            }
-        )
-    except AttributeError as e:
-        return {'error':'start preprocessing error'}
+        return {'text': output}
+    except BaseException as e:
+        return {'error': e}
 
 # Summarization: Summarization
 @app.post('/summarization/', description='start summarization') # input : list -> output : list
-def summary(segments:SegmentsOutput):
+def summary(segments: STTOutput):
 
-    stt_output = json.loads(segments)
+    stt_output = segments.stt_output
+    print(stt_output)
     try:
         input = stt_output
         output = summarize(model = app.summary_model,
@@ -154,38 +173,66 @@ def summary(segments:SegmentsOutput):
 
 # Keyword Extraction : Keyword Extraction
 @app.post("/keyword") #input = seg&summary docs, output = context, keyword dataframe() to json
-def keyword_extraction(segments:SegmentsOutput, summarized:SummaryOutput):
-    segments = json.loads(segments)
+def keyword_extraction(req: KeyWordInput):
+    '''
+    input:
+        seg_docs: list
+        summary_docs: list
+    output:
+        keywords: List[Dict[str, List[Tuple[int, str]]]]
+    '''
+    seg_docs = req.seg_docs
+    summary_docs = req.summary_docs
     temp_keywords = main_extraction(ner_model = app.ner_model, 
                                     kw_model = app.kw_model,
-                                    docs = segments) #1차 키워드 추출
+                                    docs = seg_docs) #1차 키워드 추출
 
-    summarization = json.loads(summarized)
     keywords = main_filtering(filter_model = app.filter_model,
-                                summary_datas = summarization, 
+                                summary_datas = summary_docs, 
                                 keyword_datas = temp_keywords) #2차 키워드 추출
     
-    return JSONResponse(
-        status_code = 200,
-        content = {
-        "output": json.dumps(keywords)
-        }
-    )
+    return {
+        'output': keywords
+    }
 
 # ########################################    
 
+
+
 # QG : Question Generation
-@app.post("/qg")
-def qg_task(keywords):
-    input = json.loads(keywords)
+@app.post("/questionGeneration", description="start question generation")
+def qg_task(req: QuestionGenerationInput):
+    '''
+    type:
+        List[Dict[str, Union[str, List]]]
+    example:
+        [{context: "string", keyword: [(18, "신사임당"), (19, '다른거')]}]
+    '''
+    input = req.keywords
+    for idx in range(len(input)):
+        input[idx]['keyword'] = [tuple(keyword) for keyword in input[idx]['keyword']]
+
     output = question_generate("t5", "question-generation", input, app.qg_model, app.qg_tokenizer) 
 
-    return JSONResponse(
-        status_code = 200,
-        content = {
-            "output": json.dumps(output)
-        }
-    )
+    result = {'questions': [], 'answers' : []}
+    for dictionary in output:
+        result['questions'].append(dictionary['question'])
+        result['answers'].append(dictionary['answer'])
+    
+    filename = app.wav_filename.split('.')[0]
+    app.result_filepath = f'./{filename}.csv'
+    pd.DataFrame(result).to_csv(app.result_filepath)
+
+    return {'output': output}
+
+@app.get('/downloadResult/', description='download result')
+def download_result():
+    try:
+        filepath = app.result_filepath
+        return FileResponse(filepath)
+    except:
+        return {'error': 'download_result error'}
+
 # if __name__ == "__main__":
 #     torch.multiprocessing.set_start_method('spawn', force=True)     # multiprocess mode
 #     uvicorn.run(app, host="127.0.0.1", port=8001)
