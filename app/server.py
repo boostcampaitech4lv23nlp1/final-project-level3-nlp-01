@@ -43,7 +43,7 @@ app.stt_post_model, app.stt_post_tokenizer = stt_post_model_init(
 app.segment_model = segment_model_init()
 
 app.summary_model, app.summary_tokenizer, app.summary_model_name = summary_model_init(
-    model_path = '/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news',
+    model_path = '/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news_05',
     model_name = 'kobart')
 
 app.ner_model = ner_model_init()

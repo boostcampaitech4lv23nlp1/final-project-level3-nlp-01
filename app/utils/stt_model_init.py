@@ -6,7 +6,7 @@ from sentence_transformers import SentenceTransformer
 from omegaconf import OmegaConf
 
 def stt_model_init():
-    cfg = OmegaConf.load('../STT/data/conf.yaml')
+    cfg = OmegaConf.load('app/STT/data/conf.yaml')
     kwargs = dict(getattr(cfg, 'whisper'))
     model_size = kwargs.pop('model_size')
 
@@ -29,5 +29,5 @@ def stt_post_model_init(model_path):
     return model, tokenizer
 
 def segment_model_init():
-    model = SentenceTransformer('snunlp/KR-SBERT-V40K-klueNLI-augSTS')
+    model = SentenceTransformer('/opt/ml/project_models/stt/segments_sentencetransformer')
     return model

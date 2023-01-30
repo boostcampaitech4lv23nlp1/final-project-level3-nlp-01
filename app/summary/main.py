@@ -31,7 +31,7 @@ def segment(model, data):
     preprocessed = preprocessor.preprocess()
     return preprocessed
 
-def summarize(model, tokenizer, preprocessed: list, sum_model: str):
+def summarize(model, tokenizer, postprocess_model, preprocessed: list, sum_model: str):
     '''
     ## summarize
     description:
@@ -60,7 +60,7 @@ def summarize(model, tokenizer, preprocessed: list, sum_model: str):
     summarized_data = summarizer.summarize() # 문단 별 한 문장의 요약문 list 반환
 
     # 4. Postprocessing
-    postprocessor = PostProcessor(data=summarized_data)
+    postprocessor = PostProcessor(model=postprocess_model, data=summarized_data)
     postprocessed = postprocessor.postprocess()
     return postprocessed
 

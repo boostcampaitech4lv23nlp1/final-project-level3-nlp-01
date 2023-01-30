@@ -86,10 +86,11 @@ class DecoderFromNamedEntitySequence():
 
         return list_of_ner_word, decoding_ner_sentence
 
+# original NER model
 
 class ner():
     def __init__(self):
-        model_dir = 'app/keyword_extraction/ner_config'
+        model_dir = '/opt/ml/level3_productserving-level3-nlp-01/app/keyword_extraction/ner_config'
 
         model_dir = Path(model_dir)
         model_config = Config(json_path=model_dir / 'config.json')

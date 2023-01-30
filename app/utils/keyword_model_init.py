@@ -1,7 +1,8 @@
-from ..keyword_extraction.main import ner
-from app.keyword_extraction.keybert_model import KeyBERT
-from transformers import BertModel
+from app.keyword_extraction.main import ner
 from sentence_transformers import SentenceTransformer
+from gluonnlp.data import SentencepieceTokenizer
+from app.keyword_extraction.keybert_model import KeyBERT
+from transformers import BertModel, AutoModel
 
 def ner_model_init():
     # TODO: change model path in ner function
@@ -9,9 +10,9 @@ def ner_model_init():
     return ner_model
 
 def kw_model_init():
-    kw_model = KeyBERT(BertModel.from_pretrained('sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens'))
+    kw_model = KeyBERT(AutoModel.from_pretrained('sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens', local_files_only=True))
     return kw_model
 
 def filtering_model_init():
-    filter_model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+    filter_model = SentenceTransformer('/opt/ml/project_models/filtering_model')
     return filter_model
