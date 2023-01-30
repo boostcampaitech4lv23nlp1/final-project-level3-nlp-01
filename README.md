@@ -4,5 +4,7 @@
 - model_path = f'/opt/ml/project_models/{model_name}'
 
 # settings
-`apt-get install libsndfile1-dev`
-`apt-get install ffmpeg`
+`apt-get install libsndfile1-dev`  
+`apt-get install ffmpeg`  
+`apt install default-jdk`  
+- MeCab install : [reference link](https://i-am-eden.tistory.com/9)
