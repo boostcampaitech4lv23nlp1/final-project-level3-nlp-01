@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "final"
+name = "stt"
 version = "0.1.0"
-description = "final project"
+description = "stt"
 authors = ["wooy0ng <yygg9800@naver.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
+python = ">=3.8,<4.0"
 omegaconf = "^2.3.0"
 pydub = "^0.25.1"
 pandas = "^1.5.3"
