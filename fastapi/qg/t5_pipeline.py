@@ -41,7 +41,7 @@ class QGPipeline:
 
         self.model_type = "t5"
 
-    def __call__(self, context: str, answers: list):
+    def __call__(self, idx: int, context: str, answers: list):
         # sents = sent_tokenize(context)
         sents = []
         for i in context.split('.'):
@@ -62,7 +62,7 @@ class QGPipeline:
         
         qg_inputs = [example['source_text'] for example in qg_examples]
         questions = self._generate_questions(qg_inputs)
-        output = [{'answer': example['answer'], 'question': que} for example, que in zip(qg_examples, questions)]
+        output = [{'idx':idx, 'answer': example['answer'], 'question': que, 'k_sim': example['k_sim']} for example, que in zip(qg_examples, questions)]
         return output
     
     def _generate_questions(self, inputs):
@@ -118,7 +118,7 @@ class QGPipeline:
             source_text = " ".join(sents_copy)
             source_text = f"generate question: {source_text}"
             source_text = source_text + " </s>"
-            inputs.append({"answer": answer_text, "source_text": source_text})
+            inputs.append({"answer": answer_text, "source_text": source_text,  "k_sim": answer[2]})
         
         return inputs
     
