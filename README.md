@@ -32,3 +32,16 @@ react-native를 설치합니다.
 ```bash
 npm install -g create-react-app
 ```
+
+package.json파일이 위치하는 곳에서 아래의 명령어를 입력하여 실행에 필요한 모듈을 설치합니다.
+```bash
+$ npm install
+```
+
+#### usage
+웹 서버를 실행시킵니다. (not build)
+```bash
+$ npm start
+```
+
+
