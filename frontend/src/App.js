@@ -8,7 +8,7 @@ function App() {
     const [, updateState] = useState();
     const forceUpdate = () => {updateState({})}
 
-    const serverUrl = 'http://127.0.0.1:8001/'
+    const serverUrl = 'http://127.0.0.1:30001/'
     const [inputList, setInputList] = useState([]);
 
     let [taskBarList, setTaskBarList] = useState([true, false, false, false]);
@@ -214,7 +214,11 @@ function App() {
                                     summarization
                                 </a>
                                 :<a className="nav-link fw-bold py-1 px-2" href="#!" onClick={()=>{
-                                  setTaskBarList((prev) => [false, false, true, false]);
+                                  if (summarizationResult.length > 0){
+                                    setTaskBarList((prev) => [false, false, true, false]);
+                                  } else {
+                                    alert('이전 작업을 완료해주세요.');
+                                  }
                                 }}>
                                     summarization
                                 </a>
@@ -227,7 +231,11 @@ function App() {
                                     question generation
                                 </a>
                                 :<a className="nav-link fw-bold py-1 px-2" href="#!" onClick={()=>{
-                                  setTaskBarList((prev) => [false, false, false, true]);
+                                  if (questionGenerationResult.length > 0) {
+                                    setTaskBarList((prev) => [false, false, false, true]);
+                                  } else {
+                                    alert('이전 작업을 완료해주세요.');
+                                  }
                                 }}>
                                   question generation
                                 </a>

@@ -43,6 +43,7 @@ function QuestionGenerationPage(props) {
       <div className="mb-5">
         <h1 className="display-5 fw-bold py-1"> question generation </h1>
         <p className="lead">생성된 질문을 출력합니다.</p>
+        
       </div>
       {/* question & answer */}
       {questionGenerationResult.length > 0 && (
@@ -50,6 +51,15 @@ function QuestionGenerationPage(props) {
           <QuestionGenerationCard question={d.question} answer={d.answer}/>)
         )
       )}
+      <div className="d-flex justify-content-end m-3" style={{padding: '5px'}}>
+        {
+        questionGenerationResult.length > 0 ? 
+        <label className="btn btn-sm btn-light btn-primary fw-bold border-white">
+            download
+        </label>
+        : <div></div>
+        }
+      </div>
     </div>
   )
 } export default QuestionGenerationPage;
