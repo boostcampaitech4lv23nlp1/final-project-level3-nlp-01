@@ -1,12 +1,13 @@
 import os
 import torch
 import whisper
+import asyncio
 
 from typing import Optional, Tuple, Sequence
 
 class Inference():
     def __init__(
-            self, 
+            self,
             model,
             output_dir: str,
             fp16: bool,
@@ -14,8 +15,9 @@ class Inference():
             data_path_and_name_and_type: Sequence[Tuple[str, str, str]],
             language: Optional[str],
         ):
-        self.model = model
+        
         self.output_dir = output_dir
+        self.model = model.cuda()
 
         self.scp_path, _, _ = data_path_and_name_and_type[0]
         self.options = {
@@ -23,10 +25,9 @@ class Inference():
             'beam_size': beam_size,
             'fp16': fp16,
         }
-        
-    def __call__(self):
-        print('whisper inference')
 
+    async def run(self):
+        print('whisper inference')
         with open(self.scp_path, 'r+') as f:
             lines = f.readlines()
 
@@ -52,3 +53,6 @@ class Inference():
             f.close()
 
         print(f"end {self.scp_path}")
+        
+    def process(self):
+        asyncio.run(self.run())
