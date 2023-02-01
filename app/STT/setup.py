@@ -31,9 +31,8 @@ def stt_setup(model, make_dataset: bool, download_dir='./STT/dataset/train', **k
     else:
         assert kwargs['inference_wav_file'], "you must input inference wav file's path."
         inference_wav_file = kwargs['inference_wav_file']
-        filename = MakeInferenceDataset(model=model, inference_wav_path=inference_wav_file)(
-            min_per_split=None,
-            min_silence_len=500,
-        )
+        _class = MakeInferenceDataset(model=model, inference_wav_path=inference_wav_file)
+        filename = _class.process(min_per_split=None, min_silence_len=500)
+        
         df = inference_dataset(filename=filename)
         return df

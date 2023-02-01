@@ -3,6 +3,8 @@ import time
 import warnings
 import whisper
 import torch
+import asyncio
+from concurrent.futures import ProcessPoolExecutor
 
 from omegaconf import OmegaConf
 from tqdm import tqdm
@@ -98,7 +100,7 @@ class MakeInferenceDataset(object):
         self.file = f'{self.filename}.wav'
         self.split_wav = SplitWavAudio(self.folder, self.file)
         
-    def __call__(self, min_per_split=None, min_silence_len=None) -> str:
+    async def run(self, min_per_split=None, min_silence_len=None) -> str:
         if min_per_split is None:
             # wav 파일 전체에 대해서 slience 기준으로 분리
             self.split_wav.single_silent_split(
@@ -119,10 +121,16 @@ class MakeInferenceDataset(object):
 
         model = self.model
         output_dir = f'./output/STT/{self.filename}/{self.filename}'
-        processes = []
         if len(scps) > 1:
             model.share_memory()
             inferences = []
+            # 비동기 루프를 생성합니다.
+            loop = asyncio.get_running_loop()
+
+            # executor를 생성합니다.
+            objExecutor = ProcessPoolExecutor(max_workers=num_process)
+            
+            # inference 클래스를 선언합니다.
             for i, scp in enumerate(scps):
                 kwargs.update({
                     'model': model,
@@ -130,26 +138,40 @@ class MakeInferenceDataset(object):
                     'output_dir': output_dir + f'_{i}'
                 })
                 inferences.append(Inference(**kwargs))
-                
-            for inference in inferences:
-                process = Process(target=inference)
-                process.start()
-                processes.append(process)
-                time.sleep(0.1)
 
-            for process in processes:
-                process.join()
-            processes.clear()
+            listFutures = []
+            for inference in inferences:
+                # executor를 사용해 프로세스를 생성합니다.
+                listFutures.append(loop.run_in_executor(objExecutor, inference.process))
+            
+            # 모든 프로세스가 끝날 때 까지 await 합니다.
+            await asyncio.wait(listFutures)
+            
         else:
             kwargs.update({
                     'model': model,
                     'data_path_and_name_and_type': [(scps[0], 'speech', 'sound')],
                     'output_dir': output_dir,
                 })
-            Inference(**kwargs)()
+            # 비동기 루프를 생성합니다.
+            loop = asyncio.get_running_loop()
+
+            # executor를 생성합니다.
+            objExecutor = ProcessPoolExecutor(max_workers=num_process)
+
+            # inference 클래스를 선언합니다.
+            inference = Inference(**kwargs)
+            
+            # executeor를 사용해 프로세스 생성합니다.
+            future = [loop.run_in_executor(objExecutor, inference.process)]
+            await asyncio.wait(future)
 
         print("-"*50)
         print(f"end(sec) : {time.time()-start_time:.2f}")
         print("-"*50)
         
         return self.filename
+        
+    def process(self, min_per_split=None, min_silence_len=None):
+        asyncio.run(self.run(min_per_split, min_silence_len))
+        return self.filename        

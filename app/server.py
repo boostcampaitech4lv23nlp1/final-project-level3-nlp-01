@@ -115,6 +115,7 @@ def stt_inference():
             make_dataset=False, 
             inference_wav_file=filename
         )
+        torch.cuda.empty_cache()
         app.stt_output = output
         return {'status' : True}
     except AttributeError as e:
@@ -219,6 +220,7 @@ def qg_task(req: QuestionGenerationInput):
         result['questions'].append(dictionary['question'])
         result['answers'].append(dictionary['answer'])
     
+    torch.cuda.empty_cache()
     filename = app.wav_filename.split('.')[0]
     app.result_filepath = f'./{filename}.csv'
     pd.DataFrame(result).to_csv(app.result_filepath)
