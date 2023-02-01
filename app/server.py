@@ -212,7 +212,7 @@ def qg_task(req: QuestionGenerationInput):
     for idx in range(len(input)):
         input[idx]['keyword'] = [tuple(keyword) for keyword in input[idx]['keyword']]
 
-    topN_output, output = question_generate("t5", "question-generation", input, app.qg_model, app.qg_tokenizer, app.kw_model) 
+    topN_output, output = question_generate("t5", "question-generation", input, app.qg_model, app.qg_tokenizer, app.filter_model) 
 
     result = {'questions': [], 'answers' : []}
     for dictionary in output:
