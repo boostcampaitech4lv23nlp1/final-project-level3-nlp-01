@@ -22,9 +22,8 @@ def get_use_keyword(filter_model, docs, keywords, top_n):
 
     similarity = distances.tolist()[0]
     for index, sim in enumerate(similarity):
-        if sim >=0.2:
-            keywords[index] = keywords[index] + (sim,) #튜플에 유사도 추가
-            new_keywords.append(keywords[index])
+        keywords[index] = keywords[index] + (sim,) #튜플에 유사도 추가
+        new_keywords.append(keywords[index])
 
     new_keywords.sort(key=lambda x: x[2], reverse=True)
 

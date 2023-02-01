@@ -17,5 +17,5 @@ def kw_model_init():
     return kw_model
 
 def filtering_model_init():
-    filter_model = SentenceTransformer('/opt/ml/project_models/filtering_model')
+    filter_model = SentenceTransformer('sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens')
     return filter_model
