@@ -37,7 +37,26 @@ function QuestionGenerationCard(props) {
 
 function QuestionGenerationPage(props) {
   const questionGenerationResult = props.questionGenerationResult;
-  
+
+
+  const serverUrl = 'http://127.0.0.1:30001/';
+  const onDonwloadResultRequest = () => {
+    const url = serverUrl + 'downloadResult';
+    
+    fetch(url, {
+      method: 'GET',
+    }).then((response) => {
+      return response.blob()
+    }).then((blob) => {
+      let data = blob;
+      let csvURL = window.URL.createObjectURL(data);
+      let tmpLink = document.createElement('a');
+      tmpLink.href = csvURL;
+      tmpLink.setAttribute('download', 'export.csv');
+      tmpLink.click();
+    })
+  }
+
   return (
     <div className="container-md" style={{maxWidth: '80vh'}}>
       <div className="mb-5">
@@ -51,10 +70,12 @@ function QuestionGenerationPage(props) {
           <QuestionGenerationCard question={d.question} answer={d.answer}/>)
         )
       )}
-      <div className="d-flex justify-content-end m-3" style={{padding: '5px'}}>
+      <div className="d-flex justify-content-end mb-3" style={{padding: '5px'}}>
         {
         questionGenerationResult.length > 0 ? 
-        <label className="btn btn-sm btn-light btn-primary fw-bold border-white">
+        <label className="btn btn-sm btn-light btn-primary fw-bold border-white" onClick={() => {
+          onDonwloadResultRequest();
+        }}>
             download
         </label>
         : <div></div>

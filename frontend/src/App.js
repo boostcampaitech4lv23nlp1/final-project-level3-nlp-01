@@ -13,6 +13,8 @@ function App() {
 
     let [taskBarList, setTaskBarList] = useState([true, false, false, false]);
     let [loddingFlag, setLoddingFlag] = useState(false);
+    let [summarizationFlag, setSummarizationFlag] = useState(false);
+    let [questionGenerationFlag, setQuestionGenerationFlag] = useState(false);
     
     const inputRef = useRef();
     let sttStatus = useRef([false, false, false]);
@@ -110,6 +112,7 @@ function App() {
         console.log(summarizationResult.current);
       }).then(() => {
         setLoddingFlag(false);
+        setSummarizationFlag(true);
         setTaskBarList((prev) => [false, false, true ,false]);
       }).catch(() => {
         setLoddingFlag(false);
@@ -152,28 +155,12 @@ function App() {
         console.log(questionGenerationResult.current);
       }).then(() => {
         setLoddingFlag(false);
+        setQuestionGenerationFlag(true);
         setTaskBarList((prev) => [false, false, false, true]);
-      }).then(() => {
-        onDonwloadResultRequest();
       })
     }
 
-    const onDonwloadResultRequest = () => {
-      const url = serverUrl + 'downloadResult';
-      
-      fetch(url, {
-        method: 'GET',
-      }).then((response) => {
-        return response.blob()
-      }).then((blob) => {
-        let data = blob;
-        let csvURL = window.URL.createObjectURL(data);
-        let tmpLink = document.createElement('a');
-        tmpLink.href = csvURL;
-        tmpLink.setAttribute('download', 'export.csv');
-        tmpLink.click();
-      })
-    }
+
 
     return (
         <div className='App'>
@@ -214,7 +201,7 @@ function App() {
                                     summarization
                                 </a>
                                 :<a className="nav-link fw-bold py-1 px-2" href="#!" onClick={()=>{
-                                  if (summarizationResult.length > 0){
+                                  if (summarizationFlag){
                                     setTaskBarList((prev) => [false, false, true, false]);
                                   } else {
                                     alert('이전 작업을 완료해주세요.');
@@ -231,7 +218,7 @@ function App() {
                                     question generation
                                 </a>
                                 :<a className="nav-link fw-bold py-1 px-2" href="#!" onClick={()=>{
-                                  if (questionGenerationResult.length > 0) {
+                                  if (questionGenerationFlag) {
                                     setTaskBarList((prev) => [false, false, false, true]);
                                   } else {
                                     alert('이전 작업을 완료해주세요.');
