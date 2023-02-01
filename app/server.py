@@ -212,7 +212,7 @@ def qg_task(req: QuestionGenerationInput):
     for idx in range(len(input)):
         input[idx]['keyword'] = [tuple(keyword) for keyword in input[idx]['keyword']]
 
-    output = question_generate("t5", "question-generation", input, app.qg_model, app.qg_tokenizer) 
+    topN_output, output = question_generate("t5", "question-generation", input, app.qg_model, app.qg_tokenizer, app.kw_model) 
 
     result = {'questions': [], 'answers' : []}
     for dictionary in output:
@@ -223,7 +223,7 @@ def qg_task(req: QuestionGenerationInput):
     app.result_filepath = f'./{filename}.csv'
     pd.DataFrame(result).to_csv(app.result_filepath)
 
-    return {'output': output}
+    return {'output': topN_output}
 
 @app.get('/downloadResult/', description='download result')
 def download_result():
