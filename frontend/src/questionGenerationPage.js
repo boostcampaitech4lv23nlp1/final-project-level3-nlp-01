@@ -63,7 +63,7 @@ function QuestionGenerationPage(props) {
         let csvURL = window.URL.createObjectURL(data);
         let tmpLink = document.createElement("a");
         tmpLink.href = csvURL;
-        tmpLink.setAttribute("download", "export.csv");
+        tmpLink.setAttribute("download", "question_generation_export.csv");
         tmpLink.click();
       });
   };

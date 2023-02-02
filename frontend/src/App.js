@@ -10,7 +10,7 @@ function App() {
     updateState({});
   };
 
-  const serverUrl = "http://115.85.181.112:30001/";
+  const serverUrl = "http://127.0.0.1:30001/";
 
   const sttServerUrl = "http://115.85.181.112:30001/";
   const postProcessServerUrl = "http://49.50.164.49:30001/";
@@ -21,6 +21,7 @@ function App() {
   const [inputList, setInputList] = useState([]);
 
   let [taskBarList, setTaskBarList] = useState([true, false, false, false]);
+  let [saveWavFileFlag, setSaveWavFileFlag] = useState(false);
   let [loddingFlag, setLoddingFlag] = useState(false);
   let [summarizationFlag, setSummarizationFlag] = useState(false);
   let [questionGenerationFlag, setQuestionGenerationFlag] = useState(false);
@@ -36,21 +37,40 @@ function App() {
   const onSaveRequest = (task, file) => {
     const formData = new FormData();
     formData.append("file", file);
-    for (let value of formData.values()) {
-      console.log(value);
-    }
-    const url = serverUrl + task;
+    
+    let url = serverUrl + 'isFileExist';
+    
+    const sent_data = JSON.stringify({
+      'filename': file.name,
+      'size': file.size
+    })
+    console.log(sent_data)
     fetch(url, {
       method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        sttStatus.current = [true, false, false, false];
-        setLoddingFlag(false);
+      headers: { "Content-Type": "application/json" },
+      body: sent_data
+    }).then((response) => response.json()).then((response) => {
+        console.log(formData)
+        if (response.exist === false) {
+          url = serverUrl + 'saveWavFile';
+          fetch(url, {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => {
+              sttStatus.current = [true, false, false, false];
+              setSaveWavFileFlag(true);
+              setLoddingFlag(false);
+            })
+            .catch((error) => {
+              console.log(error);
+          });      
+        } else {
+          setSaveWavFileFlag(true);
+          setLoddingFlag(false);
+        }
       })
-      .catch((error) => {
-        console.log(error);
-      });
+    
   };
 
   // get
@@ -135,11 +155,40 @@ function App() {
         setLoddingFlag(false);
         setSummarizationFlag(true);
         setTaskBarList((prev) => [false, false, true, false]);
+      }).then(() => {
+        onDownloadSummarizationRequest();
       })
       .catch(() => {
         setLoddingFlag(false);
       });
   };
+  
+  const onDownloadSummarizationRequest = () => {
+    const url = serverUrl + 'summarizationResultDownload';
+
+    const file = inputList[0]
+    const sent_data = JSON.stringify({
+      'fileName': file.name,
+      'size': file.size,
+      'result': summarizationResult.current,
+    })
+    console.log(sent_data);
+
+    fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: sent_data
+    }).then((response) => response.blob()).then((blob) => {
+      let data = blob;
+      let textURL = window.URL.createObjectURL(data);
+      let tmpLink = document.createElement('a');
+      tmpLink.href = textURL;
+      tmpLink.setAttribute('download', 'summarize_export.txt')
+      tmpLink.click();
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
 
   const onKeywordExtractionRequest = () => {
     const url = serverUrl + "keyword";
@@ -166,8 +215,11 @@ function App() {
 
   const onQuestionGenerationRequest = () => {
     const url = serverUrl + "questionGeneration";
+    const file = inputList[0]
     const sent_data = JSON.stringify({
       keywords: keywordExtractionResult.current,
+      filename: file.name,
+      size: file.size
     });
 
     fetch(url, {
@@ -351,7 +403,11 @@ function App() {
                     segmentationResult={segmentationResult.current}
                   />
                   <div className="d-flex justify-content-center mt-2">
-                    {loddingFlag ? (
+                    {(loddingFlag) && (saveWavFileFlag === false) ? (
+                      <label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3 disabled">
+                        업로드 중
+                      </label>
+                    ) : (loddingFlag) && (saveWavFileFlag === true) ? (
                       <label className="btn btn-lg btn-light btn-primary fw-bold border-white bg-white mt-3 disabled">
                         작업 중
                       </label>
