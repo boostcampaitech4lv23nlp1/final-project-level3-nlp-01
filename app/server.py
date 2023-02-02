@@ -2,12 +2,14 @@
 import os
 import json
 import shutil
+import time
 import pickle
 import torch
 import uvicorn
 import io
 import pandas as pd
 from pydantic import BaseModel
+from copy import deepcopy
 
 from typing import Optional, List, Dict, Union
 from fastapi import FastAPI, File, UploadFile
@@ -57,8 +59,6 @@ app.filter_model = filtering_model_init()
 app.qg_model, app.qg_tokenizer = qg_model_init()
 
 # input validation
-class FileName(BaseModel):
-    file: str
 
 class STTOutput(BaseModel):
     '''
@@ -80,28 +80,68 @@ class KeyWordInput(BaseModel):
 
 class QuestionGenerationInput(BaseModel):
     '''
-    type:
-        List[Dict[str, Union[str, List]]]
-    example:
-        [{context: "string", keyword: [(18, "신사임당"), (19, '다른거')]}]
+    keywords:    [{context: "string", keyword: [(18, "신사임당"), (19, '다른거')]}]
+
+    fileName:
+        "filename"
+    size:
+        10000
     '''
     keywords: List[Dict[str, Union[str, List]]]
+    filename: str
+    size: int
+
+
+
+class FileInfo(BaseModel):
+    '''
+    {'filename': 'something.wav', 'size': 10000}
+    '''
+    filename: str
+    size: int
+
+@app.post('/isFileExist/', description='file exists')
+def is_file_exist(req: FileInfo):
+    filename: str = req.filename
+    filesize: int = req.size
+    
+    filename = filename.split('.')[0] + '_' + str(filesize) + '.wav'
+
+    if os.path.exists(filename):
+        app.wav_filename = filename
+        return {
+            'exist': True
+        }
+    else:
+        return {
+            'exist': False
+        }
+
 
 # STT : input WAV file to save
 @app.post('/saveWavFile/', description='save wav file') # input : WAV -> output : str
 def save_wav_file(file: UploadFile=File(...)):
-
     if file is None:
         return {'output': None}
     else:
-        filename = file.filename
-        with open(filename, 'wb') as f:
+        fileName = file.filename
+        fileName = fileName.split('.')[0]
+        
+        with open(fileName + '.wav', 'wb') as f:
             shutil.copyfileobj(file.file, f) # for streamlit test -> to be comment
-        app.wav_filename = filename
+        fileSize = os.path.getsize(fileName + '.wav')
+        
+        copyFileName = fileName + '_' + str(fileSize) + '.wav'
+        shutil.copy(src=fileName+'.wav', dst=copyFileName)
+
+        if os.path.exists(fileName + '.wav'):
+            os.remove(fileName + '.wav')
+        app.wav_filename = copyFileName
+        time.sleep(1)
         return {JSONResponse(
             status_code = 200,
             content = {
-            "output": filename
+            "output": copyFileName
             })}
 
 # STT : STT inference
@@ -164,12 +204,38 @@ def summary(segments: STTOutput):
                             postprocess_model = app.segment_model,
                             preprocessed = input,
                             sum_model = app.summary_model_name)
+            
         print('finish summarization')
         return {'summarization_output': output}
     except AttributeError as e:
         return {'error':'start summarization error'}
 
-# ########################################
+class SummarizationResult(BaseModel):
+    '''
+        {'fileName': 'filename', 'size': 10000, 'result': ['something string', 'something string']}
+    '''
+    fileName: str
+    size: int
+    result: List[str]
+
+
+@app.post('/summarizationResultDownload', description='download summarization result')
+def download_summarization_result(req: SummarizationResult):
+    try:
+        fileName = req.fileName
+        size = req.size
+        result = req.result
+
+        filepath = fileName.split('.')[0] + '_' + str(size) + '.txt'
+        with open(filepath, 'w') as f:
+            for paragraph in result:
+                s = paragraph.split('.')
+                for text in s:
+                    text = text.strip()
+                    f.write(text + '.\n')
+        return FileResponse(filepath)
+    except:
+        return {'status': False}
 
 
 # Keyword Extraction : Keyword Extraction
@@ -210,6 +276,9 @@ def qg_task(req: QuestionGenerationInput):
         [{context: "string", keyword: [(18, "신사임당"), (19, '다른거')]}]
     '''
     input = req.keywords
+    filename = req.filename
+    size = req.size
+
     for idx in range(len(input)):
         input[idx]['keyword'] = [tuple(keyword) for keyword in input[idx]['keyword']]
 
@@ -221,7 +290,7 @@ def qg_task(req: QuestionGenerationInput):
         result['answers'].append(dictionary['answer'])
     
     torch.cuda.empty_cache()
-    filename = app.wav_filename.split('.')[0]
+    filename = filename.split('.')[0] + '_' + str(size)
     app.result_filepath = f'./{filename}.csv'
     pd.DataFrame(result).to_csv(app.result_filepath)
 
