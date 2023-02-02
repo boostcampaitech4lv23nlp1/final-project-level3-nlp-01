@@ -220,7 +220,7 @@ def qg_task(req: QuestionGenerationInput):
         result['answers'].append(dictionary['answer'])
     
     filename = app.wav_filename.split('.')[0]
-    app.result_filepath = f'./{filename}.csv'
+    app.result_filepath = f'./result.csv'
     pd.DataFrame(result).to_csv(app.result_filepath)
 
     return {'output': topN_output}
