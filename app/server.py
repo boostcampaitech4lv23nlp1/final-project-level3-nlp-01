@@ -41,19 +41,24 @@ app.add_middleware(
 )
 
 # model init
+# for STT
 app.stt_model = stt_model_init()
 app.stt_post_model, app.stt_post_tokenizer = stt_post_model_init(
             model_path = '/opt/ml/project_models/stt/postprocessing_gpt')
 app.segment_model = segment_model_init()
 
+# for Summarization
+app.segment_model = segment_model_init()
 app.summary_model, app.summary_tokenizer, app.summary_model_name = summary_model_init(
     model_path = '/opt/ml/project_models/summarization/kobart_all_preprocessed_without_news_05',
     model_name = 'kobart')
 
+# for Answer Extraction
 app.ner_model = ner_model_init()
 app.kw_model = kw_model_init()
 app.filter_model = filtering_model_init()
 
+# for Question Generation
 app.qg_model, app.qg_tokenizer = qg_model_init()
 
 # input validation
