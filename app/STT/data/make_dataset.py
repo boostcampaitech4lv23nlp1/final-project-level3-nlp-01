@@ -12,6 +12,7 @@ from tqdm import tqdm
 from .audio import SplitWavAudio, change_sampling_rate
 from ..inference.inference import Inference
 
+from transformers import AutoProcessor
 from multiprocessing import Process, set_start_method
 
 HOMEPATH = '/opt/ml'
@@ -113,14 +114,24 @@ class MakeInferenceDataset(object):
 
         start_time = time.time()
         num_process = self.cfg.default.num_process
+        batch_size = self.cfg.default.batch_size
+
         print(f'num process : {num_process}')
+        print(f'batch_size : {batch_size}')
         scps = self.split_wav.make_split_scp_file(split=num_process)
 
         # parameter setting
         kwargs = dict(getattr(self.cfg, 'whisper'))
+        model_size = kwargs.pop('model_size')
 
-        model = self.model
+        # set model init
+        model_checkpoint = f'openai/whisper-{model_size}'
+        processor = AutoProcessor.from_pretrained(model_checkpoint)
+        forced_decoder_ids = processor.get_decoder_prompt_ids(language='korean', task='transcribe')
+        model = self.model  
+
         output_dir = f'./output/STT/{self.filename}/{self.filename}'
+
         if len(scps) > 1:
             model.share_memory()
             inferences = []
@@ -133,7 +144,10 @@ class MakeInferenceDataset(object):
             # inference 클래스를 선언합니다.
             for i, scp in enumerate(scps):
                 kwargs.update({
+                    'processor': processor,
+                    'forced_decoder_ids': forced_decoder_ids,
                     'model': model,
+                    'batch_size': batch_size,
                     'data_path_and_name_and_type': [(scp, 'speech', 'sound')],
                     'output_dir': output_dir + f'_{i}'
                 })
@@ -149,7 +163,10 @@ class MakeInferenceDataset(object):
             
         else:
             kwargs.update({
+                    'processor': processor,
+                    'forced_decoder_ids': forced_decoder_ids,
                     'model': model,
+                    'batch_size': batch_size,
                     'data_path_and_name_and_type': [(scps[0], 'speech', 'sound')],
                     'output_dir': output_dir,
                 })
@@ -171,7 +188,7 @@ class MakeInferenceDataset(object):
         print("-"*50)
         
         return self.filename
-        
+
     def process(self, min_per_split=None, min_silence_len=None):
         asyncio.run(self.run(min_per_split, min_silence_len))
-        return self.filename        
+        return self.filename
