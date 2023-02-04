@@ -6,6 +6,7 @@ import torch
 import torch.multiprocessing as mp
 import asyncio
 
+from transformers import  AutoProcessor, WhisperForConditionalGeneration
 from concurrent.futures import ProcessPoolExecutor
 from omegaconf import OmegaConf
 from tqdm import tqdm
@@ -123,8 +124,17 @@ class MakeInferenceDataset(object):
         kwargs = dict(getattr(self.cfg, 'whisper'))
         model_size = kwargs.pop('model_size')
 
-        device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-        model = whisper.load_model(model_size).to(device=device)
+
+        # set model init
+        model_checkpoint = f'openai/whisper-{model_size}'
+        processor = AutoProcessor.from_pretrained(model_checkpoint)
+        forced_decoder_ids = processor.get_decoder_prompt_ids(language='korean', task='transcribe')
+
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        model = WhisperForConditionalGeneration.from_pretrained(
+            'openai/whisper-small',
+        ).to(device)
+        
         output_dir = f'./output/STT/{self.filename}/{self.filename}'
 
         if len(scps) > 1:
@@ -139,6 +149,8 @@ class MakeInferenceDataset(object):
             # inference 클래스를 선언합니다.
             for i, scp in enumerate(scps):
                 kwargs.update({
+                    'processor': processor,
+                    'forced_decoder_ids': forced_decoder_ids,
                     'model': model,
                     'data_path_and_name_and_type': [(scp, 'speech', 'sound')],
                     'output_dir': output_dir + f'_{i}'
@@ -155,6 +167,8 @@ class MakeInferenceDataset(object):
             
         else:
             kwargs.update({
+                    'processor': processor,
+                    'forced_decoder_ids': forced_decoder_ids,
                     'model': model,
                     'data_path_and_name_and_type': [(scps[0], 'speech', 'sound')],
                     'output_dir': output_dir,

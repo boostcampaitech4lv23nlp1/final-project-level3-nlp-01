@@ -4,10 +4,13 @@ import whisper
 import asyncio
 
 from typing import Optional, Tuple, Sequence
+from transformers import pipeline
 
 class Inference():
     def __init__(
             self,
+            processor,
+            forced_decoder_ids,
             model,
             output_dir: str,
             fp16: bool,
@@ -15,16 +18,14 @@ class Inference():
             data_path_and_name_and_type: Sequence[Tuple[str, str, str]],
             language: Optional[str],
         ):
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         
-        self.output_dir = output_dir
-        self.model = model.cuda()
+        self.processor = processor
+        self.forced_decoder_ids = forced_decoder_ids
+        self.model = model
 
+        self.output_dir = output_dir
         self.scp_path, _, _ = data_path_and_name_and_type[0]
-        self.options = {
-            'language': language,
-            'beam_size': beam_size,
-            'fp16': fp16,
-        }
 
     async def run(self):
         print('whisper inference')
@@ -36,14 +37,14 @@ class Inference():
             i, path = line.strip().split(' ')
 
             # TODO: apt-get install ffmpeg README.md 파일에 명시하기
-            result = self.model.transcribe(
-                path,
-                temperature=0,
-                no_speech_threshold=0.6,
-                **self.options
-            )
-            print(i, ' ', result['text'])
-            output.append(" ".join([i, result['text']]) + '\n')
+            audio = whisper.load_audio(path)
+            inputs = self.processor(audio, sampling_rate=16000, return_tensors='pt').input_features.to(self.device)
+            
+            predicted_ids = self.model.generate(inputs, forced_decoder_ids=self.forced_decoder_ids)
+            transcription = self.processor.batch_decode(predicted_ids, skip_special_tokens=True)[0]
+            
+            print(i, ' ', transcription)
+            output.append(" ".join([i, transcription]) + '\n')
     
         # make directory
         os.makedirs(path:=os.path.join(self.output_dir, '1best_recog'), exist_ok=True)
