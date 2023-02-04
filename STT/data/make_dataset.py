@@ -1,6 +1,6 @@
 import os
 import time
-import warnings
+import shutil
 import whisper
 import torch
 import torch.multiprocessing as mp
@@ -101,6 +101,7 @@ class MakeInferenceDataset(object):
 
         self.filename = change_sampling_rate(file_path=inference_wav_path, resampling_sr=resampling_sr)
         self.folder = f'./output/STT/download/{self.filename}'
+
         self.file = f'{self.filename}.wav'
         self.split_wav = SplitWavAudio(self.folder, self.file)
         
@@ -117,13 +118,15 @@ class MakeInferenceDataset(object):
 
         start_time = time.time()
         num_process = self.cfg.default.num_process
+        batch_size = self.cfg.default.batch_size
+
         print(f'num process : {num_process}')
+        print(f'batch_size : {batch_size}')
         scps = self.split_wav.make_split_scp_file(split=num_process)
 
         # parameter setting
         kwargs = dict(getattr(self.cfg, 'whisper'))
         model_size = kwargs.pop('model_size')
-
 
         # set model init
         model_checkpoint = f'openai/whisper-{model_size}'
@@ -152,6 +155,7 @@ class MakeInferenceDataset(object):
                     'processor': processor,
                     'forced_decoder_ids': forced_decoder_ids,
                     'model': model,
+                    'batch_size': batch_size,
                     'data_path_and_name_and_type': [(scp, 'speech', 'sound')],
                     'output_dir': output_dir + f'_{i}'
                 })
@@ -170,6 +174,7 @@ class MakeInferenceDataset(object):
                     'processor': processor,
                     'forced_decoder_ids': forced_decoder_ids,
                     'model': model,
+                    'batch_size': batch_size,
                     'data_path_and_name_and_type': [(scps[0], 'speech', 'sound')],
                     'output_dir': output_dir,
                 })

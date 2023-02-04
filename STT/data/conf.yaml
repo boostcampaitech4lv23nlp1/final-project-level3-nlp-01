@@ -1,9 +1,9 @@
 default:
-    num_process: 8
     resampling_sr: 16000
+    num_process: 4
+    batch_size: 8
 
 whisper:
     model_size: small
-    language: ko
-    fp16: True
     beam_size: 10
+    

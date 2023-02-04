@@ -179,6 +179,9 @@ def change_sampling_rate(
     filename = file_path.split('/')[-1].split('.')[0].replace(' ', '')
     filename = filename.replace('–', '_').replace('-', '_')
     new_path = os.path.join('output/STT', 'download', filename)
+    if os.path.exists(new_path):
+        shutil.rmtree(new_path)
+
     os.makedirs(new_path, exist_ok=True)
     
     if type(resampling_sr) != str:
