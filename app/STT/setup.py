@@ -4,6 +4,9 @@ from .data.make_dataset import MakeDatasetUsingAIHUB, MakeInferenceDataset
 from .data.utils.output_to_dataframe import aihub_dataset, inference_dataset
 from typing import Optional
 
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning)
+
 # TODO: GPT2에 학습할 데이터셋 생성 모듈 제작 -> make_dataset()
 # TODO: GPT2에 넘겨줄 inference 모듈 제작 -> inference()
 
