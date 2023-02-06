@@ -6,7 +6,6 @@ import math
 import numpy as np
 import pandas as pd
 import shutil
-import librosa
 import soundfile as sf
 
 
@@ -180,6 +179,9 @@ def change_sampling_rate(
     filename = file_path.split('/')[-1].split('.')[0].replace(' ', '')
     filename = filename.replace('–', '_').replace('-', '_')
     new_path = os.path.join('output/STT', 'download', filename)
+    if os.path.exists(new_path):
+        shutil.rmtree(new_path)
+
     os.makedirs(new_path, exist_ok=True)
     
     if type(resampling_sr) != str:
@@ -188,11 +190,14 @@ def change_sampling_rate(
         if resampling_sr == None:
             resampling_sr = 'None'
 
+    output_path = os.path.join(new_path, filename+'.wav')
     if resampling_sr != 'None':
-        data, sr = librosa.load(file_path)
-        resample = librosa.resample(data, sr, resampling_sr)
-        sf.write(os.path.join(new_path, filename+'.wav'), resample, resampling_sr, format='WAV')
+        sound = AudioSegment.from_wav(file_path)
+        sound = sound.set_channels(1)
+        sound = sound.set_frame_rate(16000)
+        sound.export(output_path, format='wav')
     else:
-        shutil.copy(file_path, os.path.join(new_path, filename+'.wav'))
-
+        sound = AudioSegment.from_wav(file_path)
+        sound = sound.set_channels(1)
+        sound.export(output_path, format='wav')
     return filename

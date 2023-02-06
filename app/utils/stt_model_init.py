@@ -3,6 +3,7 @@ import whisper
 from transformers import PreTrainedTokenizerFast, GPT2LMHeadModel
 from sentence_transformers import SentenceTransformer
 
+from transformers import WhisperForConditionalGeneration
 from omegaconf import OmegaConf
 
 def stt_model_init():
@@ -11,7 +12,9 @@ def stt_model_init():
     model_size = kwargs.pop('model_size')
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model = whisper.load_model(model_size).to(device=device)
+    model = WhisperForConditionalGeneration.from_pretrained(
+            f'openai/whisper-{model_size}',
+        ).to(device)
 
     return model
 
