@@ -1,9 +1,9 @@
 default:
     resampling_sr: 16000
-    num_process: 4
-    batch_size: 8
+    num_process: 8
+    batch_size: 1
 
 whisper:
     model_size: small
-    beam_size: 10
+    beam_size: 3
     

@@ -2,7 +2,9 @@ import os
 import torch
 import whisper
 import asyncio
-import shutil
+import warnings
+
+warnings.filterwarnings('ignore', category=UserWarning)
 
 from typing import Optional, Tuple, Sequence
 from transformers import pipeline
@@ -31,7 +33,7 @@ class Inference():
 
         self.batch_size = batch_size
 
-    async def run(self):
+    def __call__(self):
         print('whisper inference')
         with open(self.scp_path, 'r+') as f:
             lines = f.readlines()
@@ -86,8 +88,6 @@ class Inference():
             batch_metadatas.clear()
     
         # make directory
-        if os.path.exists(self.output_dir):
-            shutil.rmtree(self.output_dir)
         os.makedirs(path:=os.path.join(self.output_dir, '1best_recog'), exist_ok=True)
         with open(os.path.join(path, 'text'), 'w+') as f:
             for s in output:
@@ -95,6 +95,3 @@ class Inference():
             f.close()
 
         print(f"end {self.scp_path}")
-        
-    def process(self):
-        asyncio.run(self.run())

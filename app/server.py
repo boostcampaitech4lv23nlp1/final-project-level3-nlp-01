@@ -8,14 +8,16 @@ import torch
 import uvicorn
 import io
 import pandas as pd
+import warnings
+
+warnings.filterwarnings('ignore', category=UserWarning)
+
 from pydantic import BaseModel
 from copy import deepcopy
-
 from typing import Optional, List, Dict, Union
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse, FileResponse
 from starlette.middleware.cors import CORSMiddleware
-import pandas as pd
 
 from .summary.main import segment, summarize
 from .stt_postprocessing.main import postprocess
@@ -41,6 +43,9 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*']
 )
+
+if os.path.exists('output'):
+    shutil.rmtree('output')
 
 # model init
 app.stt_model = stt_model_init()
@@ -109,6 +114,7 @@ def is_file_exist(req: FileInfo):
 
     if os.path.exists(filename):
         app.wav_filename = filename
+        time.sleep(2)
         return {
             'exist': True
         }
@@ -155,7 +161,6 @@ def stt_inference():
             make_dataset=False, 
             inference_wav_file=filename
         )
-        torch.cuda.empty_cache()
         app.stt_output = output
         return {'status' : True}
     except AttributeError as e:
@@ -289,11 +294,12 @@ def qg_task(req: QuestionGenerationInput):
         result['questions'].append(dictionary['question'])
         result['answers'].append(dictionary['answer'])
     
-    torch.cuda.empty_cache()
     filename = filename.split('.')[0] + '_' + str(size)
     app.result_filepath = f'./{filename}.csv'
     pd.DataFrame(result).to_csv(app.result_filepath)
-
+    
+    torch.cuda.empty_cache()
+    
     return {'output': topN_output}
 
 @app.get('/downloadResult/', description='download result')
