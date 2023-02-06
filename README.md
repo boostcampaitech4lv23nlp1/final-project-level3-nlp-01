@@ -2,8 +2,15 @@
 ## Members
 |강혜빈|권현정|백인진|이용우|이준원|
 |:--:|:--:|:--:|:--:|:--:|
-|tmp|tmp|tmp|tmp|tmp|
+|<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216918705-56e2f4d6-bc4f-482a-b9fd-190ca865d0e5.png">|<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216918785-3bc90fc4-e4b8-43f4-bd61-d797cf87e344.png">|<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216919234-e9cc433c-f464-4a4b-8601-cffa668b22b2.png">|<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216919814-f6ff7c2f-90ea-489c-b19a-a29fca8f9861.png">|<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216919925-1ab02487-e7a5-4995-8d22-1253bbcae550.png">|
 |Question <br> Generation|Answer <br> Extraction|Summarization, <br> FastAPI|STT, <br> React|STT, <br> STT PostProcessing|
+|[@hyeb](https://github.com/hyeb)|[@malinmalin2](https://github.com/malinmalin2)|[@eenzeenee](https://github.com/eenzeenee)|[@wooy0ng](https://github.com/wooy0ng)|[jun9603](https://github.com/jun9603)
+
+
+
+
+
+
 
 
 <br><br><br>
@@ -23,14 +30,14 @@
 ### 프로젝트 목표
 - 강의 녹음본을 활용하여 요약본과 예상 질문 및 답안을 생성하여 효율적인 학습을 돕는다.
 
-<br><br><br>
+<br><br>
 
 ### 프로젝트 목표 대상
 - 강의 수강 시, 주요 내용을 놓쳐 강의 녹음본을 통해 복습하고자 하는 학생
 - 대면 강의 시, 필기 중 주요 내용에 대한 체계적인 정리가 어려운 학생
 - 시험 전, 예상질문과 답안을 통해 공부를 하고자 하는 학생
 
-<br><br><br>
+<br><br>
 
 ## Service Flow
 
@@ -43,7 +50,7 @@
 - [model link (on google drive)](https://drive.google.com/drive/folders/1peLB2-ngf8pYgyrgf545q1Ml-ReBHLiL?usp=sharing)
 - model_path = f'/opt/ml/project_models/{model_name}'
 
-<br><br><br>
+<br><br>
 
 ### backend settings
 
@@ -56,7 +63,7 @@ apt-get install openjdk-8-jdk python3-dev
 bash <(curl -s https://raw.githubusercontent.com/konlpy/konlpy/master/scripts/mecab.sh)
 ```
 
-<br><br><br>
+<br><br>
 
 ### frontend settings
 
@@ -82,9 +89,9 @@ package.json파일이 위치하는 곳에서 아래의 명령어를 입력하여
 $ npm install
 ```
 
-<br><br><br>
+<br><br>
 
-#### usage
+### usage
 웹 서버를 실행시킵니다. (not build)
 ```bash
 $ npm start
