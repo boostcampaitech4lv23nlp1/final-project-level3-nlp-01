@@ -4,17 +4,10 @@
 |:--:|:--:|:--:|:--:|:--:|
 |<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216918705-56e2f4d6-bc4f-482a-b9fd-190ca865d0e5.png">|<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216918785-3bc90fc4-e4b8-43f4-bd61-d797cf87e344.png">|<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216919234-e9cc433c-f464-4a4b-8601-cffa668b22b2.png">|<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216919814-f6ff7c2f-90ea-489c-b19a-a29fca8f9861.png">|<img width="100" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216919925-1ab02487-e7a5-4995-8d22-1253bbcae550.png">|
 |Question <br> Generation|Answer <br> Extraction|Summarization, <br> FastAPI|STT, <br> React|STT, <br> STT PostProcessing|
-|[@hyeb](https://github.com/hyeb)|[@malinmalin2](https://github.com/malinmalin2)|[@eenzeenee](https://github.com/eenzeenee)|[@wooy0ng](https://github.com/wooy0ng)|[jun9603](https://github.com/jun9603)
-
-
-
-
-
-
+|[@hyeb](https://github.com/hyeb)|[@malinmalin2](https://github.com/malinmalin2)|[@eenzeenee](https://github.com/eenzeenee)|[@wooy0ng](https://github.com/wooy0ng)|[@jun9603](https://github.com/jun9603)
 
 
 <br><br><br>
-
 
 ## Introduction
 ### 프로젝트 배경
@@ -22,7 +15,8 @@
 
 ![교육부](https://user-images.githubusercontent.com/37149278/216916559-523f6fe2-18ae-4dec-8281-0fb0d0ee9c3f.png)
 
-<img width="763" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216916495-addec7cf-3301-4ff0-8839-b6831b0cc426.png">
+<img width="500" alt="에브리타임" src="https://user-images.githubusercontent.com/37149278/216916495-addec7cf-3301-4ff0-8839-b6831b0cc426.png">
+
 
 
 <br><br><br>
@@ -100,6 +94,8 @@ $ npm start
 <br><br><br>
 
 ## Demo
+
+![데모 시연 (2)](https://user-images.githubusercontent.com/37149278/217130400-f3f790ab-0d2d-45e3-a7a5-e66b2ab254a6.gif)
 
 
 <br><br><br>
@@ -216,7 +212,7 @@ $ npm start
 **STT**
 
 - **Character error rates(CER) : [https://github.com/hyeonsangjeon/computing-Korean-STT-error-rates](https://github.com/hyeonsangjeon/computing-Korean-STT-error-rates)**
-- **SPNet : [https://github.com/espnet/espnet](https://github.com/espnet/espnet)**
+- **ESPNet : [https://github.com/espnet/espnet](https://github.com/espnet/espnet)**
 - **Whisper : [https://arxiv.org/pdf/2212.04356.pdf](https://arxiv.org/pdf/2212.04356.pdf)**
 
 **Summarization**
