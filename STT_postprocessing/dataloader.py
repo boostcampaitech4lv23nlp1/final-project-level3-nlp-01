@@ -26,7 +26,7 @@ class Datasets(Dataset):
         sent = '0'
         answer=""
         for idx, item in df.iterrows():
-            data = OUTPUT_TKN + item['result'] + SENT + sent + RESULT_TKN + answer
+            data = OUTPUT_TKN + item['output'] + SENT + sent + RESULT_TKN + answer
             input_ids = tokenizer(data, max_length = 32, padding = 'max_length',truncation = True)
 
             inputs.append(input_ids)
