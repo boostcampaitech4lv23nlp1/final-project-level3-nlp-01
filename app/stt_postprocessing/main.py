@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import torch
 import time
-from dataloader import Datasets
+from .dataloader import Datasets
 from transformers import PreTrainedTokenizerFast
 from transformers import GPT2LMHeadModel
 import warnings
