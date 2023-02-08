@@ -1,86 +1,77 @@
+import numpy as np
 import pandas as pd
 import torch
 import time
+from .dataloader import Datasets
 from transformers import PreTrainedTokenizerFast
 from transformers import GPT2LMHeadModel
 import warnings
-from multiprocessing import Process
-from .inference import inference
-from .split_data import split_file
 warnings.filterwarnings("ignore")
 
 
 def postprocess(model, tokenizer, df):
-
-    '''
-    ## postprocess
-    description:
-    - stt 작업 후 후처리를 진행합니다.
     
-    args:
-    - model: 후처리에 사용하는 모델
-        - GPT2LMHeadModel
-    - tokenizer: 후처리에 사용하는 tokenizer 모델
-        - PreTrainedTokenizerFast
-    - df: 후처리 입력으로 활용되는 stt output
-        - pd.DataFrame
-    '''
-
-    num_process = 8
+    inference_dataset = Datasets(df, tokenizer)
+    tokenized_dataloader = torch.utils.data.DataLoader(inference_dataset, batch_size=32)
     
-    print(f'num process : {num_process}')
     
-    scps = split_file(df, split = num_process)
-
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    tokenizer = tokenizer
-    model = model.to(device)
-    max_len = 64
-    processes = []
-    sentences = []
-    # outputs = [] # for making csv file
-    if len(scps) > 1:
-        model.share_memory()
-
-        for i, scp in enumerate(scps):
-            output_dir= f'./output/inference_{i}'
-            args = [model, tokenizer, scp, max_len, output_dir]
- 
-            process = Process(target=inference,args=args)
-            process.start()
-            processes.append(process)
-            time.sleep(0.1)
-
-        for process in processes:
-            process.join()
-        processes.clear()
-    else:
-        output_dir = './output/inference_0'
-        num_process = 1
-        args = [model, tokenizer, scps[0], max_len, output_dir]
-        inference(*args)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    sentences= []
     
-    for i in range(num_process):
-        df = pd.read_csv(f'./output/inference_{i}.csv')
-        for _, item in df.iterrows():
-            sentences.append(item['result'])
-    #         outputs.append(item['output']) # for making csv file
-    # data = pd.DataFrame({
-    #     'output' : outputs,
-    #     'result' : sentences
-    # })
-    # data.to_csv('./inference.csv', index=False)
-    
+    for batch in tokenized_dataloader:
+        output = model.generate(input_ids = batch['input_ids'].to(device),
+                            attention_mask =batch['attention_mask'].to(device),
+                            max_length = 64,)
+        
+        outputs = []
+        for out in output:
+            x = torch.where(out == 4)[0].tolist()[0]
+            out = out[x:]
+            outputs.append(out)
+
+        decoded_output = tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        
+        for answer in decoded_output:
+            if answer[0] == '아' and answer[1] == ' ':
+                    answer = answer[2:]
+            elif answer[0] == '어' and answer[1] == ' ':
+                answer = answer[2:]
+            
+            if '<pad>' in answer :
+                answer = answer.replace('<pad>', '')
+                sentences.append(answer)
+                print(f"answer : {answer.strip()}")
+            elif '<unk>' in answer : 
+                answer = answer.replace('<unk>','')
+                print(f"answer : {answer.strip()}")
+                sentences.append(answer.strip())
+            else:
+                sentences.append(answer.strip())
+                print(f"answer : {answer.strip()}")
+    # df = pd.DataFrame({'result' : sentences})
+    # df.to_csv('inference.csv',index=False)
     return sentences
 
-
 if __name__ == '__main__':
-    from dataloader import DataLoader
+
+    model_path = '/opt/ml/espnet-asr/final/GPT_2'
+    OUTPUT_TKN = "<usr>"
+    RESULT_TKN = "<sys>"
+    BOS = '</s>'
+    EOS = '</s>'
+    MASK = '<unused0>'
+    SENT = '<unused1>'
+    PAD = '<pad>'
     start_time = time.time()
-    data_path = '/opt/ml/espnet-asr/STT_postprocessing/history_dataset.csv'
-    loader = DataLoader(data_path=data_path)
-    df = loader.load()
-    torch.multiprocessing.set_start_method('spawn',force=True)
-    results = postprocess(model_path = '/opt/ml/espnet-asr/final/GPT_2', df = df)
-    print(results)
-    print(f'sec : {time.time()-start_time}')
+    
+    tokenizer = PreTrainedTokenizerFast.from_pretrained(model_path,
+                bos_token=BOS, eos_token=EOS, unk_token='<unk>',
+                pad_token=PAD, mask_token=MASK,padding_side='left')
+    model = GPT2LMHeadModel.from_pretrained(model_path)
+    data_path = '설민석_일제강점기_inference_small_beam10.csv'
+    df = pd.read_csv(data_path)
+
+    result = postprocess(model = model, tokenizer=tokenizer, df = df)
+
+    print(f'sec : {time.time() - start_time}')
