@@ -202,11 +202,15 @@ $ npm start
 
 <br><br><br>
 
-## Wrap-up Review
+## Review
 
+[Wrap-up Report](https://docs.google.com/document/d/1Ars4xIwXqjSFoMxxC03JUyKm_UsWZ1RrXQmJZqgxbiw/edit?usp=sharing)
+
+<!-- [Wrap-up Notion]() -->
+
+[Presentation](https://docs.google.com/presentation/d/1w4aHEkJTYKRBfi6exVl3DvRwXsg2ipxe/edit?usp=sharing&ouid=110238381982950597659&rtpof=true&sd=true)
 
 <br><br><br>
-
 
 ## Reference
 **STT**
